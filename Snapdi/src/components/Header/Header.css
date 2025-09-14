@@ -1,0 +1,153 @@
+.nav-container {
+  max-width: 1620px;
+  height: 7rem;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: slideDown 1s ease-out; /* Default slide-down animation */
+}
+
+.nav-container.leave {
+  animation: slideUp 0.5s ease-in forwards; /* Slide-up animation when leaving */
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s;
+}
+
+.logo:hover {
+  transform: scale(1.3);
+}
+
+.nav-link-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  padding: 1rem 1.25rem;
+  transition: all 0.3s;
+}
+
+.nav-link:hover {
+  color: blueviolet;
+  transform: scale(1.1);
+}
+
+.nav-link.active {
+  color: blueviolet;
+  text-decoration: underline;
+  transform: scale(1.1);
+}
+
+.nav-link.contact {
+  background-color: blueviolet;
+  border-radius: 18px;
+  color: white;
+  padding: 0.8rem 1.25rem;
+  transition: color 0.3s, transform 0.3s, background-color 0.3s;
+}
+
+.nav-link.contact:hover {
+  background-color: rgb(184, 120, 245);
+  color: rgba(106, 0, 206, 0.808);
+  transform: scale(1.1);
+}
+
+.nav-link.contact.active {
+  background-color: rgb(184, 120, 245);
+  color: rgba(106, 0, 206, 0.808);
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@media (max-width: 1620px) {
+  .nav-container {
+    max-width: 1280px;
+  }
+}
+
+/* xl */
+@media (max-width: 1280px) {
+  .nav-container {
+    max-width: 1024px;
+  }
+
+  .nav-link-container {
+    gap: 1rem;
+  }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+  .nav-container {
+    max-width: 768px;
+  }
+}
+
+/* md */
+@media (max-width: 768px) {
+  .nav-container {
+    max-width: 640px;
+  }
+}
+
+/* sm */
+@media (max-width: 640px) {
+  .nav-container {
+    max-width: 475px;
+  }
+}
+
+/* xs */
+@media (max-width: 475px) {
+  .nav-container {
+    width: 100%;
+  }
+}
