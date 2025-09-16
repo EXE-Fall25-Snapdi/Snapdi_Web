@@ -1,21 +1,20 @@
 .button-primary {
   width: 130px;
-  border: 2px solid blueviolet;
+  border: 2px solid greenyellow;
   padding: 10px 15px;
   font-size: 20px;
   font-weight: bold;
-  color: blueviolet;
+  color: greenyellow;
   border-radius: 25px;
   text-align: center;
   text-decoration: none;
-  margin-top: 20px;
   transition: background-color 0.3s, color 0.3s, transform 0.3s;
   animation: bounceIn 1.5s ease-in-out;
 }
 
 .button-primary:hover {
-  background-color: darkviolet;
-  color: rgb(255, 167, 255);
+  background-color: green;
+  color: greenyellow;
   transform: scale(1.2);
 }
 

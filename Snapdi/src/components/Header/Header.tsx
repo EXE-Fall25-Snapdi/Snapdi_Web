@@ -1,43 +1,79 @@
-
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Container, Nav, Navbar, Image } from "react-bootstrap";
 import "./Header.css";
-// import Logo from "../assets/images/logoup.png";
+import Logo from "../../assets/images/logo.png";
 
 function Header() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isLeaving, setIsLeaving] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
-    const handleNavigation = (path: string) => {
-      if (location.pathname !== path) {
-        setIsLeaving(true);
-        setTimeout(() => {
-          setIsLeaving(false); // Reset the state after navigation
-          navigate(path);
-        }, 500); // Wait for slide-up animation to complete
+  // Handle smooth scrolling to sections
+  const handleScrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      setTimeout(() => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        setActiveSection(sectionId);
+      }, 300);
+    }
+  };
+
+  // Update active section based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["home", "features", "download", "about"];
+      const scrollPosition = window.scrollY;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
       }
     };
 
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Set initial active section
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <Container className={`nav-container ${isLeaving ? "leave" : ""}`}>
+    <Container className="nav-container">
       <Navbar className="nav">
-        <Navbar.Brand onClick={() => handleNavigation("/")} className="logo">
-          {/* <Image src={Logo} alt="Logo" height={60} /> */}
-        </Navbar.Brand>
+        <Nav onClick={() => handleScrollToSection("home")} className="nav-logo">
+          <Image src={Logo} alt="Logo" height={60} />
+        </Nav>
         <Nav className="nav-link-container">
           <Nav.Link
-            onClick={() => handleNavigation("/")}
-            className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+            onClick={() => handleScrollToSection("home")}
+            className={`nav-link home ${activeSection === "home" ? "active" : ""}`}
           >
             Home
           </Nav.Link>
           <Nav.Link
-            onClick={() => handleNavigation("/contact")}
-            className={`nav-link contact ${location.pathname === "/contact" ? "active" : ""}`}
+            onClick={() => handleScrollToSection("features")}
+            className={`nav-link features ${activeSection === "features" ? "active" : ""}`}
           >
-            Contact
+            Features
+          </Nav.Link>
+          <Nav.Link
+            onClick={() => handleScrollToSection("download")}
+            className={`nav-link download ${activeSection === "download" ? "active" : ""}`}
+          >
+            Download
+          </Nav.Link>
+          <Nav.Link
+            onClick={() => handleScrollToSection("about")}
+            className={`nav-link about ${activeSection === "about" ? "active" : ""}`}
+          >
+            About Us
           </Nav.Link>
         </Nav>
       </Navbar>

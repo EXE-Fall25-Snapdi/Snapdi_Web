@@ -1,0 +1,7 @@
+.home-container {
+    min-height: 100vh;
+    width: auto;
+    display: flex;
+    padding: 2rem;
+    background-color:cornsilk;
+}
