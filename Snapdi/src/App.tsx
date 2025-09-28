@@ -12,34 +12,62 @@ import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import { useLoadingStore } from "./config/zustand";
 import useToastStorage from "./hooks/useToastStorage";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
+import UserManagement from "./pages/Admin/UsersManagement/UserManagement";
+import BlogsManagement from "./pages/Admin/BlogsManagement/BlogsManagement";
+import PhotographerApplication from "./pages/Admin/PhotographerApplication/PhotographerApplication";
+import AboutUs from "./pages/Main/AboutUs/AboutUs";
+import BlogPage from "./pages/Main/BlogPage/BlogPage";
+import { Contact } from "lucide-react";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <NotFound />,
-    children: [{ path: "/", element: <MainPage /> }],
+    children: [
+      { path: "/", 
+        element: <MainPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutUs />,
+      },
+      {
+        path: "/blog",
+        element: <BlogPage />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+
+    ],
   },
   {
     path: "/admin",
     element: (
-      <ProtectedRoute requireAdmin={true}>
+      // <ProtectedRoute requireAdmin={true}>
       <AdminLayout />
-      </ProtectedRoute>
+      // </ProtectedRoute>
     ),
-    errorElement: <MainPage />,
+    errorElement: <AdminDashboard />,
     children: [
       {
-        path: "/admin/dashboard",
-        element: <NotFound />,
+        path: "/admin/admin-dashboard",
+        element: <AdminDashboard />,
       },
       {
-        path: "/admin/users",
-        element: <NotFound />,
+        path: "/admin/user-management",
+        element: <UserManagement />,
       },
       {
-        path: "/admin/blogs",
-        element: <NotFound />,
+        path: "/admin/blogs-management",
+        element: <BlogsManagement />,
+      },
+      {
+        path: "/admin/photographer-applications",
+        element: <PhotographerApplication />,
       },
     ],
   },
