@@ -63,20 +63,24 @@ const router = createBrowserRouter([
         element: <AdminDashboard />,
       },
       {
-        path: "/admin/admin-dashboard",
+        path: "admin-dashboard",
         element: <AdminDashboard />,
       },
       {
-        path: "/admin/user-management",
+        path: "user-management",
         element: <UserManagement />,
       },
       {
-        path: "/admin/blogs-management",
+        path: "blogs-management",
         element: <BlogsManagement />,
       },
       {
-        path: "/admin/photographer-applications",
+        path: "photographer-applications",
         element: <PhotographerApplication />,
+      },
+      {
+        path: "*",
+        element: <AdminDashboard />, // Fallback for any unmatched admin routes
       },
     ],
   },
