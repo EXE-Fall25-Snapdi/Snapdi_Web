@@ -1,7 +1,9 @@
 
 const SnaperPage = () => {
   return (
-    <div>SnaperPage</div>
+    <div className="text-2xl font-bold text-center mt-8 h-screen flex justify-center items-center">
+      Coming Soon
+    </div>
   )
 }
 

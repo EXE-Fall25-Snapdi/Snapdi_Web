@@ -46,12 +46,13 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaClock,
+   FaFacebook, FaTiktok
 } from "react-icons/fa";
 
 import { BiMenuAltLeft } from "react-icons/bi";
 import { GoArrowUpRight } from "react-icons/go";
 import { FaArrowRight, FaCircleLeft } from "react-icons/fa6";
-import { MdOutlineEmail, MdApproval, MdCancel } from "react-icons/md";
+import { MdOutlineEmail, MdApproval, MdCancel, MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CiLock, CiUnlock } from "react-icons/ci";
 
 // Định nghĩa kiểu dữ liệu cho danh sách icon
@@ -60,6 +61,11 @@ type IconType = {
 };
 
 const Icons: IconType = {
+  Facebook: FaFacebook,
+  Tiktok: FaTiktok,
+  Email: MdEmail,
+  MdLocation: MdLocationOn,
+  Phone: MdPhone,
   TrendingUp: TrendingUp,
   UserCheck: UserCheck,
   Wallet2: Wallet2,

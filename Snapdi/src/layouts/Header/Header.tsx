@@ -3,9 +3,11 @@ import { Nav, Navbar } from "react-bootstrap";
 import "./Header.css";
 // import Logo from "../../assets/images/logo.png";
 import { NavLink } from "react-router-dom";
+import MainSidebar from "../MainSidebar/MainSidebar";
 
 function Header() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
     { path: "/", label: "Home", key: "home" },
@@ -23,15 +25,15 @@ function Header() {
           {/* <Image src={Logo} alt="Logo" height={60} /> */}
           <p className="font-sf-pro font-extrabold text-black text-2xl md:text-[32px]">SNAPDI</p>
         </Nav>
-        
+
         {/* Desktop Navigation */}
-        <Nav className="nav-link-container font-sf-pro hidden lg:flex gap-6">
+        <Nav className="nav-link-container font-sf-pro hidden! md:flex gap-6">
           {menuItems.map((item, index) => (
             <NavLink
               key={index}
               to={item.path}
               className={({ isActive }) =>
-              `w-full flex items-center font-sf-pro! font-bold text-black! gap-4 px-3 py-2 rounded-xl transition-all duration-300
+                `w-full flex items-center font-sf-pro! font-bold text-black! gap-4 px-3 py-2 rounded-xl transition-all duration-300
               ${isActive ? "bg-[#34D399] rounded-xl px-4 py-2 text-white!" : ""}
               ${hoveredIndex === index ? " scale-120" : ""}
               ${hoveredIndex !== null && hoveredIndex !== index ? "opacity-75" : ""}`
@@ -43,7 +45,7 @@ function Header() {
             </NavLink>
           ))}
         </Nav>
-        
+
         {/* Desktop Buttons */}
         <Nav className="hidden lg:flex gap-2 items-center">
           <button className="bg-[#34D399] text-white px-4 py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform">
@@ -53,14 +55,28 @@ function Header() {
             Sign In
           </button>
         </Nav>
-        
+
         {/* Mobile Menu Button */}
         <Nav className="lg:hidden">
-          <button className="bg-[#34D399] text-white px-3 py-2 rounded-lg font-sf-pro font-bold text-sm">
-            Menu
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="bg-[#34D399] text-black px-3 py-2 rounded-lg font-sf-pro font-bold text-sm hover:scale-105 transition-transform"
+          >
+            {/* Simple hamburger menu icon */}
+            <div className="w-6 h-6 flex flex-col justify-center items-center gap-1">
+              <div className="w-5 h-0.5 bg-black"></div>
+              <div className="w-5 h-0.5 bg-black"></div>
+              <div className="w-5 h-0.5 bg-black"></div>
+            </div>
           </button>
         </Nav>
       </Navbar>
+
+      {/* Mobile Sidebar */}
+      <MainSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       {/* </Container> */}
     </>
   );

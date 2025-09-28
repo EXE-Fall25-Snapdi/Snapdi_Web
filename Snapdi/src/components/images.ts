@@ -1,4 +1,7 @@
 import logo from "../assets/images/logo.png";
+import camera from "../assets/images/camera.png";
+import map from "../assets/images/map.png";
+import pose1 from "../assets/images/mascot-pose1.png";
 // import Logo from "../assets/images/logo.png";
 // import Logo2 from "../assets/images/logo2.png";
 // import Work1 from "../assets/images/work.png";
@@ -27,7 +30,10 @@ import logo from "../assets/images/logo.png";
 import hero from "../assets/images/snaper-hero.png";
 const Images = {
   logo,
-  hero
+  hero,
+  camera,
+  map,
+  pose1,
   // Logo2,
   // Work1,
   // Work2,

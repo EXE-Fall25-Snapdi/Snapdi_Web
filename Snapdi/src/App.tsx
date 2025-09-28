@@ -18,8 +18,8 @@ import BlogsManagement from "./pages/Admin/BlogsManagement/BlogsManagement";
 import PhotographerApplication from "./pages/Admin/PhotographerApplication/PhotographerApplication";
 import AboutUs from "./pages/Main/AboutUs/AboutUs";
 import BlogPage from "./pages/Main/BlogPage/BlogPage";
-import { Contact } from "lucide-react";
 import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
+import Contact from "./pages/Main/Contact/Contact";
 
 const router = createBrowserRouter([
   {
