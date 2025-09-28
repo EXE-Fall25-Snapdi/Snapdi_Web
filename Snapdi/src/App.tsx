@@ -27,7 +27,8 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <NotFound />,
     children: [
-      { path: "/", 
+      {
+        path: "/",
         element: <MainPage />,
       },
       {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <AdminDashboard />,
     children: [
+      {
+        index: true,
+        element: <AdminDashboard />,
+      },
       {
         path: "/admin/admin-dashboard",
         element: <AdminDashboard />,
