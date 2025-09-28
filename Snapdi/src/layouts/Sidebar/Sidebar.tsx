@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, type JSX } from "react";
-import { useSidebarStore, useUserStore } from "../../config/zustand";
+import React, { useState, type JSX } from "react";
+// import { useUserStore } from "../../config/zustand";
 import Images from "../../components/images";
 import Icons from "../../components/icon";
 import { NavLink } from "react-router-dom";
@@ -7,32 +7,11 @@ import { toast } from "react-toastify";
 import { logout } from "../../utils/userUtils";
 
 const Sidebar: React.FC = () => {
-  const userData = useUserStore((state) => state.user);
-  let user = userData || '{}';
-  let parseUser = typeof user === "string" ? JSON.parse(user) : user;
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const { isSidebarOpen, closeSidebar } = useSidebarStore();
+  // const userData = useUserStore((state) => state.user);
+  // let user = userData || '{}';
+  // let parseUser = typeof user === "string" ? JSON.parse(user) : user;
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target as Node) &&
-      isSidebarOpen
-    ) {
-      closeSidebar();
-    }
-  };
-
-  useEffect(() => {
-    if (isSidebarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isSidebarOpen]);
 
   const handleLogout = () => {
     setShowConfirm(false);
@@ -48,115 +27,24 @@ const Sidebar: React.FC = () => {
   > = {
     A001: [
       {
-        path: "dashboard",
+        path: "admin-dashboard",
         icon: <Icons.Dashboard className="w-8 h-8" />,
         label: "Dashboard",
       },
       {
-        path: "user",
+        path: "user-management",
         icon: <Icons.User className="w-8 h-8" />,
         label: "User Management",
       },
       {
-        path: "project",
+        path: "blogs-management",
         icon: <Icons.FolderDot className="w-8 h-8" />,
-        label: "Project Management",
+        label: "Blogs Management",
       },
       {
-        path: "edit_profile",
-        icon: <Icons.Settings className="w-8 h-8" />,
-        label: "Setting",
-      },
-    ],
-    A003: [
-      {
-        path: "dashboard",
-        icon: <Icons.Dashboard className="w-8 h-8" />,
-        label: "Dashboard",
-      },
-      {
-        path: "approval-management",
-        icon: <Icons.MdApproval className="w-8 h-8" />,
-        label: "Approval Management",
-      },
-      {
-        path: "calendar",
-        icon: <Icons.Calendar className="w-8 h-8" />,
-        label: "Calendar",
-      },
-      {
-        path: "request",
-        icon: <Icons.ChartColumn className="w-8 h-8" />,
-        label: "Claim Request",
-      },
-      {
-        path: "user_project",
-        icon: <Icons.FolderDot className="w-8 h-8" />,
-        label: "Projects",
-      },
-      {
-        path: "edit_profile",
-        icon: <Icons.Settings className="w-8 h-8" />,
-        label: "Setting",
-      },
-    ],
-    A002: [
-      {
-        path: "dashboard",
-        icon: <Icons.Dashboard className="w-8 h-8" />,
-        label: "Dashboard",
-      },
-      {
-        path: "paid-management",
-        icon: <Icons.Wallet className="w-8 h-8" />,
-        label: "Finance Management",
-      },
-      {
-        path: "calendar",
-        icon: <Icons.Calendar className="w-8 h-8" />,
-        label: "Calendar",
-      },
-      {
-        path: "request",
-        icon: <Icons.ChartColumn className="w-8 h-8" />,
-        label: "Claim Request",
-      },
-      {
-        path: "user_project",
-        icon: <Icons.FolderDot className="w-8 h-8" />,
-        label: "Projects",
-      },
-      {
-        path: "edit_profile",
-        icon: <Icons.Settings className="w-8 h-8" />,
-        label: "Setting",
-      },
-    ],
-    A004: [
-      {
-        path: "dashboard",
-        icon: <Icons.Dashboard className="w-8 h-8" />,
-        label: "Dashboard",
-      },
-      {
-        path: "calendar",
-        icon: <Icons.Calendar className="w-8 h-8" />,
-        label: "Calendar",
-      },
-      {
-        path: "request",
-        icon: <Icons.ChartColumn className="w-8 h-8" />,
-        label: "Claim Request",
-      },
-      {
-        path: "user_project",
-        icon: <Icons.FolderDot className="w-8 h-8" />,
-        label: "Projects",
-      },
-      {
-        path: "edit_profile",
-        icon: <Icons.Settings className="w-8 h-8" />,
-        label: "Setting",
+        path: "photographer-applications",
+        icon: <Icons.Camera className="w-8 h-8" />,
+        label: "Photographer Applications",
       },
     ],
   };
@@ -164,58 +52,47 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <div
-        ref={sidebarRef}
-        className={`fixed lg:relative top-0 left-0 h-full transition-all duration-300 z-50 bg-white
-        ${isSidebarOpen ? "translate-x-0 w-60" : "-translate-x-full lg:w-20"
-          } lg:translate-x-0`}
+        className="fixed lg:relative top-0 left-0 h-full z-50 bg-black
+  translate-x-0 w-72"
       >
         <div className="flex flex-col gap-4 mt-4 pl-4">
           <div className="flex items-center justify-center pr-4">
-            {isSidebarOpen ? (
-              <img
-                src={Images.logo}
-                alt="logo"
-                className="lg:max-w-36 lg:h-20 max-w-40 transition-all duration-300"
-              />
-            ) : (
-              <img
-                src={Images.logo}
-                alt="logo"
-                className="lg:max-w-24 lg:h-24 max-w-16 transition-all duration-300"
-              />
-            )}
+            <img
+              src={Images.logo}
+              alt="logo"
+              className="lg:max-w-24 lg:h-24 max-w-16 transition-all duration-300"
+            />
           </div>
-          {parseUser.role_code && menuItems[parseUser.role_code] && (
-            <>
-              <h2 className="text-gray-400 text-sm font-semibold uppercase tracking-wider px-2">
-                Menu
-              </h2>
-              {menuItems[parseUser.role_code].map((item, index) => (
-                <NavLink
-                  key={index}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `w-full flex items-center gap-4 px-3 py-2 rounded-l-2xl transition-all duration-300
-                  ${isActive
-                      ? "bg-brand-orange-light text-white"
-                      : "text-gray-700 hover:bg-brand-orange-light-1 hover:text-gray-800"
-                    }
-                  ${hoveredIndex !== null && hoveredIndex !== index
-                      ? "opacity-50"
-                      : "opacity-100"
-                    }`
+          {/* {parseUser.role_code && menuItems[parseUser.role_code] && ( */}
+          {/* {parseUser.role_code && menuItems[parseUser.role_code] && ( */}
+          {/* check role_code */}
+          <div className="border-t border-gray-400 my-2 mr-4">
+          </div>
+          <>
+            {menuItems["A001"].map((item, index) => (
+              <NavLink
+                key={index}
+                to={item.path}
+                className={({ isActive }) =>
+                  `w-full flex items-center gap-4 px-3 py-2 rounded-l-2xl transition-all duration-300
+                ${isActive
+                    ? "bg-brand-orange-light text-white"
+                    : "text-gray-700! hover:bg-brand-orange-light-1 hover:text-gray-800"
                   }
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  <span className="flex-shrink-0 text-xl">{item.icon}</span>
-                  {isSidebarOpen && (
-                    <span className="truncate font-medium">{item.label}</span>
-                  )}
-                </NavLink>
-              ))}
-            </>
-          )}
+                ${hoveredIndex !== null && hoveredIndex !== index
+                    ? "opacity-50"
+                    : "opacity-100"
+                  }`
+                }
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                <span className="flex-shrink-0 text-sm">{item.icon}</span>
+                <span className="truncate text-sm">{item.label}</span>
+              </NavLink>
+            ))}
+          </>
+          {/* )} check role_code */}
           <div className="border-t border-gray-400 my-2 mr-4"></div>
           <NavLink
             to="#"
@@ -226,7 +103,7 @@ const Sidebar: React.FC = () => {
             className="flex items-center gap-4 px-3 py-2 rounded-l-2xl text-red-600 transition-all duration-300 hover:bg-red-100"
           >
             <Icons.LogOut className="w-6 h-6" />
-            {isSidebarOpen && <span className="font-medium">Log out</span>}
+            <span className="text-sm">Log out</span>
           </NavLink>
         </div>
       </div>

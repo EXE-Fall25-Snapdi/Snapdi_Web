@@ -24,8 +24,10 @@ import logo from "../assets/images/logo.png";
 // import news2 from "../assets/images/8-3.png";
 // import changelog from "../assets/images/changelog.png";
 // import Logo3 from "../assets/images/logo3.png";
+import hero from "../assets/images/snaper-hero.png";
 const Images = {
   logo,
+  hero
   // Logo2,
   // Work1,
   // Work2,

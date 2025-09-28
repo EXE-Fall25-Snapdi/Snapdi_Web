@@ -32,6 +32,9 @@ export default {
         heavy: "800",
         black: "900",
       },
+      colors: {
+        primary: "#34D399",
+      },
     },
   },
   plugins: [],

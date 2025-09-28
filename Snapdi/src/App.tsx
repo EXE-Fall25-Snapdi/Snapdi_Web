@@ -19,6 +19,7 @@ import PhotographerApplication from "./pages/Admin/PhotographerApplication/Photo
 import AboutUs from "./pages/Main/AboutUs/AboutUs";
 import BlogPage from "./pages/Main/BlogPage/BlogPage";
 import { Contact } from "lucide-react";
+import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,10 @@ const router = createBrowserRouter([
         path: "/contact",
         element: <Contact />,
       },
-
+      {
+        path: "/snaper",
+        element: <SnaperPage />,
+      },
     ],
   },
   {
@@ -77,7 +81,7 @@ const App: React.FC = () => {
 
   useToastStorage();
   return (
-    <div className="App">
+    <div className="w-full">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="loader">Loading...</div>

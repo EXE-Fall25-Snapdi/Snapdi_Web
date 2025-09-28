@@ -9,10 +9,8 @@ const MainLayout: React.FC = () => {
   return (
     <>
       <div className="app">
-        <div className="header">
-          <Header />
-        </div>
-        <div className="main-content">
+        <Header />
+        <div className="flex-1">
           <Outlet />
         </div>
       </div>

@@ -28,10 +28,16 @@ import {
   Facebook,
   Instagram,
   Search,
-  Medal, 
-  Building, 
+  Medal,
+  Building,
   FileText,
   Undo2,
+  Camera,
+  Cable,
+  Earth,
+  Wallet2,
+  UserCheck,
+TrendingUp
 } from "lucide-react";
 import {
   FaUsers,
@@ -54,6 +60,12 @@ type IconType = {
 };
 
 const Icons: IconType = {
+  TrendingUp: TrendingUp,
+  UserCheck: UserCheck,
+  Wallet2: Wallet2,
+  Earth: Earth,
+  Cable: Cable,
+  Camera: Camera,
   Clock: Clock,
   Calendar: Calendar,
   Dashboard: LayoutDashboard,
