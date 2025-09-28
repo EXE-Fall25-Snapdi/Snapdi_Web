@@ -1,14 +1,15 @@
-import { Container } from "react-bootstrap";
+import Landing from "../../components/Landing/Landing";
+import SnaperBenefit from "../../components/SnaperBenefit/SnaperBenefit";
 import "./MainPage.css";
-import Home from "../../components/Home/Home";
-import Features from "../../components/Features/Features";
 
 function MainPage() {
   return (
-    <Container className="main-page-content">
-      <Home />
-      <Features />
-    </Container>
+    <div className="flex justify-center">
+    <div className="lg:w-10/12 w-full">
+      <Landing />
+      <SnaperBenefit />
+    </div>
+    </div>
   );
 }
 

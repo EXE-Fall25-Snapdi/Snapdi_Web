@@ -21,17 +21,20 @@ import {
   Trash2,
   Eye,
   DollarSign,
-  Phone,
   Mail,
   MapPin,
   Menu,
-  Facebook,
-  Instagram,
   Search,
-  Medal, 
-  Building, 
+  Medal,
+  Building,
   FileText,
   Undo2,
+  Camera,
+  Cable,
+  Earth,
+  Wallet2,
+  UserCheck,
+TrendingUp
 } from "lucide-react";
 import {
   FaUsers,
@@ -40,12 +43,13 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaClock,
+   FaFacebook, FaTiktok
 } from "react-icons/fa";
 
 import { BiMenuAltLeft } from "react-icons/bi";
 import { GoArrowUpRight } from "react-icons/go";
 import { FaArrowRight, FaCircleLeft } from "react-icons/fa6";
-import { MdOutlineEmail, MdApproval, MdCancel } from "react-icons/md";
+import { MdApproval, MdCancel, MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CiLock, CiUnlock } from "react-icons/ci";
 
 // Định nghĩa kiểu dữ liệu cho danh sách icon
@@ -54,6 +58,17 @@ type IconType = {
 };
 
 const Icons: IconType = {
+  Facebook: FaFacebook,
+  Tiktok: FaTiktok,
+  Email: MdEmail,
+  MdLocation: MdLocationOn,
+  Phone: MdPhone,
+  TrendingUp: TrendingUp,
+  UserCheck: UserCheck,
+  Wallet2: Wallet2,
+  Earth: Earth,
+  Cable: Cable,
+  Camera: Camera,
   Clock: Clock,
   Calendar: Calendar,
   Dashboard: LayoutDashboard,
@@ -65,7 +80,6 @@ const Icons: IconType = {
   Wallet: Wallet,
   ArrowUpRight: GoArrowUpRight,
   ArrowRight: FaArrowRight,
-  Email: MdOutlineEmail,
   Lock: CiLock,
   Unlock: CiUnlock,
   Approve: Check,
@@ -94,12 +108,9 @@ const Icons: IconType = {
   Edit: Pencil,
   Delete: Trash2,
   Dollar: DollarSign,
-  Phone: Phone,
   Mail: Mail,
   MapPin: MapPin,
   Menu2: Menu,
-  Facebook: Facebook,
-  Instagram: Instagram,
   SearchIcon: Search,
   Menu3: BiMenuAltLeft,
   History: History,

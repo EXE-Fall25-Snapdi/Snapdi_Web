@@ -6,7 +6,7 @@ import Sidebar from "../Sidebar/Sidebar";
 const AdminLayout: React.FC = () => {
   return (
     <>
-      <div className="flex h-screen overflow-hidden ">
+      <div className="flex h-screen overflow-hidden bg-white">
         <aside className="flex-shrink-0 flex flex-col">
           <Sidebar />
         </aside>

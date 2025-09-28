@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 // import { useUser } from "../../../contexts/UserContext";
 import Icons from "../../../components/icon";
-import { useSidebarStore, useUserStore } from "../../../config/zustand";
+import { useUserStore } from "../../../config/zustand";
 import { APP_CONSTANTS } from "../../../constants/appConstants";
 import { toast } from "react-toastify";
 import { logout } from "../../../utils/userUtils";
 
 const AdminHeader: React.FC = () => {
   // const { user } = useUser();
-  const { toggleSidebar } = useSidebarStore();
   const location = useLocation();
   const [showConfirm, setShowConfirm] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,7 +21,7 @@ const AdminHeader: React.FC = () => {
   const currentTitle =
     APP_CONSTANTS.pageTitles[
     location.pathname as keyof typeof APP_CONSTANTS.pageTitles
-    ] || "Home";
+    ] || "Admin Panel";
 
   const handleLogout = () => {
     setShowConfirm(false);
@@ -53,84 +52,78 @@ const AdminHeader: React.FC = () => {
     <>
       <div className="flex items-center justify-between w-full py-4 px-6">
         <div className="flex items-center gap-4">
-          <button
-            onClick={toggleSidebar}
-            className="text-white p-2 bg-transparent"
-          >
-            <Icons.Menu3 className="w-10 h-10" />
-          </button>
-          <h1 className="text-white text-3xl font-bold">{currentTitle}</h1>
+          <p className="text-black text-3xl font-bold">{currentTitle}</p>
         </div>
 
 
-      {/* User Dropdown */}
+        {/* User Dropdown */}
         <div className="flex items-center bg-white rounded-full">
 
           <div className="relative" ref={dropdownRef}>
-          {userData?.avatarUrl ? (
-            <button
-              className="bg-gray-200! p-2 hover:bg-brand-gradient rounded-full overflow-hidden group"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <img
-                src={userData?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"}
-                alt="User Avatar"
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            </button>
-          ) : (
-            <button
-              className="bg-gray-200! hover:bg-brand-gradient rounded-full group"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <div className="w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full overflow-hidden">
-                <Icons.User className="text-black group-hover:text-white w-7 h-7 rounded-full!" />
-              </div>
-            </button>
-          )}
-          <div
-            className={`absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg overflow-hidden z-50 border border-gray-200 transition-all duration-200 ease-in-out transform ${dropdownOpen
-              ? "opacity-100 scale-100 translate-y-0"
-              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
-              }`}
-          >
-            {/* User Info */}
-            <div className="flex items-center gap-3 px-5 py-4 border-b bg-gray-50">
-              <img
-                src={userData?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"}
-                alt="User Avatar"
-                className="w-10 h-10 flex-shrink-0 bg-gray-300 rounded-full"
-              />
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">
-                  {userData?.username || "Guest"}
-                </p>
-                <p className="text-xs text-gray-500">{userRole}</p>
-                <p className="text-sm text-gray-600">
-                  {userData?.email || "NaN"}
-                </p>
-              </div>
-            </div>
-
-            {/* Dropdown Actions */}
-            <div className="py-2">
+            {userData?.avatarUrl ? (
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowConfirm(true);
-                }}
-                className="w-full flex items-center bg-gray-100! gap-3 text-left px-5 py-3 text-red-600 hover:bg-red-50 transition-all duration-200"
+                className="bg-gray-200! p-2 hover:bg-brand-gradient rounded-full overflow-hidden group"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                <Icons.LogOut className="w-5 h-5" />
-                <span className="font-medium">Logout</span>
+                <img
+                  src={userData?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"}
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
               </button>
+            ) : (
+              <button
+                className="bg-gray-200! hover:bg-brand-gradient rounded-full group"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <div className="w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full overflow-hidden">
+                  <Icons.User className="text-black group-hover:text-white w-7 h-7 rounded-full!" />
+                </div>
+              </button>
+            )}
+            <div
+              className={`absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg overflow-hidden z-50 border border-gray-200 transition-all duration-200 ease-in-out transform ${dropdownOpen
+                ? "opacity-100 scale-100 translate-y-0"
+                : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                }`}
+            >
+              {/* User Info */}
+              <div className="flex items-center gap-3 px-5 py-4 border-b bg-gray-50">
+                <img
+                  src={userData?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"}
+                  alt="User Avatar"
+                  className="w-10 h-10 flex-shrink-0 bg-gray-300 rounded-full"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-800">
+                    {userData?.username || "Guest"}
+                  </p>
+                  <p className="text-xs text-gray-500">{userRole}</p>
+                  <p className="text-sm text-gray-600">
+                    {userData?.email || "NaN"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Dropdown Actions */}
+              <div className="py-2">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowConfirm(true);
+                  }}
+                  className="w-full flex items-center bg-gray-100! gap-3 text-left px-5 py-3 text-red-600 hover:bg-red-50 transition-all duration-200"
+                >
+                  <Icons.LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div >
+      </div >
 
-      { showConfirm && (
+      {showConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-brand-orange-light backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
             <h2 className="text-lg font-semibold mb-4">Confirm Logout</h2>
@@ -154,7 +147,8 @@ const AdminHeader: React.FC = () => {
           </div>
         </div>
       )
-}
+      }
+      <div className="border-b border-gray-700 ml-4 mr-4"></div>
     </>
   );
 };
