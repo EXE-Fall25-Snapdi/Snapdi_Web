@@ -27,7 +27,7 @@ function Header() {
         </Nav>
 
         {/* Desktop Navigation */}
-        <Nav className="nav-link-container font-sf-pro hidden! md:flex gap-6">
+        <Nav className="font-sf-pro hidden lg:flex gap-6">
           {menuItems.map((item, index) => (
             <NavLink
               key={index}
