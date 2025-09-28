@@ -13,8 +13,9 @@ const BlogItemCard: React.FC<BlogItemCardProps> = ({
   teaser,
   date,
 }) => {
-  const [day, ...rest] = date.split(" ");
-  const month = rest[0] || "";
+  // const [day, ...rest] = date.split(" ");
+  // const month = rest[0] || "";
+  console.log('BlogItemCard Props:', { thumbnailUrl, title, teaser, date });
 
   return (
     <div className="flex items-center gap-4 w-full">

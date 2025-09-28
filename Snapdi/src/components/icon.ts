@@ -21,12 +21,9 @@ import {
   Trash2,
   Eye,
   DollarSign,
-  Phone,
   Mail,
   MapPin,
   Menu,
-  Facebook,
-  Instagram,
   Search,
   Medal,
   Building,
@@ -52,7 +49,7 @@ import {
 import { BiMenuAltLeft } from "react-icons/bi";
 import { GoArrowUpRight } from "react-icons/go";
 import { FaArrowRight, FaCircleLeft } from "react-icons/fa6";
-import { MdOutlineEmail, MdApproval, MdCancel, MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
+import { MdApproval, MdCancel, MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CiLock, CiUnlock } from "react-icons/ci";
 
 // Định nghĩa kiểu dữ liệu cho danh sách icon
@@ -83,7 +80,6 @@ const Icons: IconType = {
   Wallet: Wallet,
   ArrowUpRight: GoArrowUpRight,
   ArrowRight: FaArrowRight,
-  Email: MdOutlineEmail,
   Lock: CiLock,
   Unlock: CiUnlock,
   Approve: Check,
@@ -112,12 +108,9 @@ const Icons: IconType = {
   Edit: Pencil,
   Delete: Trash2,
   Dollar: DollarSign,
-  Phone: Phone,
   Mail: Mail,
   MapPin: MapPin,
   Menu2: Menu,
-  Facebook: Facebook,
-  Instagram: Instagram,
   SearchIcon: Search,
   Menu3: BiMenuAltLeft,
   History: History,

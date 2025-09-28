@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
-import ProtectedRoute from "./routers/ProtectedRouted";
+// import ProtectedRoute from "./routers/ProtectedRouted";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import { useLoadingStore } from "./config/zustand";
