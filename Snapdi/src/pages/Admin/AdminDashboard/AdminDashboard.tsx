@@ -1,8 +1,7 @@
-import { Card, Tabs } from 'antd';
+import { Card } from 'antd';
 import { UserCheck, UserPlus, Users, UserX } from 'lucide-react';
 // import AnalyticsCharts from '../../../components/WebtrafficChart/WebTrafficChart';
 import UsersTable from '../../../components/AdminComponents/UsersTable';
-import VercelAnalytics from '../../../components/AdminComponents/VercelAnalytics/VercelAnalytics';
 import { users } from '../../../lib/mock-data';
 
 const AdminDashboard = () => {
@@ -38,57 +37,18 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      <Tabs
-        defaultActiveKey="1"
-        items={[
-          {
-            key: '1',
-            label: '📊 Analytics Overview',
-            children: (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 h-full">
-                  <VercelAnalytics />
-                </div>
-                <div>
-                  <Card title={
-                    <div>
-                      <span className="font-headline">Recent Sign-ups</span>
-                      <div className="text-xs text-muted-foreground">The latest users to join the platform.</div>
-                    </div>
-                  }>
-                    <UsersTable users={recentSignups} />
-                  </Card>
-                </div>
-              </div>
-            ),
-          },
-          {
-            key: '2',
-            label: '📈 Quick Stats',
-            children: (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {analyticsData.map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <Card key={index}>
-                      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <div className="text-sm font-medium">{item.label}</div>
-                        <IconComponent className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold">{item.value}</div>
-                        <p className="text-xs text-muted-foreground">
-                          {item.change} from last month
-                        </p>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            ),
-          },
-        ]}
-      />
+      <div className="grid grid-cols-1 gap-6">
+        <div>
+          <Card title={
+            <div>
+              <span className="font-headline">Recent Sign-ups</span>
+              <div className="text-xs text-muted-foreground">The latest users to join the platform.</div>
+            </div>
+          }>
+            <UsersTable users={recentSignups} />
+          </Card>
+        </div>
+      </div>
     </div >
   );
 }
