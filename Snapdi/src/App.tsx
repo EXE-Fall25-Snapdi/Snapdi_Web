@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
 // import ProtectedRoute from "./routers/ProtectedRouted";
@@ -99,6 +100,7 @@ const App: React.FC = () => {
       )}
       <RouterProvider router={router} />
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 };
