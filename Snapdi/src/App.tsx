@@ -5,6 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
 // import ProtectedRoute from "./routers/ProtectedRouted";
@@ -97,6 +98,7 @@ const App: React.FC = () => {
         </div>
       )}
       <RouterProvider router={router} />
+      <Analytics />
     </div>
   );
 };
