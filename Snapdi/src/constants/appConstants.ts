@@ -1,9 +1,6 @@
 export const APP_CONSTANTS = {
     roleNames: {
       A001: "Admin",
-      A002: "Finance",
-      A003: "Approval",
-      A004: "User",
     },
     pageTitles: {
       "/admin/dashboard": "Dashboard",

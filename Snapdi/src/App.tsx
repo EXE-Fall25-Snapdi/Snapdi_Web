@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
 // import ProtectedRoute from "./routers/ProtectedRouted";
@@ -89,7 +91,6 @@ const router = createBrowserRouter([
 ]);
 const App: React.FC = () => {
   const loading = useLoadingStore((state) => state.loading);
-
   useToastStorage();
   return (
     <div className="w-full">
@@ -99,6 +100,18 @@ const App: React.FC = () => {
         </div>
       )}
       <RouterProvider router={router} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Analytics />
       <SpeedInsights />
     </div>

@@ -40,10 +40,12 @@ const BlogFeaturedCard: React.FC<BlogFeaturedCardProps> = ({
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col justify-between p-4 text-white">
           <div className="flex justify-between items-start">
-            <h2 className="text-2xl md:text-3xl font-bold">{title}</h2>
             <span className="text-sm bg-black/50 px-2 py-1 rounded">{date}</span>
           </div>
-          <p className="text-sm md:text-base">{shortDesc}</p>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold">{title}</h2>
+            <p className="text-sm md:text-base">{shortDesc}</p>
+          </div>
         </div>
       </div>
     </div>

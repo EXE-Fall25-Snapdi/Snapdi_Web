@@ -2,12 +2,23 @@ import axios, { type InternalAxiosRequestConfig } from "axios";
 import { useLoadingStore } from "./zustand"; // Adjust path
 import { toast } from "react-toastify";
 
+// Log current configuration for debugging
+console.log('🔧 Axios Configuration:', {
+  environment: import.meta.env.VITE_APP_ENV || 'development',
+  baseURL: import.meta.env.VITE_APP_ENV === 'production'
+    ? import.meta.env.VITE_API_BASE_URL
+    : "/",
+  mode: import.meta.env.MODE
+});
+
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   showLoading?: boolean; // Allow requests to override loading behavior
 }
 
 const axiosInstance = axios.create({
-  baseURL: "https://management-claim-request.vercel.app/api/",
+  baseURL: import.meta.env.VITE_APP_ENV === 'production'
+    ? import.meta.env.VITE_API_BASE_URL
+    : "/", // Use proxy for development
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
