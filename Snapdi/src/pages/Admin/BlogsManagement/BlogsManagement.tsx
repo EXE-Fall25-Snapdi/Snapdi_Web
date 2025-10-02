@@ -94,6 +94,7 @@ const BlogsManagement = () => {
       // For HTTP 204 No Content, result might be null/undefined or have undefined properties
       // If no error was thrown, consider it successful
       toast.success('Blog deleted successfully');
+      
       console.log('Delete successful, refreshing posts...');
       fetchPosts(); // Refresh the list
 

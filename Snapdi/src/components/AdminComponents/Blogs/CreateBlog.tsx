@@ -16,6 +16,7 @@ interface CreateBlogProps {
 }
 
 const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
+
   const [form] = Form.useForm();
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
@@ -24,6 +25,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('names');
   const [selectedKeywordIds, setSelectedKeywordIds] = useState<number[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [submitType, setSubmitType] = useState<'draft' | 'published'>('published');
   const { loading } = useLoadingStore();
 
   React.useEffect(() => {
@@ -31,10 +33,8 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     const fetchKeywords = async () => {
       try {
         const response = await getAllKeywords();
-        console.log('Fetched keywords:', response);
         if (response && Array.isArray(response)) {
           setKeywords(response);
-          console.log('Keywords set:', response);
         } else {
           console.error('Failed to fetch keywords or invalid response format:', response);
         }
@@ -107,34 +107,57 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     }
 
     try {
-      const blogData = {
+      // Debug: Check all form values and submit type
+      console.log('All form values received:', values);
+      console.log('Submit Type (from state):', submitType);
+
+      // Determine isActive based on submitType (not form values)
+      const isDraft = submitType === 'draft';
+      const isActive = !isDraft; // Published = true, Draft = false
+
+      console.log('isDraft calculation:', isDraft);
+      console.log('Blog status (submit type):', submitType);
+      console.log('Is Active (final):', isActive); const blogData = {
         title: values.title,
         thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl : '', // TODO: Handle uploaded file URL
         content: content,
-        authorId: 2, // TODO: Get actual authorId from user context/auth
+        authorId: 1, // TODO: Get actual authorId from user context/auth
         keywordNames: keywordMethod === 'names' ? tags : [],
         keywordIds: keywordMethod === 'ids' ? selectedKeywordIds : [],
+        isActive: isActive
       };
 
-      console.log('Sending blog data to API:', blogData);
       const response = await createBlog(blogData);
-      console.log('API Response:', response);
+      const blogId = (response as any)?.blogId || (response?.data as any)?.blogId;
 
-      // Check if blog was created successfully
-      if (response && response.data && (response.data as any).blogId) {
-        toast.success('Blog created successfully!');
+
+      if (blogId) {
+        // Show different success message based on submit type
+        const successMessage = isDraft ? 'Blog saved as draft successfully!' : 'Blog published successfully!';
+        toast.success(successMessage);
+
+        console.log('Blog creation successful! BlogId:', blogId);
+
+        // Reset form and state
         form.resetFields();
         setContent('');
         setTags([]);
         setThumbnailMethod('upload');
         setKeywordMethod('names');
         setSelectedKeywordIds([]);
+        setSubmitType('published'); // Reset to default
 
         console.log('Form reset complete, calling onCreated callback...');
+
         // Call onCreated callback if provided
         if (onCreated) {
+          console.log('Calling onCreated callback...');
           onCreated();
+        } else {
+          console.log('No onCreated callback provided');
         }
+      } else {
+        toast.error('Blog creation failed: No blog ID in response');
       }
     } catch (error) {
       toast.error('Failed to create blog: ' + (error || 'Unknown error'));
@@ -160,26 +183,13 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       }
     },
   };
-
-  // // Preview function
-  // const handlePreview = () => {
-  //   const values = form.getFieldsValue();
-  //   const previewData = {
-  //     ...values,
-  //     content,
-  //     tags,
-  //   };
-  //   console.log('Preview Data:', previewData);
-  //   message.info('Opening preview... (Feature to be implemented)');
-  // };
-
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={{
-        isActive: false,
+        status: 'published', // Default to published
       }}
     >
       {/* Title */}
@@ -348,6 +358,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
             setThumbnailMethod('upload');
             setKeywordMethod('names');
             setSelectedKeywordIds([]);
+            setSubmitType('published');
           }}>
             Reset
           </Button>
@@ -357,7 +368,9 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
             icon={<SaveOutlined />}
             loading={loading}
             onClick={() => {
-              form.setFieldsValue({ status: 'draft' });
+              console.log('Save as Draft button clicked');
+              setSubmitType('draft');
+              console.log('Set submit type to draft');
               form.submit();
             }}
           >
@@ -369,7 +382,9 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
             icon={<SendOutlined />}
             loading={loading}
             onClick={() => {
-              form.setFieldsValue({ status: 'published' });
+              console.log('Publish button clicked');
+              setSubmitType('published');
+              console.log('Set submit type to published');
               form.submit();
             }}
           >

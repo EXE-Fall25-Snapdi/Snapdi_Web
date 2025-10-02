@@ -7,10 +7,9 @@ export const getBlogWithPaging = async (pageNumber: number, pageSize: number) =>
   const response = await get<PaginatedResponse<Blog>>(API_CONSTANTS.BLOGS.GET_PAGED, { pageNumber, pageSize });
   return response;
 };
-export const getActiveBlogWithPaging = async (page: number, pageSize: number): Promise<ResponseModel<Blog[]>> => {
-  // Simulate an API call with mock data
+export const getActiveBlogWithPaging = async (pageNumber: number, pageSize: number): Promise<ResponseModel<PaginatedResponse<Blog>>> => {
   console.log("Fetching active blogs with paging:", API_CONSTANTS.BLOGS.GET_ACTIVE_PAGED);
-  const response = await get<Blog[]>(API_CONSTANTS.BLOGS.GET_ACTIVE_PAGED, { page, pageSize });
+  const response = await get<PaginatedResponse<Blog>>(API_CONSTANTS.BLOGS.GET_ACTIVE_PAGED, { pageNumber, pageSize });
   return response;
 };
 

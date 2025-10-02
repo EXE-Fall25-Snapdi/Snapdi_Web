@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Select, Switch, Button, Space, Radio, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Select, Switch, Button, Space, Radio, Upload, message, Tag } from 'antd';
+import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import type { Blog, Keyword } from '../../../lib/types';
@@ -27,39 +27,125 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
   const [content, setContent] = useState('');
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [thumbnailMethod, setThumbnailMethod] = useState<'url' | 'upload'>('url');
+  const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('ids');
+  const [tags, setTags] = useState<string[]>([]);
+  const [inputTag, setInputTag] = useState('');
   const { loading } = useLoadingStore();
 
   // Fetch keywords when modal opens
   useEffect(() => {
     if (visible) {
+      console.log('Modal opened, fetching keywords...');
       fetchKeywords();
     }
   }, [visible]);
 
-  // Populate form when blog changes
+  // Populate form when blog changes AND keywords are loaded
   useEffect(() => {
-    if (blog && visible) {
+    if (blog && visible && keywords.length > 0) {
+      console.log('Populating form with blog:', blog);
+      console.log('Available keywords:', keywords);
+      console.log('Blog keywords:', blog.keywords);
+
+      const selectedKeywordIds = blog.keywords?.map(k => k.keywordId) || [];
+      console.log('Selected keyword IDs:', selectedKeywordIds);
+
       form.setFieldsValue({
         title: blog.title,
         thumbnailUrl: blog.thumbnailUrl,
-        keywordIds: blog.keywords?.map(k => k.keywordId),
+        keywordIds: selectedKeywordIds,
         isActive: blog.isActive,
       });
       setContent(blog.content);
       setThumbnailMethod('url'); // Default to URL method
+      setKeywordMethod('ids'); // Default to existing keywords
+
+      // Set tags from existing keywords for display
+      if (blog.keywords && blog.keywords.length > 0) {
+        setTags(blog.keywords.map(k => k.keyword));
+      } else {
+        setTags([]);
+      }
+    }
+  }, [blog, visible, form, keywords]);
+
+  // Separate useEffect for cases when blog is available but keywords not loaded yet
+  useEffect(() => {
+    if (blog && visible && keywords.length === 0) {
+      console.log('Blog available but keywords not loaded yet, showing blog info...');
+      // Still populate basic fields even without keywords
+      form.setFieldsValue({
+        title: blog.title,
+        thumbnailUrl: blog.thumbnailUrl,
+        isActive: blog.isActive,
+      });
+      setContent(blog.content);
+      setThumbnailMethod('url');
+      setKeywordMethod('ids');
+
+      // Set tags from blog keywords for display
+      if (blog.keywords && blog.keywords.length > 0) {
+        setTags(blog.keywords.map(k => k.keyword));
+      } else {
+        setTags([]);
+      }
     }
   }, [blog, visible, form]);
 
   const fetchKeywords = async () => {
     try {
+      console.log('Fetching all keywords...');
       const response = await getAllKeywords();
-      if (response.data) {
-        setKeywords(response.data);
+      console.log('Raw response:', response);
+
+      // Handle different response structures
+      let keywordsData: Keyword[] = [];
+
+      // Case 1: ResponseModel<Keyword[]> - response.data contains keywords array
+      if (response.data && Array.isArray(response.data)) {
+        keywordsData = response.data;
+        console.log('Using response.data structure');
+      }
+      // Case 2: Direct Keyword[] - response is directly the keywords array  
+      else if (Array.isArray(response)) {
+        keywordsData = response;
+        console.log('Using direct array structure');
+      }
+      // Case 3: Other wrapper structure
+      else if (response && typeof response === 'object') {
+        console.log('Response keys:', Object.keys(response));
+        console.log('Checking for keywords in response object...');
+        keywordsData = response.data || response || [];
+      }
+
+      console.log('Final keywords data:', keywordsData);
+      console.log('Keywords count:', keywordsData.length);
+
+      if (keywordsData.length > 0) {
+        setKeywords(keywordsData);
+        console.log('Keywords set successfully');
+      } else {
+        console.log('No keywords found in response');
+        setKeywords([]);
       }
     } catch (error) {
       console.error('Error fetching keywords:', error);
       message.error('Failed to load keywords');
+      setKeywords([]);
     }
+  };
+
+  // Handle tag addition
+  const handleAddTag = () => {
+    if (inputTag && !tags.includes(inputTag)) {
+      setTags([...tags, inputTag]);
+      setInputTag('');
+    }
+  };
+
+  // Handle tag removal
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   const handleSubmit = async (values: any) => {
@@ -70,17 +156,24 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
         title: values.title,
         content: content,
         thumbnailUrl: values.thumbnailUrl,
-        keywordIds: values.keywordIds || [],
+        keywordNames: keywordMethod === 'names' ? tags : [],
+        keywordIds: keywordMethod === 'ids' ? (values.keywordIds || []) : [],
         isActive: values.isActive,
       };
 
       console.log('Updating blog:', blogData);
+      console.log('Keyword method:', keywordMethod);
+      console.log('Tags (for names):', tags);
+      console.log('Selected keyword IDs:', values.keywordIds);
 
       await updateBlog(blog.blogId, blogData);
 
       message.success('Blog updated successfully!');
       form.resetFields();
       setContent('');
+      setTags([]);
+      setInputTag('');
+      setKeywordMethod('ids');
       onSuccess();
       onClose();
     } catch (error) {
@@ -92,6 +185,9 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
   const handleCancel = () => {
     form.resetFields();
     setContent('');
+    setTags([]);
+    setInputTag('');
+    setKeywordMethod('ids');
     onClose();
   };
 
@@ -166,27 +262,85 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
           />
         </Form.Item>
 
-        <Form.Item
-          label="Keywords"
-          name="keywordIds"
-          rules={[{ required: true, message: 'Please select at least one keyword' }]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select keywords"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.children as unknown as string)
-                ?.toLowerCase()
-                ?.includes(input.toLowerCase())
-            }
-          >
-            {keywords.map((keyword) => (
-              <Option key={keyword.keywordId} value={keyword.keywordId}>
-                {keyword.keyword}
-              </Option>
-            ))}
-          </Select>
+        {/* Keywords / Tags */}
+        <Form.Item label="Keywords / Tags">
+          <div className="space-y-4">
+            {/* Keyword Method Selection */}
+            <Radio.Group
+              value={keywordMethod}
+              onChange={(e) => setKeywordMethod(e.target.value)}
+            >
+              <Radio.Button value="ids">
+                Select Existing Keywords
+              </Radio.Button>
+              <Radio.Button value="names">
+                <PlusOutlined /> Add New Keywords
+              </Radio.Button>
+            </Radio.Group>
+
+            {/* Existing Keywords Method */}
+            {keywordMethod === 'ids' && (
+              <Form.Item
+                name="keywordIds"
+                rules={[{ required: keywordMethod === 'ids', message: 'Please select at least one keyword' }]}
+              >
+                <Select
+                  mode="multiple"
+                  placeholder={keywords.length === 0 ? "Loading keywords..." : "Select existing keywords"}
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.children as unknown as string)
+                      ?.toLowerCase()
+                      ?.includes(input.toLowerCase())
+                  }
+                  loading={keywords.length === 0}
+                  notFoundContent={keywords.length === 0 ? "Loading..." : "No keywords found"}
+                  size="large"
+                >
+                  {keywords.map((keyword) => (
+                    <Option key={keyword.keywordId} value={keyword.keywordId}>
+                      {keyword.keyword}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+
+            {/* New Keywords Method */}
+            {keywordMethod === 'names' && (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Add keywords/tags..."
+                    value={inputTag}
+                    onChange={(e) => setInputTag(e.target.value)}
+                    onPressEnter={handleAddTag}
+                    style={{ flex: 1 }}
+                  />
+                  <Button type="dashed" onClick={handleAddTag} icon={<PlusOutlined />}>
+                    Add Tag
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, index) => (
+                    <Tag
+                      key={index}
+                      closable
+                      onClose={() => handleRemoveTag(tag)}
+                      color="blue"
+                    >
+                      {tag}
+                    </Tag>
+                  ))}
+                </div>
+                {tags.length === 0 && keywordMethod === 'names' && (
+                  <div className="text-gray-500 text-sm">
+                    Add at least one keyword/tag for your blog
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </Form.Item>
 
         <Form.Item
