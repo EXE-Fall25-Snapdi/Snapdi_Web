@@ -67,7 +67,7 @@ export const getUserById = async (userId: string, loading?: boolean): Promise<Re
     }
 
     const response = await get<UserData>(
-      API_CONSTANTS.USERS.GET_USER_BY_ID.replace("${id}", userId),
+      API_CONSTANTS.USERS.GET_USER_BY_ID(userId),
       "",
       loading
     );
@@ -102,7 +102,7 @@ export const updateUser = async (
     };
 
     const response = await put<ResponseModel<UserData>>(
-      API_CONSTANTS.USERS.UPDATE_USER.replace("${id}", userId),
+      API_CONSTANTS.USERS.UPDATE_USER(userId),
       updateData
     );
 
@@ -127,7 +127,7 @@ export const deleteUser = async (
     if (!userId) throw new Error("User ID is required");
 
     const response = await del<ResponseModel<null>>(
-      API_CONSTANTS.USERS.DELETE_USER.replace("${id}", userId)
+      API_CONSTANTS.USERS.DELETE_USER(userId)
     );
 
     if (!response.success) {
