@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Tag, Button, message } from 'antd';
 import { ArrowLeftOutlined, ShareAltOutlined, CalendarOutlined, UserOutlined, EyeOutlined } from '@ant-design/icons';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import { getBlogById } from '../../../services/blogService';
 import type { Blog } from '../../../lib/types';
 import './BlogDetail.css';

@@ -26,7 +26,7 @@ import BlogDetail from "./pages/Main/BlogDetail/BlogDetail";
 import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
 import Contact from "./pages/Main/Contact/Contact";
 import { Spin } from "antd";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from '@dr.pogodin/react-helmet';
 
 const router = createBrowserRouter([
   {
