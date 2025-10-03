@@ -46,6 +46,7 @@ const BlogItemCard: React.FC<BlogItemCardProps> = ({
       <img
         src={thumbnailUrl}
         alt={title}
+        loading="lazy"
         className="w-full h-48 object-cover sm:w-48 md:w-64 md:h-48 sm:h-auto"
       />
       <div className="flex flex-col justify-between p-4 flex-1">

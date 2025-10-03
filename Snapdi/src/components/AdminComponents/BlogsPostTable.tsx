@@ -25,7 +25,7 @@ export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: Blog
       dataIndex: 'thumbnailUrl',
       key: 'thumbnail',
       render: (url: string) => (
-        <img src={url} alt="Thumbnail" className="w-16 h-16 object-cover" />
+        <img src={url} loading="lazy" alt="Thumbnail" className="w-16 h-16 object-cover" />
       ),
     },
     {
