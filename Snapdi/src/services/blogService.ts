@@ -62,3 +62,46 @@ export const deleteBlog = async (blogId: string): Promise<ResponseModel<null>> =
   const response = await del<null>(API_CONSTANTS.BLOGS.DELETE(blogId));
   return response;
 };
+
+// Blog search interfaces
+export interface BlogSearchParams {
+  searchTerm?: string;
+  authorId?: number;
+  keywords?: string[];
+  keywordIds?: number[];
+  isActive?: boolean;
+  dateFrom?: string;
+  dateTo?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+// Blog search with GET method (query parameters)
+export const searchBlogsWithQuery = async (params: BlogSearchParams): Promise<ResponseModel<PaginatedResponse<Blog>>> => {
+  const queryParams = new URLSearchParams();
+
+  if (params.searchTerm) queryParams.append('searchTerm', params.searchTerm);
+  if (params.authorId) queryParams.append('authorId', params.authorId.toString());
+  if (params.keywords && params.keywords.length > 0) {
+    queryParams.append('keywords', params.keywords.join(','));
+  }
+  if (params.keywordIds && params.keywordIds.length > 0) {
+    queryParams.append('keywordIds', params.keywordIds.join(','));
+  }
+  if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+  if (params.dateFrom) queryParams.append('dateFrom', params.dateFrom);
+  if (params.dateTo) queryParams.append('dateTo', params.dateTo);
+  if (params.pageNumber) queryParams.append('pageNumber', params.pageNumber.toString());
+  if (params.pageSize) queryParams.append('pageSize', params.pageSize.toString());
+
+  const response = await get<PaginatedResponse<Blog>>(
+    `${API_CONSTANTS.BLOGS.SEARCH}?${queryParams.toString()}`
+  );
+  return response;
+};
+
+// Blog search with POST method (request body)
+export const searchBlogsWithBody = async (searchParams: BlogSearchParams): Promise<ResponseModel<PaginatedResponse<Blog>>> => {
+  const response = await post<PaginatedResponse<Blog>>(API_CONSTANTS.BLOGS.SEARCH, searchParams);
+  return response;
+};

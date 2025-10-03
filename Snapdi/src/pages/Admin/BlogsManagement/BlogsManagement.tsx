@@ -7,8 +7,11 @@ import CreateBlog from '../../../components/AdminComponents/Blogs/CreateBlog';
 import BlogDetailModal from '../../../components/AdminComponents/Blogs/BlogDetailModal';
 import EditBlogModal from '../../../components/AdminComponents/Blogs/EditBlogModal';
 import type { Blog } from '../../../lib/types';
-import { getBlogWithPaging, deleteBlog } from '../../../services/blogService';
+import { getBlogWithPaging, deleteBlog, searchBlogsWithBody, type BlogSearchParams } from '../../../services/blogService';
+import { getAllKeywords } from '../../../services/keywordService';
 import { toast } from 'react-toastify';
+import { BlogSearchFilterFull } from '../../../components/BlogSearchFilter';
+import type { Keyword } from '../../../lib/types';
 
 const BlogsManagement = () => {
   const [activeTab, setActiveTab] = useState('posts');
@@ -16,6 +19,29 @@ const BlogsManagement = () => {
   const [pages, setPages] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
   const [totalPosts, setTotalPosts] = React.useState(0);
+
+  // Debug logging for posts state
+  React.useEffect(() => {
+    console.log('BlogsManagement - Posts state updated:', {
+      postsCount: posts.length,
+      totalPosts,
+      isSearchMode,
+      posts
+    });
+  }, [posts, totalPosts]);
+
+  // Search and filter states
+  const [keywords, setKeywords] = React.useState<Keyword[]>([]);
+
+  // Debug logging for keywords state
+  React.useEffect(() => {
+    console.log('BlogsManagement - Keywords state updated:', {
+      keywordsCount: keywords.length,
+      keywords
+    });
+  }, [keywords]);
+  const [currentSearchParams, setCurrentSearchParams] = React.useState<BlogSearchParams | null>(null);
+  const [isSearchMode, setIsSearchMode] = React.useState(false);
 
   // Modal states
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
@@ -33,6 +59,8 @@ const BlogsManagement = () => {
       console.log("Response keys:", Object.keys(paginatedData || {}));
 
       // paginatedData đã là object pagination trực tiếp
+      console.log('Setting posts from fetchPosts:', paginatedData?.data || []);
+      console.log('Setting total from fetchPosts:', paginatedData?.totalRecords || 0);
       setPosts(paginatedData?.data || []); // Extract the blog posts array
       setTotalPosts(paginatedData?.totalRecords || 0);
 
@@ -51,14 +79,149 @@ const BlogsManagement = () => {
     }
   }, [pages, pageSize]);
 
+  // Fetch keywords for filter
+  const fetchKeywords = useCallback(async () => {
+    try {
+      console.log('BlogsManagement - Fetching keywords...');
+      const response = await getAllKeywords();
+      console.log('BlogsManagement - Keywords API response:', response);
+      console.log('BlogsManagement - Response type:', typeof response);
+      console.log('BlogsManagement - Response keys:', Object.keys(response || {}));
+
+      // Handle different response structures
+      let keywordsData: Keyword[] = [];
+
+      if (response && (response as any).data && (response as any).data.data && Array.isArray((response as any).data.data)) {
+        // ResponseModel<ResponseModel<Keyword[]>> structure
+        keywordsData = (response as any).data.data;
+        console.log("BlogsManagement - Keywords - Using nested ResponseModel structure");
+      } else if (response && response.data && Array.isArray(response.data)) {
+        // ResponseModel<Keyword[]> structure
+        keywordsData = response.data;
+        console.log("BlogsManagement - Keywords - Using ResponseModel structure");
+      } else if (response && Array.isArray((response as any).data)) {
+        // Direct response with data array
+        keywordsData = (response as any).data;
+        console.log("BlogsManagement - Keywords - Using direct data array");
+      } else if (response && Array.isArray(response)) {
+        // Direct array response
+        keywordsData = response as Keyword[];
+        console.log("BlogsManagement - Keywords - Using direct response array");
+      }
+
+      console.log("BlogsManagement - Final keywords data:", keywordsData);
+      console.log("BlogsManagement - Keywords count:", keywordsData.length);
+      setKeywords(keywordsData);
+    } catch (error) {
+      console.error("BlogsManagement - Error fetching keywords:", error);
+      setKeywords([]);
+    }
+  }, []);
+
+  // Search blogs function
+  const searchBlogs = useCallback(async (searchParams: BlogSearchParams) => {
+    try {
+      console.log('Searching blogs with params:', searchParams);
+
+      const response = await searchBlogsWithBody({
+        ...searchParams,
+        pageNumber: pages,
+        pageSize: pageSize
+      });
+
+      console.log('Search API response:', response);
+      console.log('Response type:', typeof response);
+      console.log('Response keys:', Object.keys(response || {}));
+
+      // Handle different response structures
+      let paginatedData: any = null;
+
+      if (response && response.data && response.data.data) {
+        // ResponseModel<PaginatedResponse<Blog>> structure
+        paginatedData = response.data;
+        console.log("Search - Using ResponseModel structure");
+      } else if (response && response.data && Array.isArray(response.data)) {
+        // ResponseModel<Blog[]> structure  
+        paginatedData = response;
+        console.log("Search - Using direct ResponseModel structure");
+      } else if (response && Array.isArray((response as any).data)) {
+        // Direct response with data array
+        paginatedData = response;
+        console.log("Search - Using direct data response");
+      } else if (response && Array.isArray(response)) {
+        // Direct array response
+        paginatedData = {
+          data: response,
+          totalRecords: (response as any[]).length
+        };
+        console.log("Search - Using direct array response");
+      }
+
+      if (paginatedData && paginatedData.data) {
+        console.log('Setting posts:', paginatedData.data);
+        console.log('Setting total:', paginatedData.totalRecords);
+        setPosts(paginatedData.data || []);
+        setTotalPosts(paginatedData.totalRecords || 0);
+      } else {
+        console.log('No data found in response');
+        setPosts([]);
+        setTotalPosts(0);
+      }
+    } catch (error) {
+      console.error("Error searching blogs:", error);
+      setPosts([]);
+      setTotalPosts(0);
+    }
+  }, [pages, pageSize]);
+
   React.useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    console.log('BlogsManagement - useEffect triggered:', {
+      isSearchMode,
+      hasSearchParams: !!currentSearchParams,
+      pages,
+      pageSize
+    });
+
+    if (isSearchMode && currentSearchParams) {
+      console.log('BlogsManagement - Calling searchBlogs');
+      searchBlogs(currentSearchParams);
+    } else {
+      console.log('BlogsManagement - Calling fetchPosts');
+      fetchPosts();
+    }
+  }, [fetchPosts, searchBlogs, isSearchMode, currentSearchParams, pages]);
+
+  // Fetch keywords on component mount
+  React.useEffect(() => {
+    fetchKeywords();
+  }, [fetchKeywords]);
+
+  // Handle search
+  const handleSearch = (searchParams: BlogSearchParams) => {
+    console.log('BlogsManagement - handleSearch called with params:', searchParams);
+    setCurrentSearchParams(searchParams);
+    setIsSearchMode(true);
+    setPages(1); // Reset to first page
+    console.log('BlogsManagement - Search mode activated');
+  };
+
+  // Handle clear search
+  const handleClearSearch = () => {
+    console.log('BlogsManagement - handleClearSearch called');
+    setCurrentSearchParams(null);
+    setIsSearchMode(false);
+    setPages(1); // Reset to first page
+    console.log('BlogsManagement - Search mode deactivated');
+  };
 
   // Handle blog creation success
   const handleBlogCreated = () => {
     // Refresh posts list
-    fetchPosts();
+    if (isSearchMode && currentSearchParams) {
+      searchBlogs(currentSearchParams);
+    } else {
+      fetchPosts();
+    }
     // Switch to posts tab to see the new blog
     setActiveTab('posts');
   };
@@ -94,7 +257,7 @@ const BlogsManagement = () => {
       // For HTTP 204 No Content, result might be null/undefined or have undefined properties
       // If no error was thrown, consider it successful
       toast.success('Blog deleted successfully');
-      
+
       console.log('Delete successful, refreshing posts...');
       fetchPosts(); // Refresh the list
 
@@ -148,6 +311,35 @@ const BlogsManagement = () => {
             </div>
           }
         >
+          {/* Search and Filter Section */}
+          <BlogSearchFilterFull
+            onSearch={handleSearch}
+            onClear={handleClearSearch}
+            keywords={keywords}
+          />
+
+          {/* Results Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <h3 className="text-lg font-medium">
+                {isSearchMode ? 'Search Results' : 'All Blog Posts'}
+              </h3>
+              {isSearchMode && (
+                <div className="text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-full">
+                  {totalPosts} {totalPosts === 1 ? 'result' : 'results'} found
+                </div>
+              )}
+            </div>
+            {isSearchMode && (
+              <button
+                onClick={handleClearSearch}
+                className="text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
+
           <BlogPostsTable
             posts={posts}
             onView={handleViewBlog}
@@ -171,7 +363,7 @@ const BlogsManagement = () => {
               }}
               showQuickJumper
               showTotal={(total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`
+                `${range[0]}-${range[1]} of ${total} ${isSearchMode ? 'results' : 'items'}`
               }
             />
           </div>

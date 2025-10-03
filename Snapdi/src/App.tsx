@@ -104,7 +104,7 @@ const App: React.FC = () => {
       <div className="w-full">
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
-            <Spin size="small" tip="Đang tải..." />
+            <Spin size="default" />
           </div>
         )}
         <RouterProvider router={router} />

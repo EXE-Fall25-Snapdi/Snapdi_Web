@@ -1,4 +1,3 @@
-import React from "react";
 
 const AboutUs = () => {
   return (
@@ -17,7 +16,7 @@ const AboutUs = () => {
       </div>
 
       {/* Nội dung */}
-      <div className="px-6 py-12 md:px-16 lg:px-24">
+      <div className="px-6 py-12 md:px-16 lg:px-24 max-w-[1200px] mx-auto">
         {/* Tầm nhìn */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-indigo-600 mb-4">

@@ -27,6 +27,7 @@ export const API_CONSTANTS = {
     GET_PAGED: "/api/Blogs/paged",
     GET_ACTIVE: "/api/Blogs/active",
     GET_ACTIVE_PAGED: "/api/Blogs/active/paged",
+    SEARCH: "/api/Blogs/search",
     GET_BY_ID: (id: string | number) => `/api/Blogs/${id}`,
     UPDATE: (id: string | number) => `/api/Blogs/${id}`,
     DELETE: (id: string | number) => `/api/Blogs/${id}`,

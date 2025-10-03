@@ -2,24 +2,26 @@ import React from "react";
 import { Pagination } from "antd";
 import BlogFeaturedCard from "../../../components/BlogFeaturedCard/BlogFeaturedCard";
 import BlogItemCard from "../../../components/BlogItemCard/BlogItemCard";
+import BlogSearchFilterSimple from "../../../components/BlogSearchFilter/BlogSearchFilterSimple";
 import Images from "../../../components/images";
-import { getActiveBlogWithPaging } from "../../../services/blogService";
+import { getActiveBlogWithPaging, searchBlogsWithBody, type BlogSearchParams } from "../../../services/blogService";
 import type { Blog } from "../../../lib/types";
+import "./BlogPage.css";
 
 const BlogPage: React.FC = () => {
   const [posts, setPosts] = React.useState<Blog[]>([]);
   const [pages, setPages] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
   const [totalPosts, setTotalPosts] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
   const [featuredBlogs, setFeaturedBlogs] = React.useState<Blog[]>([]);
-  const [featuredLoading, setFeaturedLoading] = React.useState(true);
+
+  // Search and filter states
+  const [currentSearchParams, setCurrentSearchParams] = React.useState<BlogSearchParams | null>(null);
+  const [isSearchMode, setIsSearchMode] = React.useState(false);
 
   console.log('BlogPage render - States:', {
     postsLength: posts.length,
     featuredBlogsLength: featuredBlogs.length,
-    loading,
-    featuredLoading,
     pages,
     totalPosts
   });
@@ -27,7 +29,6 @@ const BlogPage: React.FC = () => {
   // Fetch featured blogs (2 latest blogs) - only once
   const fetchFeaturedBlogs = React.useCallback(async () => {
     try {
-      setFeaturedLoading(true);
       console.log('Fetching featured blogs (2 latest)');
 
       // Fetch first page with pageSize 2 to get 2 latest blogs
@@ -54,8 +55,6 @@ const BlogPage: React.FC = () => {
     } catch (error) {
       console.error("Error fetching featured blogs:", error);
       setFeaturedBlogs([]);
-    } finally {
-      setFeaturedLoading(false);
     }
   }, []);
 
@@ -67,7 +66,6 @@ const BlogPage: React.FC = () => {
   // Fetch blogs function (excluding the 2 featured blogs)
   const fetchBlogs = React.useCallback(async () => {
     try {
-      setLoading(true);
       console.log('Fetching blogs - Page:', pages, 'PageSize:', pageSize);
 
       // Calculate skip count: skip 2 featured blogs + previous pages
@@ -116,14 +114,77 @@ const BlogPage: React.FC = () => {
       console.error("Error fetching blogs:", error);
       setPosts([]);
       setTotalPosts(0);
-    } finally {
-      setLoading(false);
+    }
+  }, [pages, pageSize]);
+
+  // Search blogs function
+  const searchBlogs = React.useCallback(async (searchParams: BlogSearchParams) => {
+    try {
+      console.log('Searching blogs with params:', searchParams);
+
+      const response = await searchBlogsWithBody({
+        ...searchParams,
+        pageNumber: pages,
+        pageSize: pageSize
+      });
+
+      // Handle different response structures
+      let paginatedData: any = null;
+
+      if (response && response.data && response.data.data) {
+        paginatedData = response.data;
+        console.log("Search - Using ResponseModel structure");
+      } else if (response && (response as any).data && Array.isArray((response as any).data)) {
+        paginatedData = response;
+        console.log("Search - Using direct PaginatedResponse structure");
+      }
+
+      if (paginatedData && paginatedData.data && Array.isArray(paginatedData.data)) {
+        setPosts(paginatedData.data);
+        setTotalPosts(paginatedData.totalRecords || 0);
+        console.log('Search results:', {
+          totalResults: paginatedData.totalRecords,
+          currentPageResults: paginatedData.data.length
+        });
+      } else {
+        console.error("Failed to search blogs:", response);
+        setPosts([]);
+        setTotalPosts(0);
+      }
+    } catch (error) {
+      console.error("Error searching blogs:", error);
+      setPosts([]);
+      setTotalPosts(0);
     }
   }, [pages, pageSize]);
 
   React.useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
+    if (isSearchMode && currentSearchParams) {
+      searchBlogs(currentSearchParams);
+    } else {
+      fetchBlogs();
+    }
+  }, [fetchBlogs, searchBlogs, isSearchMode, currentSearchParams]);
+
+  // Handle search
+  const handleSearch = (searchParams: BlogSearchParams) => {
+    console.log('Search initiated with params:', searchParams);
+    setCurrentSearchParams(searchParams);
+    setIsSearchMode(true);
+    setPages(1); // Reset to first page for new search
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle clear search
+  const handleClearSearch = () => {
+    console.log('Clearing search');
+    setCurrentSearchParams(null);
+    setIsSearchMode(false);
+    setPages(1); // Reset to first page
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Handle pagination change
   const handlePageChange = (page: number, size?: number) => {
@@ -138,42 +199,16 @@ const BlogPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Loading state - only show when both featured and posts are loading initially
-  if (loading && featuredLoading && pages === 1) {
-    return (
-      <div className="px-4 md:px-6 py-10 lg:w-10/12 w-full mx-auto">
-        <div className="flex justify-center items-center h-64">
-          <div className="text-xl text-gray-600">Loading blogs...</div>
-        </div>
-      </div>
-    );
-  }
 
-  // Empty state
-  if (!loading && posts.length === 0) {
-    return (
-      <div className="px-4 md:px-6 py-10 lg:w-10/12 w-full mx-auto">
-        <div className="flex justify-center items-center h-64">
-          <div className="text-xl text-gray-600">No blogs found.</div>
-        </div>
-      </div>
-    );
-  }
-
+  // Empty state - but we still show the page layout
+  const isEmpty = posts.length === 0;
   return (
     <div className="px-4 md:px-6 py-10 lg:w-10/12 w-full mx-auto">
       {/* Featured section */}
       <h1 className="text-4xl font-bold mb-10 text-center block md:hidden">Latest Blogs</h1>
       <div className="mb-10">
         {/* Featured Large */}
-        {featuredLoading ? (
-          <div className="text-center py-20 text-gray-500">
-            <div className="animate-pulse">
-              <div className="bg-gray-300 h-64 md:h-96 rounded-xl mb-4"></div>
-              <div className="bg-gray-300 h-6 w-3/4 mx-auto rounded"></div>
-            </div>
-          </div>
-        ) : featuredBlogs[0] ? (
+        {featuredBlogs[0] ? (
           <BlogFeaturedCard
             blogId={featuredBlogs[0].blogId}
             thumbnailUrl={featuredBlogs[0].thumbnailUrl}
@@ -193,14 +228,7 @@ const BlogPage: React.FC = () => {
       <div className="relative mb-6">
         {/* Featured blog (small) - mobile: show above mascot */}
         <div className="md:hidden mb-4">
-          {featuredLoading ? (
-            <div className="text-center py-8 text-gray-500">
-              <div className="animate-pulse">
-                <div className="bg-gray-300 h-48 rounded-xl mb-4"></div>
-                <div className="bg-gray-300 h-4 w-2/3 mx-auto rounded"></div>
-              </div>
-            </div>
-          ) : featuredBlogs[1] ? (
+          {featuredBlogs[1] ? (
             <BlogFeaturedCard
               blogId={featuredBlogs[1].blogId}
               thumbnailUrl={featuredBlogs[1].thumbnailUrl}
@@ -229,14 +257,7 @@ const BlogPage: React.FC = () => {
 
           {/* Featured blog (small) - desktop */}
           <div>
-            {featuredLoading ? (
-              <div className="text-center py-8 text-gray-500">
-                <div className="animate-pulse">
-                  <div className="bg-gray-300 h-48 rounded-xl mb-4"></div>
-                  <div className="bg-gray-300 h-4 w-2/3 mx-auto rounded"></div>
-                </div>
-              </div>
-            ) : featuredBlogs[1] ? (
+            {featuredBlogs[1] ? (
               <BlogFeaturedCard
                 blogId={featuredBlogs[1].blogId}
                 thumbnailUrl={featuredBlogs[1].thumbnailUrl}
@@ -262,29 +283,28 @@ const BlogPage: React.FC = () => {
           />
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 ml-20 md:ml-0 md:text-center">Blogs List</h1>
+
+      {/* Search and Filter Section */}
+      <BlogSearchFilterSimple
+        onSearch={handleSearch}
+        onClear={handleClearSearch}
+      />
+
+      {/* Blogs List Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold ml-20 md:ml-0 md:text-left">
+          {isSearchMode ? 'Search Results' : 'Blogs List'}
+        </h1>
+        {isSearchMode && (
+          <div className="text-sm text-gray-600">
+            {totalPosts} {totalPosts === 1 ? 'result' : 'results'} found
+          </div>
+        )}
+      </div>
 
       {/* Blog List */}
       <div className="flex flex-col gap-4 pt-10">
-        {loading ? (
-          // Loading skeleton for blog list
-          <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="animate-pulse flex items-center gap-4 w-full">
-                <div className="hidden md:flex items-center min-w-[60px]">
-                  <div className="bg-gray-300 h-20 w-12 rounded"></div>
-                </div>
-                <div className="flex-1 flex items-center bg-gray-100 rounded-lg p-4">
-                  <div className="bg-gray-300 w-32 h-32 lg:w-52 lg:h-52 rounded-lg mr-4"></div>
-                  <div className="flex-1">
-                    <div className="bg-gray-300 h-6 w-3/4 mb-2 rounded"></div>
-                    <div className="bg-gray-300 h-4 w-1/2 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : posts.length > 0 ? (
+        {posts.length > 0 ? (
           posts.map((b) => (
             <BlogItemCard
               key={b.blogId}
@@ -295,28 +315,47 @@ const BlogPage: React.FC = () => {
               date={b.createAt ? new Date(b.createAt).toDateString() : 'Unknown date'}
             />
           ))
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            No active blogs found for this page.
+        ) : isEmpty ? (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">🔍</div>
+            <div className="text-xl text-gray-600 mb-2">
+              {isSearchMode ? 'No results found' : 'No blogs available'}
+            </div>
+            <div className="text-gray-500">
+              {isSearchMode
+                ? 'Try adjusting your search filters or keywords'
+                : 'Check back later for new blog posts'
+              }
+            </div>
+            {isSearchMode && (
+              <button
+                onClick={handleClearSearch}
+                className="mt-4 empty-state-clear-button"
+              >
+                Clear Search
+              </button>
+            )}
           </div>
-        )}
+        ) : null}
 
         {/* Pagination */}
-        <div className="flex justify-center mt-8">
-          <Pagination
-            current={pages}
-            pageSize={pageSize}
-            total={totalPosts}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(total, range) =>
-              `Showing ${range[0]}-${range[1]} of ${total} active blogs`
-            }
-            pageSizeOptions={['5', '10', '15', '20']}
-            onChange={handlePageChange}
-            className="mt-4"
-          />
-        </div>
+        {totalPosts > 0 && (
+          <div className="flex justify-center mt-8">
+            <Pagination
+              current={pages}
+              pageSize={pageSize}
+              total={totalPosts}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(total, range) =>
+                `Showing ${range[0]}-${range[1]} of ${total} ${isSearchMode ? 'results' : 'active blogs'}`
+              }
+              pageSizeOptions={['5', '10', '15', '20']}
+              onChange={handlePageChange}
+              className="mt-4"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

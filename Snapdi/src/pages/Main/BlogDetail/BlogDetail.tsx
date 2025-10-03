@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Spin, Tag, Button, message } from 'antd';
+import { Tag, Button, message } from 'antd';
 import { ArrowLeftOutlined, ShareAltOutlined, CalendarOutlined, UserOutlined, EyeOutlined } from '@ant-design/icons';
 import { Helmet } from 'react-helmet-async';
 import { getBlogById } from '../../../services/blogService';
@@ -12,13 +12,11 @@ const BlogDetail: React.FC = () => {
   const navigate = useNavigate();
 
   const [blog, setBlog] = useState<Blog | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   console.log('BlogDetail render - State:', {
     blogId,
     hasBlog: !!blog,
-    loading,
     error,
     blogTitle: blog?.title
   });
@@ -30,13 +28,11 @@ const BlogDetail: React.FC = () => {
     } else {
       console.error('Blog ID not provided from URL params');
       setError('Blog ID not provided');
-      setLoading(false);
     }
   }, [blogId]);
 
   const fetchBlogDetail = async (id: string) => {
     try {
-      setLoading(true);
       setError(null); // Reset error state
       console.log('Fetching blog detail for ID:', id);
 
@@ -111,8 +107,6 @@ const BlogDetail: React.FC = () => {
         error
       });
       setError('Failed to load blog. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -137,18 +131,6 @@ const BlogDetail: React.FC = () => {
     navigate('/blog');
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="blog-loading-container">
-        <div className="loading-content">
-          <Spin size="large" />
-          <h2 className="loading-title">Loading blog content...</h2>
-          <p className="loading-subtitle">Please wait while we fetch the article for you.</p>
-        </div>
-      </div>
-    );
-  }
 
   // Error state
   if (error || !blog) {
