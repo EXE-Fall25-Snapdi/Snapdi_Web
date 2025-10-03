@@ -1,20 +1,23 @@
 "use client";
 
-import type { Post } from "../../lib/types";
+import type { Blog } from "../../lib/types";
 import { Table, Tag, Button, Space } from "antd";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 
 type BlogPostsTableProps = {
-  posts: Post[];
+  posts: Blog[];
+  onView?: (blog: Blog) => void;
+  onEdit?: (blog: Blog) => void;
+  onDelete?: (blog: Blog) => void;
 };
 
-export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
+export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: BlogPostsTableProps) {
 
   const postColumns = [
     {
       title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'blogId',
+      key: 'blogId',
       width: 80,
     },
     {
@@ -22,58 +25,68 @@ export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
       dataIndex: 'thumbnailUrl',
       key: 'thumbnail',
       render: (url: string) => (
-        <img src={url} alt="Thumbnail" className="w-16 h-16 object-cover" />
+        <img src={url} loading="lazy" alt="Thumbnail" className="w-16 h-16 object-cover" />
       ),
     },
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string, record: Post) => (
-        <a href={`/posts/${record.id}/${text}`} className="font-medium text-blue-600 hover:underline cursor-pointer">
+      render: (text: string, record: Blog) => (
+        <a href={`/posts/${record.blogId}/${text}`} className="font-medium text-blue-600 hover:underline cursor-pointer">
           {text}
         </a>
       ),
     },
     {
       title: 'Author',
-      dataIndex: 'author',
-      key: 'author',
+      dataIndex: 'authorName',
+      key: 'authorName',
     },
     {
       title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'createAt',
+      key: 'createAt',
+      render: (date: Date) => new Date(date).toLocaleDateString(),
     },
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => {
-        let color = 'default';
-        if (status === 'Published') color = 'green';
-        if (status === 'Draft') color = 'orange';
-        if (status === 'Scheduled') color = 'blue';
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: (isActive: boolean) => {
+        const status = isActive ? 'Published' : 'Draft';
+        const color = isActive ? 'green' : 'orange';
 
         return <Tag color={color}>{status}</Tag>;
       },
     },
     {
-      title: 'Comments',
-      dataIndex: 'comments',
-      key: 'comments',
-      render: (count: number) => (
-        <span className="text-gray-600">{count} comments</span>
-      ),
-    },
-    {
       title: 'Actions',
       key: 'actions',
-      render: (_: any) => (
+      render: (_: any, record: Blog) => (
         <Space size="small">
-          <Button type="text" icon={<EyeOutlined />} size="small" />
-          <Button type="text" icon={<EditOutlined />} size="small" />
-          <Button type="text" danger icon={<DeleteOutlined />} size="small" />
+          <Button
+            type="text"
+            icon={<EyeOutlined />}
+            size="small"
+            onClick={() => onView?.(record)}
+            title="View Details"
+          />
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => onEdit?.(record)}
+            title="Edit Blog"
+          />
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined />}
+            size="small"
+            onClick={() => onDelete?.(record)}
+            title="Delete Blog"
+          />
         </Space>
       ),
     },
@@ -82,14 +95,8 @@ export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
     <Table
       columns={postColumns}
       dataSource={posts}
-      rowKey="id"
-      pagination={{
-        pageSize: 10,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: (total, range) =>
-          `${range[0]}-${range[1]} of ${total} posts`,
-      }}
+      rowKey="blogId"
+      pagination={false}
     />
   );
 }

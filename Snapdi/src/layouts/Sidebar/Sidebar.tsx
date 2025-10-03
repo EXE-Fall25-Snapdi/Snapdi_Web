@@ -76,12 +76,12 @@ const Sidebar: React.FC = () => {
                 className={({ isActive }) =>
                   `w-full flex items-center gap-4 px-3 py-2 rounded-l-2xl transition-all duration-300
                 ${isActive
-                    ? "bg-brand-orange-light text-white"
-                    : "text-gray-700! hover:bg-brand-orange-light-1 hover:text-gray-800"
+                    ? "text-blue-700!"
+                    : "text-white! hover:text-gray-800"
                   }
                 ${hoveredIndex !== null && hoveredIndex !== index
-                    ? "opacity-50"
-                    : "opacity-100"
+                    ? "opacity-50 scale-100"
+                    : "opacity-100 scale-105"
                   }`
                 }
                 onMouseEnter={() => setHoveredIndex(index)}
@@ -100,7 +100,7 @@ const Sidebar: React.FC = () => {
               e.preventDefault();
               setShowConfirm(true);
             }}
-            className="flex items-center gap-4 px-3 py-2 rounded-l-2xl text-red-600 transition-all duration-300 hover:bg-red-100"
+            className="flex items-center gap-4 px-2 text-red-600! hover:text-white! hover:scale-105"
           >
             <Icons.LogOut className="w-6 h-6" />
             <span className="text-sm">Log out</span>
@@ -124,7 +124,7 @@ const Sidebar: React.FC = () => {
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-md bg-brand-gradient text-white hover:scale-120 transition cursor-pointer"
+                className="px-4 py-2 rounded-md bg-brand-gradient text-white bg-red-600! hover:scale-120 transition cursor-pointer"
               >
                 Confirm Logout
               </button>

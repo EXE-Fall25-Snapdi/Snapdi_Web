@@ -1,9 +1,6 @@
 #root {
   margin: 0 auto;
   border: none;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
 }
 
 .main-content {

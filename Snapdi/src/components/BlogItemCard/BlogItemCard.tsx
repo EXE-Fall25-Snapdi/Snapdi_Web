@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface BlogItemCardProps {
+  blogId: string;
   thumbnailUrl: string;
   title: string;
   teaser: string;
@@ -8,33 +10,50 @@ interface BlogItemCardProps {
 }
 
 const BlogItemCard: React.FC<BlogItemCardProps> = ({
+  blogId,
   thumbnailUrl,
   title,
   teaser,
   date,
 }) => {
-  // const [day, ...rest] = date.split(" ");
-  // const month = rest[0] || "";
-  console.log('BlogItemCard Props:', { thumbnailUrl, title, teaser, date });
+  const navigate = useNavigate();
+
+  // Parse and format date
+  const postDate = new Date(date);
+  const day = postDate.getDate().toString().padStart(2, '0');
+  const month = postDate.getMonth() + 1;
+  const year = postDate.getFullYear();
+
+  // Month names in Vietnamese
+  const monthNames = [
+    'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+    'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+  ];
+
+  const monthName = monthNames[month - 1];
+  const fullDate = `${day} ${monthName} ${year}`;
+
+  const handleCardClick = () => {
+    console.log('BlogItemCard clicked - navigating to:', `/blog/${blogId}`);
+    navigate(`/blog/${blogId}`);
+  };
 
   return (
-    <div className="flex items-center gap-4 w-full">
-      {/* Publish Date - ẩn trên mobile */}
-      <div className="hidden md:flex items-center min-w-[60px] whitespace-nowrap">
-        <span className="text-9xl font-bold">27/</span>
-        <span className="text-[64px] mt-8">9</span>
-      </div>
-
-      {/* Card */}
-      <div className="flex-1 flex items-center bg-gray-100 rounded-lg shadow p-4 lg:h-[220px] w-[830px]!">
-        <img
-          src={thumbnailUrl}
-          alt={title}
-          className="w-32 h-32 lg:w-52 lg:h-52 rounded-lg object-cover mr-4"
-        />
+    <div
+      className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden transition hover:shadow-lg flex flex-col sm:flex-row w-full mx-auto hover:scale-[1.02] duration-300"
+      onClick={handleCardClick}
+    >
+      <img
+        src={thumbnailUrl}
+        alt={title}
+        loading="lazy"
+        className="w-full h-48 object-cover sm:w-48 md:w-64 md:h-48 sm:h-auto"
+      />
+      <div className="flex flex-col justify-between p-4 flex-1">
         <div>
-          <p className="font-black lg:text-[40px]!">{title}</p>
-          <p className="lg:text-3xl font-thin text-gray-500">{teaser}</p>
+          <h3 className="text-lg md:text-2xl font-semibold text-gray-900 mb-2 line-clamp-2">{title}</h3>
+          <p className="text-gray-600 text-sm md:text-lg mb-4 line-clamp-3">{teaser}</p>
+          <span className="text-xs md:text-xl text-blue-800">{fullDate}</span>
         </div>
       </div>
     </div>

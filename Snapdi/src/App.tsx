@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
 // import ProtectedRoute from "./routers/ProtectedRouted";
@@ -20,8 +22,11 @@ import BlogsManagement from "./pages/Admin/BlogsManagement/BlogsManagement";
 import PhotographerApplication from "./pages/Admin/PhotographerApplication/PhotographerApplication";
 import AboutUs from "./pages/Main/AboutUs/AboutUs";
 import BlogPage from "./pages/Main/BlogPage/BlogPage";
+import BlogDetail from "./pages/Main/BlogDetail/BlogDetail";
 import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
 import Contact from "./pages/Main/Contact/Contact";
+import { Spin } from "antd";
+import { HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/blog",
         element: <BlogPage />,
+      },
+      {
+        path: "/blog/:blogId",
+        element: <BlogDetail />,
       },
       {
         path: "/contact",
@@ -89,19 +98,32 @@ const router = createBrowserRouter([
 ]);
 const App: React.FC = () => {
   const loading = useLoadingStore((state) => state.loading);
-
   useToastStorage();
   return (
-    <div className="w-full">
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="loader">Loading...</div>
-        </div>
-      )}
-      <RouterProvider router={router} />
-      <Analytics />
-      <SpeedInsights />
-    </div>
+    <HelmetProvider>
+      <div className="w-full">
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
+            <Spin size="default" />
+          </div>
+        )}
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <Analytics />
+        <SpeedInsights />
+      </div>
+    </HelmetProvider>
   );
 };
 export default App;

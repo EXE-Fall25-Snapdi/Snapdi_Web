@@ -9,25 +9,31 @@ export type User = {
   joined: string;
 };
 
-export type Post = {
-  id: string;
+export type Blog = {
+  blogId: string;
   title: string;
-  author: string;
-  date: string;
-  status: 'Published' | 'Draft' | 'Scheduled';
-  comments: number;
+  authorName: string;
+  content: string;
+  isActive: boolean;
+  createAt: Date;
+  updatedAt?: Date;
   thumbnailUrl: string;
+  keywords: Keyword[];
+};
+export type Keyword = {
+  keywordId: string;
+  keyword: string;
+  blogCount: number;
 };
 
-export type Comment = {
-  id: string;
-  author: string;
-  avatar: string;
-  imageHint: string;
-  date: string;
-  content: string;
-  postTitle: string;
-  status: 'Approved' | 'Pending' | 'Spam';
+export type PaginatedResponse<T> = {
+  data: T[];
+  totalRecords: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 };
 
 export type SupportTicket = {

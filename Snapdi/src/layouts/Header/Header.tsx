@@ -10,11 +10,11 @@ function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
-    { path: "/", label: "Home", key: "home" },
+    { path: "/", label: "Trang chủ", key: "home" },
     { path: "/snaper", label: "Snaper", key: "snaper" },
     { path: "/blog", label: "Blog", key: "blog" },
-    { path: "/about", label: "About Us", key: "about" },
-    { path: "/contact", label: "Contact", key: "contact" },
+    { path: "/about", label: "Về chúng tôi", key: "about" },
+    { path: "/contact", label: "Liên hệ", key: "contact" },
   ];
 
   return (

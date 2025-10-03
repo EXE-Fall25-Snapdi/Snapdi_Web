@@ -11,7 +11,7 @@ const MainLayout: React.FC = () => {
     <>
       <div className="app">
         <Header />
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           <Outlet />
         </div>
       </div>

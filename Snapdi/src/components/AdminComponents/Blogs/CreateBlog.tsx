@@ -1,32 +1,50 @@
 
 import React, { useState, useMemo } from 'react';
-import { Form, Input, Button, Select, Upload, message, Tag, Divider } from 'antd';
-import { UploadOutlined, PlusOutlined, SaveOutlined, SendOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Select, Upload, message, Tag, Divider, Radio } from 'antd';
+import { UploadOutlined, PlusOutlined, SaveOutlined, SendOutlined, LinkOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { createBlog } from '../../../services/blogService';
+import { getAllKeywords } from '../../../services/keywordService';
+import type { Keyword } from '../../../lib/types';
+import { useLoadingStore } from '../../../config/zustand';
+import { toast } from 'react-toastify';
 
-const { Option } = Select;
-
-interface BlogFormData {
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-  status: 'draft' | 'published' | 'scheduled';
-  thumbnailUrl?: string;
-}
 
 interface CreateBlogProps {
   onCreated?: () => void;
 }
 
 const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
+
   const [form] = Form.useForm();
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [inputTag, setInputTag] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [thumbnailMethod, setThumbnailMethod] = useState<'upload' | 'url'>('upload');
+  const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('names');
+  const [selectedKeywordIds, setSelectedKeywordIds] = useState<number[]>([]);
+  const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [submitType, setSubmitType] = useState<'draft' | 'published'>('published');
+  const { loading } = useLoadingStore();
 
+  React.useEffect(() => {
+    // Fetch existing keywords from API
+    const fetchKeywords = async () => {
+      try {
+        const response = await getAllKeywords();
+        if (response && Array.isArray(response)) {
+          setKeywords(response);
+        } else {
+          console.error('Failed to fetch keywords or invalid response format:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching keywords:', error);
+      }
+    };
+    fetchKeywords();
+  }, []);
+  // Quill editor modules and formats
   const modules = useMemo(() => ({
     toolbar: {
       container: [
@@ -76,30 +94,74 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
-    setLoading(true);
+    console.log('Form submitted with values:', values);
+    console.log('Content:', content);
+    console.log('Tags:', tags);
+    console.log('Keyword method:', keywordMethod);
+    console.log('Selected keyword IDs:', selectedKeywordIds);
+
+    // Validate content
+    if (!content || content.trim() === '' || content === '<p><br></p>') {
+      message.error('Please write your blog content!');
+      return;
+    }
+
     try {
-      const blogData: BlogFormData = {
-        ...values,
-        content,
-        tags,
+      // Debug: Check all form values and submit type
+      console.log('All form values received:', values);
+      console.log('Submit Type (from state):', submitType);
+
+      // Determine isActive based on submitType (not form values)
+      const isDraft = submitType === 'draft';
+      const isActive = !isDraft; // Published = true, Draft = false
+
+      console.log('isDraft calculation:', isDraft);
+      console.log('Blog status (submit type):', submitType);
+      console.log('Is Active (final):', isActive); const blogData = {
+        title: values.title,
+        thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl : '', // TODO: Handle uploaded file URL
+        content: content,
+        authorId: 1, // TODO: Get actual authorId from user context/auth
+        keywordNames: keywordMethod === 'names' ? tags : [],
+        keywordIds: keywordMethod === 'ids' ? selectedKeywordIds : [],
+        isActive: isActive
       };
 
-      console.log('Blog Data:', blogData);
-      message.success('Blog created successfully!');
+      const response = await createBlog(blogData);
+      const blogId = (response as any)?.blogId || (response?.data as any)?.blogId;
 
-      // Reset form
-      form.resetFields();
-      setContent('');
-      setTags([]);
 
-      // Call onCreated callback if provided
-      if (onCreated) {
-        onCreated();
+      if (blogId) {
+        // Show different success message based on submit type
+        const successMessage = isDraft ? 'Blog saved as draft successfully!' : 'Blog published successfully!';
+        toast.success(successMessage);
+
+        console.log('Blog creation successful! BlogId:', blogId);
+
+        // Reset form and state
+        form.resetFields();
+        setContent('');
+        setTags([]);
+        setThumbnailMethod('upload');
+        setKeywordMethod('names');
+        setSelectedKeywordIds([]);
+        setSubmitType('published'); // Reset to default
+
+        console.log('Form reset complete, calling onCreated callback...');
+
+        // Call onCreated callback if provided
+        if (onCreated) {
+          console.log('Calling onCreated callback...');
+          onCreated();
+        } else {
+          console.log('No onCreated callback provided');
+        }
+      } else {
+        toast.error('Blog creation failed: No blog ID in response');
       }
     } catch (error) {
-      message.error('Failed to create blog. Please try again.');
-    } finally {
-      setLoading(false);
+      toast.error('Failed to create blog: ' + (error || 'Unknown error'));
+      // Axios interceptor will handle error toast automatically
     }
   };
 
@@ -121,27 +183,13 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       }
     },
   };
-
-  // // Preview function
-  // const handlePreview = () => {
-  //   const values = form.getFieldsValue();
-  //   const previewData = {
-  //     ...values,
-  //     content,
-  //     tags,
-  //   };
-  //   console.log('Preview Data:', previewData);
-  //   message.info('Opening preview... (Feature to be implemented)');
-  // };
-
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={{
-        status: 'draft',
-        category: '',
+        status: 'published', // Default to published
       }}
     >
       {/* Title */}
@@ -161,75 +209,121 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
         />
       </Form.Item>
 
+      {/* Keywords / Tags */}
+      <Form.Item label="Keywords / Tags">
+        <div className="space-y-4">
+          {/* Keyword Method Selection */}
+          <Radio.Group
+            value={keywordMethod}
+            onChange={(e) => setKeywordMethod(e.target.value)}
+          >
+            <Radio.Button value="names">
+              <PlusOutlined /> Add New Keywords
+            </Radio.Button>
+            <Radio.Button value="ids">
+              Select Existing Keywords
+            </Radio.Button>
+          </Radio.Group>
 
-      {/* Category and Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Form.Item
-          label="Category"
-          name="category"
-          rules={[{ required: true, message: 'Please select a category!' }]}
-        >
-          <Select placeholder="Select category" size="large">
-            <Option value="photography">Photography</Option>
-            <Option value="tutorial">Tutorial</Option>
-            <Option value="review">Review</Option>
-            <Option value="news">News</Option>
-            <Option value="tips">Tips & Tricks</Option>
-            <Option value="gear">Gear Review</Option>
-          </Select>
-        </Form.Item>
+          {/* New Keywords Method */}
+          {keywordMethod === 'names' && (
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add keywords/tags..."
+                  value={inputTag}
+                  onChange={(e) => setInputTag(e.target.value)}
+                  onPressEnter={handleAddTag}
+                  style={{ flex: 1 }}
+                />
+                <Button type="dashed" onClick={handleAddTag} icon={<PlusOutlined />}>
+                  Add Tag
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag, index) => (
+                  <Tag
+                    key={index}
+                    closable
+                    onClose={() => handleRemoveTag(tag)}
+                    color="blue"
+                  >
+                    {tag}
+                  </Tag>
+                ))}
+              </div>
+            </div>
+          )}
 
-        <Form.Item
-          label="Status"
-          name="status"
-          rules={[{ required: true, message: 'Please select status!' }]}
-        >
-          <Select size="large">
-            <Option value="draft">Draft</Option>
-            <Option value="published">Published</Option>
-            <Option value="scheduled">Scheduled</Option>
-          </Select>
-        </Form.Item>
-      </div>
-
-      {/* Tags */}
-      <Form.Item label="Tags">
-        <div className="space-y-2">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add tags..."
-              value={inputTag}
-              onChange={(e) => setInputTag(e.target.value)}
-              onPressEnter={handleAddTag}
-              style={{ flex: 1 }}
-            />
-            <Button type="dashed" onClick={handleAddTag} icon={<PlusOutlined />}>
-              Add Tag
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => (
-              <Tag
-                key={index}
-                closable
-                onClose={() => handleRemoveTag(tag)}
-                color="blue"
-              >
-                {tag}
-              </Tag>
-            ))}
-          </div>
+          {/* Existing Keywords Method */}
+          {keywordMethod === 'ids' && (
+            <Select
+              mode="multiple"
+              placeholder="Select existing keywords"
+              value={selectedKeywordIds}
+              onChange={setSelectedKeywordIds}
+              style={{ width: '100%' }}
+              size="large"
+            >
+              {keywords.map((keyword) => (
+                <Select.Option key={keyword.keywordId} value={keyword.keywordId}>
+                  {keyword.keyword}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </div>
       </Form.Item>
 
       {/* Thumbnail Image */}
       <Form.Item label="Thumbnail Image">
-        <Upload {...handleImageUpload} listType="picture-card" maxCount={1}>
-          <div>
-            <UploadOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-          </div>
-        </Upload>
+        <div className="space-y-4">
+          {/* Method Selection */}
+          <Radio.Group
+            value={thumbnailMethod}
+            onChange={(e) => setThumbnailMethod(e.target.value)}
+          >
+            <Radio.Button value="upload">
+              <UploadOutlined /> Upload Image
+            </Radio.Button>
+            <Radio.Button value="url">
+              <LinkOutlined /> Image URL
+            </Radio.Button>
+          </Radio.Group>
+
+          {/* Upload Method */}
+          {thumbnailMethod === 'upload' && (
+            <Upload {...handleImageUpload} listType="picture-card" maxCount={1}>
+              <div>
+                <UploadOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          )}
+
+          {/* URL Method */}
+          {thumbnailMethod === 'url' && (
+            <Form.Item
+              name="thumbnailUrl"
+              rules={[
+                {
+                  type: 'url',
+                  message: 'Please enter a valid URL!'
+                },
+                {
+                  pattern: /\.(jpg|jpeg|png|gif|webp)$/i,
+                  message: 'URL must point to an image file (jpg, jpeg, png, gif, webp)'
+                }
+              ]}
+            >
+              <Input
+                placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                prefix={<LinkOutlined />}
+                size="large"
+              />
+            </Form.Item>
+          )}
+        </div>
       </Form.Item>
 
       <Divider />
@@ -237,7 +331,6 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       {/* Content Editor */}
       <Form.Item
         label="Content"
-        rules={[{ required: true, message: 'Please write your blog content!' }]}
       >
         <div className="border border-gray-300 rounded-lg">
           <ReactQuill
@@ -258,18 +351,28 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       {/* Action Buttons */}
       <Form.Item>
         <div className="flex justify-end gap-4 pt-4">
-          <Button size="large" onClick={() => form.resetFields()}>
+          <Button size="large" onClick={() => {
+            form.resetFields();
+            setContent('');
+            setTags([]);
+            setThumbnailMethod('upload');
+            setKeywordMethod('names');
+            setSelectedKeywordIds([]);
+            setSubmitType('published');
+          }}>
             Reset
           </Button>
           <Button
             type="default"
             size="large"
             icon={<SaveOutlined />}
+            loading={loading}
             onClick={() => {
-              form.setFieldsValue({ status: 'draft' });
+              console.log('Save as Draft button clicked');
+              setSubmitType('draft');
+              console.log('Set submit type to draft');
               form.submit();
             }}
-            loading={loading}
           >
             Save as Draft
           </Button>
@@ -277,11 +380,13 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
             type="primary"
             size="large"
             icon={<SendOutlined />}
+            loading={loading}
             onClick={() => {
-              form.setFieldsValue({ status: 'published' });
+              console.log('Publish button clicked');
+              setSubmitType('published');
+              console.log('Set submit type to published');
               form.submit();
             }}
-            loading={loading}
           >
             Publish
           </Button>
