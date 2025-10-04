@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
-    
+
     // Optimization to avoid CSP eval issues
     optimizeDeps: {
       esbuildOptions: {
