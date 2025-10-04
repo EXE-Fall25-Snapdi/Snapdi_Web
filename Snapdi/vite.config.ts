@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:7247',
+        target: 'https://localhost:7000',
         changeOrigin: true,
         secure: false, // Allow self-signed certificates
         rewrite: (path) => path.replace(/^\/api/, '/api')

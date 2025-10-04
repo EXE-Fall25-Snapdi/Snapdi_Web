@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 // import { API_CONTANTS } from '../constants/apiContants';
 
@@ -31,34 +32,82 @@ export const useLoadingStore = create<LoadingState>((set) => ({
   loading: false,
   setLoading: (loading) => set({ loading }),
 }));
+interface LoginResponse {
+  token: string;
+  refreshToken: string;
+  user: {
+    userId: number;
+    roleId: number;
+    roleName: string;
+    name: string;
+    email: string;
+    phone: string;
+    isActive: boolean;
+    isVerify: boolean;
+    createdAt: string;
+    locationAddress: string;
+    locationCity: string;
+    avatarUrl: string;
+  };
+}
+
 interface UserState {
   user: {
     token: string | null;
-    id: string;
+    refreshToken: string | null;
+    id: number;
     username: string;
     email: string;
+    phone: string;
     role_code: string;
+    roleId: number;
     avatarUrl: string;
+    isActive: boolean;
+    isVerify: boolean;
+    createdAt: string;
+    locationAddress: string;
+    locationCity: string;
   } | null;
-  setUser: (user: { id: string; email: string; role_code: string; token: string, username: string, avatarUrl: string }) => void;
+  setLoginData: (loginResponse: LoginResponse) => void;
   clearUser: () => void;
-  getToken: () => string | null; // Add this function to get the token
+  getToken: () => string | null;
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  user: JSON.parse(localStorage.getItem("user") || "null"),
-  setUser: (user) => {
-    localStorage.setItem("user", JSON.stringify(user));
-    set({ user });
-  },
-  clearUser: () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    set({ user: null });
-  },
-  getToken: () => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    return user?.token || null;
-  },
-}));
+export const useUserStore = create<UserState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      setLoginData: (loginResponse: LoginResponse) => {
+        const userData = {
+          token: loginResponse.token,
+          refreshToken: loginResponse.refreshToken,
+          id: loginResponse.user.userId,
+          username: loginResponse.user.name,
+          email: loginResponse.user.email,
+          phone: loginResponse.user.phone,
+          role_code: loginResponse.user.roleName,
+          roleId: loginResponse.user.roleId,
+          avatarUrl: loginResponse.user.avatarUrl,
+          isActive: loginResponse.user.isActive,
+          isVerify: loginResponse.user.isVerify,
+          createdAt: loginResponse.user.createdAt,
+          locationAddress: loginResponse.user.locationAddress,
+          locationCity: loginResponse.user.locationCity,
+        };
+        set({ user: userData });
+      },
+      clearUser: () => {
+        set({ user: null });
+      },
+      getToken: () => {
+        const state = get();
+        return state.user?.token || null;
+      },
+    }),
+    {
+      name: 'user-storage', // localStorage key name
+      partialize: (state) => ({ user: state.user }), // Only persist user data
+    }
+  )
+);
 

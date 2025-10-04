@@ -1,7 +1,7 @@
 import { get, post, put } from "./apiService";
 import type { ResponseModel } from "../models/ResponseModel";
 import { API_CONSTANTS } from "../constants/apiConstants";
-import { useUserStore } from "../config/zustand";
+import axiosInstance from '../config/axiosConfig';
 
 interface AuthResponse {
   token: string;
@@ -36,17 +36,7 @@ export function parseJwt(token: string): any {
 
 export const login = async (email: string, password: string): Promise<ResponseModel<AuthResponse>> => {
   const response = await post<AuthResponse>(API_CONSTANTS.AUTH.LOGIN, { email, password });
-  const setUser = useUserStore.getState().setUser;
-  if (response.success) {
-    setUser({
-      token: response.data.token,
-      id: "",
-      email: "",
-      role_code: "",
-      username: "",
-      avatarUrl: ""
-    });
-  }
+  // Note: This function is deprecated, use loginUser instead
   console.log(response.data.token)
   return response;
 };
@@ -83,3 +73,47 @@ export const resendToken = async (email: string): Promise<ResponseModel<any>> =>
     email,
   });
 }
+
+// New login function for the updated API
+export interface LoginRequest {
+  emailOrPhone: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  refreshToken: string;
+  user: {
+    userId: number;
+    roleId: number;
+    roleName: string;
+    name: string;
+    email: string;
+    phone: string;
+    isActive: boolean;
+    isVerify: boolean;
+    createdAt: string;
+    locationAddress: string;
+    locationCity: string;
+    avatarUrl: string;
+  };
+}
+
+export const loginUser = async (credentials: LoginRequest): Promise<LoginResponse> => {
+  try {
+    const response = await axiosInstance.post<LoginResponse>(API_CONSTANTS.AUTH.LOGIN, credentials);
+    return response.data;
+  } catch (error: any) {
+    // Handle different error types
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    if (error.response?.status === 401) {
+      throw new Error('Invalid email/phone or password');
+    }
+    if (error.response?.status === 400) {
+      throw new Error('Please check your login credentials');
+    }
+    throw new Error('Login failed. Please try again.');
+  }
+};

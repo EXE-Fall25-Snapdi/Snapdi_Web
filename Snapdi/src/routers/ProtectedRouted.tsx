@@ -15,36 +15,26 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin,
-  requireEditProfile,
   requireApproval,
   requireFinance,
-  requireUser,
   children,
 }) => {
   if (!isAuthenticated()) {
     return <Navigate to="/login" />;
   }
 
-  if (requireAdmin && !checkRole("A001")) {
+  if (requireAdmin && !checkRole(1)) {
     toast.error("You do not have access to this page.");
     return <Navigate to="/" />;
   }
 
-  if (requireApproval && !checkRole("A003")) {
+  if (requireApproval && !checkRole(3)) {
     toast.error("You do not have access to this page.");
     return <Navigate to="/" />;
   }
 
-  if (requireFinance && !checkRole("A002")) {
+  if (requireFinance && !checkRole(2)) {
     toast.error("You do not have access to this page.");
-    return <Navigate to="/" />;
-  }
-
-  if (requireUser && !checkRole("A004")) {
-    toast.error("You do not have access to this page.");
-    return <Navigate to="/" />;
-  }
-  if (requireEditProfile && !checkRole("user")) {
     return <Navigate to="/" />;
   }
 

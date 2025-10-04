@@ -1,9 +1,14 @@
-import { Button, Card } from "antd"
+import { Button, Card, Pagination } from "antd"
 import { UserPlus } from "lucide-react"
 import UsersTable from "../../../components/AdminComponents/UsersTable"
 import { users } from "../../../lib/mock-data"
+import React from "react"
 
 const UserManagement = () => {
+  const [pages, setPages] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(10);
+  const totalPosts = users.length;
+  const isSearchMode = false; // Replace with actual search mode state if applicable
   return (
     <Card title={
       <div className="flex items-center justify-between p-4">
@@ -18,6 +23,25 @@ const UserManagement = () => {
       </div>
     }>
       <UsersTable users={users} />
+      <Pagination
+              showSizeChanger
+              pageSizeOptions={['5', '10', '20']}
+              current={pages}
+              pageSize={pageSize}
+              total={totalPosts}
+              onChange={(page, size) => {
+                console.log('Pagination changed:', { page, size });
+                setPages(page);
+                if (size && size !== pageSize) {
+                  setPageSize(size);
+                  setPages(1); // Reset to first page when page size changes
+                }
+              }}
+              showQuickJumper
+              showTotal={(total, range) =>
+                `${range[0]}-${range[1]} of ${total} ${isSearchMode ? 'results' : 'items'}`
+              }
+            />
     </Card>
   )
 }
