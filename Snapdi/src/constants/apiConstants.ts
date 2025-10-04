@@ -1,6 +1,6 @@
 export const API_CONSTANTS = {
   AUTH: {
-    LOGIN: "/auth",
+    LOGIN: "api/auth/login",
     LOGOUT: "/auth/logout",
     USER_INFO: "/auth",
     FORGOT_PASSWORD: "/auth/forgot-password",
@@ -12,7 +12,7 @@ export const API_CONSTANTS = {
   },
   USERS: {
     CHANGE_PASSWORD: "/users/change-password",
-    GET_ALL: "/users/get-all",
+    GET_ALL: "api/Users/",
     CREATE_USER: "/users",
     UPDATE_USER: (id: string | number) => `/users/${id}`,
     DELETE_USER: (id: string | number) => `/users/${id}`,

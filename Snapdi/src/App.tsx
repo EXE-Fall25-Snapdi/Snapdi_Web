@@ -9,9 +9,10 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ConfigProvider } from 'antd';
 import MainPage from "./pages/MainPage/MainPage";
 import NotFound from "./pages/NotFound/NotFound";
-// import ProtectedRoute from "./routers/ProtectedRouted";
+import ProtectedRoute from "./routers/ProtectedRouted";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import { useLoadingStore } from "./config/zustand";
@@ -25,10 +26,15 @@ import BlogPage from "./pages/Main/BlogPage/BlogPage";
 import BlogDetail from "./pages/Main/BlogDetail/BlogDetail";
 import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
 import Contact from "./pages/Main/Contact/Contact";
+import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
   {
     path: "/",
     element: <MainLayout />,
@@ -63,8 +69,8 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      // <ProtectedRoute requireAdmin={true}>
-      <AdminLayout />
+      <ProtectedRoute requireAdmin={true}>
+        <AdminLayout />
       // </ProtectedRoute>
     ),
     errorElement: <AdminDashboard />,
@@ -101,28 +107,37 @@ const App: React.FC = () => {
   useToastStorage();
   return (
     <HelmetProvider>
-      <div className="w-full">
-        {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
-            <Spin size="default" />
-          </div>
-        )}
-        <RouterProvider router={router} />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <Analytics />
-        <SpeedInsights />
-      </div>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#34D399',
+          },
+        }}
+      >
+        <div className="w-full">
+          {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
+              <Spin size="default" />
+            </div>
+          )}
+          <RouterProvider router={router} />
+          <ToastContainer
+            className="text-sm z-9999"
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          <Analytics />
+          <SpeedInsights />
+        </div>
+      </ConfigProvider>
     </HelmetProvider>
   );
 };

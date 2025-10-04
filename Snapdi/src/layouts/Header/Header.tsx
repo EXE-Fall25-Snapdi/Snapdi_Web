@@ -49,11 +49,14 @@ function Header() {
         {/* Desktop Buttons */}
         <Nav className="hidden lg:flex gap-2 items-center">
           <button className="bg-[#34D399] text-white px-4 py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform">
-            Download now
+            Tải ngay
           </button>
-          <button className="bg-[#34D399] text-white px-6 py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform">
-            Sign In
-          </button>
+          <a
+            className="bg-[#34D399] text-white! px-6 py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform flex items-center justify-center"
+            href="/login"
+          >
+            Đăng nhập
+          </a>
         </Nav>
 
         {/* Mobile Menu Button */}

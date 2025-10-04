@@ -1,30 +1,16 @@
 export const APP_CONSTANTS = {
-    roleNames: {
-      A001: "Admin",
-    },
-    pageTitles: {
-      "/admin/dashboard": "Dashboard",
-      "/admin/user": "User Management",
-      "/admin/project": "Project Management",
-      "/admin/edit_profile": "Profile",
-      "/finance/dashboard": "Dashboard",
-      "/finance/paid-management": "Finance Management",
-      "/finance/edit_profile": "Profile",
-      "/finance/calender": "Calender",
-      "/finance/request": "Claim Request",
-      "/finance/user_project": "Projects List",
-      "/approval/dashboard": "Dashboard",
-      "/approval/approval-management": "Approval Management",
-      "/approval/edit_profile": "Profile",
-      "/approval/calender": "Calender",
-      "/approval/request": "Claim Request",
-      "/approval/user_project": "Projects List",
-      "/user/dashboard": "Dashboard",
-      "/user/edit_profile": "Profile",
-      "/user/calender": "Calender",
-      "/user/request": "Claim Request",
-      "/user/user_project": "Projects List",
+  roleNames: {
+    ADMIN: "Administrator",
+    USER: "User",
+    PHOTOGRAPHER: "Photographer",
+    MODERATOR: "Moderator"
+  },
 
-    },
-  };
-  
+  pageTitles: {
+    "/admin": "Dashboard",
+    "/admin/admin-dashboard": "Dashboard",
+    "/admin/user-management": "User Management",
+    "/admin/blogs-management": "Blogs Management",
+    "/admin/photographer-applications": "Photographer Applications"
+  }
+};

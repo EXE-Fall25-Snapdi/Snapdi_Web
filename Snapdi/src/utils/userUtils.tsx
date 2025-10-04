@@ -5,24 +5,24 @@ export const isAuthenticated = (): boolean => {
   return !!token;
 };
 
-export const getRole = (): string | null => {
-  const userData = useUserStore.getState().user?.role_code;
+export const getRole = (): number | null => {
+  const userData = useUserStore.getState().user?.roleId;
   let user = userData ?? null;
   return user;
 };
 
-export const checkRole = (role: string): boolean => {
-  return getRole() === role;
+export const checkRole = (roleId: number): boolean => {
+  return getRole() === roleId;
 };
 
-export const hasAnyRole = (...roles: string[]): boolean => {
-  return roles.includes(getRole() || "");
+export const hasAnyRole = (...roles: number[]): boolean => {
+  return roles.includes(getRole() || 0);
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
-  localStorage.removeItem("user");
+  // Use Zustand clearUser instead of manual localStorage removal
+  useUserStore.getState().clearUser();
+
   sessionStorage.setItem("toastMessage", JSON.stringify({
     type: "success",
     message: "Logout Successfully!",
