@@ -1,49 +1,278 @@
-import { Button, Card, Pagination } from "antd"
-import { UserPlus } from "lucide-react"
-import UsersTable from "../../../components/AdminComponents/UsersTable"
-import { users } from "../../../lib/mock-data"
-import React from "react"
+import { useState, useEffect } from "react";
+import { Button, Card, Input, Select } from "antd";
+import { UserPlus, Search } from "lucide-react";
+import { UserModal } from "../../../components/AdminComponents/UserModal";
+import { ConfirmationModal } from "../../../components/AdminComponents/ConfirmationModal";
+import { userService } from "../../../services/userService";
+import { toast } from "react-toastify";
+import type { User as ApiUser, UserFilterRequest, CreateUserRequest, UpdateUserRequest } from "../../../lib/types";
+import UsersTable from "../../../components/AdminComponents/UsersTable";
+
+const { Option } = Select;
 
 const UserManagement = () => {
-  const [pages, setPages] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(10);
-  const totalPosts = users.length;
-  const isSearchMode = false; // Replace with actual search mode state if applicable
-  return (
-    <Card title={
-      <div className="flex items-center justify-between p-4">
-        <div className="flex items-start flex-col">
-          <p className="font-bold text-2xl">User Management</p>
-          <p className="text-gray-500">Manage your customers and photographers.</p>
-        </div>
-        <Button size="large" className="flex items-center shadow-lg my-2">
-          <UserPlus className="mr-2 h-6 w-6" />
-          <span className="text-lg">Add User</span>
-        </Button>
-      </div>
-    }>
-      <UsersTable users={users} />
-      <Pagination
-              showSizeChanger
-              pageSizeOptions={['5', '10', '20']}
-              current={pages}
-              pageSize={pageSize}
-              total={totalPosts}
-              onChange={(page, size) => {
-                console.log('Pagination changed:', { page, size });
-                setPages(page);
-                if (size && size !== pageSize) {
-                  setPageSize(size);
-                  setPages(1); // Reset to first page when page size changes
-                }
-              }}
-              showQuickJumper
-              showTotal={(total, range) =>
-                `${range[0]}-${range[1]} of ${total} ${isSearchMode ? 'results' : 'items'}`
-              }
-            />
-    </Card>
-  )
-}
+  const [users, setUsers] = useState<ApiUser[]>([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    pageSizeOptions: ['10', '20', '50', '100']
+  });
 
-export default UserManagement
+  // Modal states
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<ApiUser | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<ApiUser | null>(null);
+
+  // Filter states
+  const [filters, setFilters] = useState<UserFilterRequest>({
+    page: 1,
+    pageSize: 10,
+    searchTerm: '',
+    roleId: undefined,
+    isActive: undefined,
+    isVerified: undefined,
+    locationCity: '',
+    sortBy: 'createdAt',
+    sortDirection: 'desc'
+  });
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userService.getUsers(filters);
+
+      if (response.success && response.data) {
+        setUsers(response.data.items);
+        setPagination(prev => ({
+          ...prev,
+          current: response.data!.currentPage,
+          total: response.data!.totalItems,
+          pageSize: response.data!.pageSize
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      if ((error as any)?.response?.status === 401) {
+        toast.error('Unauthorized access. Please login again.');
+      } else {
+        toast.error('Failed to fetch users');
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [filters]);
+
+  const handleCreateUser = async (data: CreateUserRequest) => {
+    try {
+      const response = await userService.createUser(data);
+      if (response.success) {
+        toast.success('User created successfully');
+        fetchUsers();
+      } else {
+        toast.error('Failed to create user');
+      }
+    } catch (error) {
+      toast.error('Failed to create user');
+    }
+  };
+
+  const handleUpdateUser = async (data: UpdateUserRequest) => {
+    if (!selectedUser) return;
+    try {
+      const response = await userService.updateUser(selectedUser.userId, data);
+      if (response.success) {
+        toast.success('User updated successfully');
+        fetchUsers();
+      } else {
+        toast.error('Failed to update user');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toast.error('Failed to update user');
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    try {
+      await userService.deleteUser(userToDelete.userId);
+      toast.success('User deleted successfully');
+      fetchUsers();
+      setIsConfirmModalOpen(false);
+      setUserToDelete(null);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Failed to delete user');
+    }
+  };
+
+  const handleEdit = (user: ApiUser) => {
+    setSelectedUser(user);
+    setIsEditing(true);
+    setIsUserModalOpen(true);
+  };
+
+  const handleDelete = (user: ApiUser) => {
+    setUserToDelete(user);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleFilterChange = (key: string, value: any) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+      page: 1
+    }));
+  };
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setFilters(prev => ({
+      ...prev,
+      page,
+      pageSize: pageSize || prev.pageSize
+    }));
+  };
+
+  const roleOptions = [
+    { value: 1, label: 'Customer' },
+    { value: 2, label: 'Photographer' },
+    { value: 3, label: 'Admin' }
+  ];
+
+  return (
+    <div className="p-6">
+      <Card
+        title={
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">User Management</h1>
+              <p className="text-gray-500">Manage your customers and photographers</p>
+            </div>
+            <Button
+              type="primary"
+              size="large"
+              icon={<UserPlus className="w-4 h-4" />}
+              onClick={() => {
+                setSelectedUser(null);
+                setIsEditing(false);
+                setIsUserModalOpen(true);
+              }}
+            >
+              Add User
+            </Button>
+          </div>
+        }
+      >
+        {/* Filters */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Input
+              placeholder="Search by name or email..."
+              prefix={<Search className="w-4 h-4 text-gray-400" />}
+              value={filters.searchTerm}
+              onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+              allowClear
+            />
+
+            <Select
+              placeholder="Select Role"
+              value={filters.roleId}
+              onChange={(value) => handleFilterChange('roleId', value)}
+              allowClear
+            >
+              {roleOptions.map(role => (
+                <Option key={role.value} value={role.value}>
+                  {role.label}
+                </Option>
+              ))}
+            </Select>
+
+            <Select
+              placeholder="Status"
+              value={filters.isActive}
+              onChange={(value) => handleFilterChange('isActive', value)}
+              allowClear
+            >
+              <Option value={true}>Active</Option>
+              <Option value={false}>Inactive</Option>
+            </Select>
+
+            <Select
+              placeholder="Verification"
+              value={filters.isVerified}
+              onChange={(value) => handleFilterChange('isVerified', value)}
+              allowClear
+            >
+              <Option value={true}>Verified</Option>
+              <Option value={false}>Unverified</Option>
+            </Select>
+          </div>
+        </div>
+
+        {/* Users Table */}
+        <UsersTable
+          users={users}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+
+        {/* Pagination */}
+        <div className="mt-6 flex justify-between items-center">
+          <div className="text-sm text-gray-500">
+            Showing {((pagination.current - 1) * pagination.pageSize) + 1} to {Math.min(pagination.current * pagination.pageSize, pagination.total)} of {pagination.total} users
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              disabled={pagination.current <= 1}
+              onClick={() => handlePaginationChange(pagination.current - 1)}
+            >
+              Previous
+            </Button>
+            <span className="px-3 py-1 bg-blue-600 text-white rounded">
+              {pagination.current}
+            </span>
+            <Button
+              disabled={pagination.current * pagination.pageSize >= pagination.total}
+              onClick={() => handlePaginationChange(pagination.current + 1)}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* User Modal */}
+      <UserModal
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        onSubmit={async (data) => {
+          if (isEditing) {
+            await handleUpdateUser(data as UpdateUserRequest);
+          } else {
+            await handleCreateUser(data as CreateUserRequest);
+          }
+        }}
+        user={selectedUser}
+        isEditing={isEditing}
+      />
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleDeleteUser}
+        title="Delete User"
+        message={`Are you sure you want to delete ${userToDelete?.name}? This action cannot be undone.`}
+        confirmText="Delete"
+        type="danger"
+      />
+    </div>
+  );
+};
+
+export default UserManagement;

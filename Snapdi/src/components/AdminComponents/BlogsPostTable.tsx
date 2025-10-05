@@ -94,7 +94,7 @@ export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: Blog
   return (
     <Table
       columns={postColumns}
-      dataSource={posts}
+      dataSource={posts || []} // Ensure dataSource is always an array
       rowKey="blogId"
       pagination={false}
     />

@@ -4,13 +4,13 @@ import { users } from '../../lib/mock-data';
 import { User, Mail, Calendar, Shield, UserCheck, AlertCircle, Edit, Ban } from 'lucide-react';
 
 interface UserDetailModalProps {
-  userId: string;
+  userId: number;
   visible: boolean;
   onClose: () => void;
 }
 
 const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onClose }) => {
-  const user = users.find((user) => user.id === userId);
+  const user = users.find((user) => user.userId === userId);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -56,7 +56,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
                 icon={<Ban className="w-4 h-4" />}
                 className="flex items-center"
               >
-                {user.status === 'Banned' ? 'Unban User' : 'Ban User'}
+                {/* {user.isActive === 0 ? 'Unban User' : 'Ban User'} */}
               </Button>
             </div>
             <Button onClick={onClose}>Close</Button>
@@ -74,12 +74,12 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
             <div className="flex items-center gap-6">
               <div className="relative">
                 <Avatar
-                  src={user.avatar}
+                  src={user.avatarUrl}
                   size={120}
                   className="border-4 border-white shadow-lg"
                 />
                 <Badge
-                  status={getStatusColor(user.status) as any}
+                  status={getStatusColor(user.roleName) as any}
                   className="absolute -bottom-2 -right-2 bg-white rounded-full p-1"
                 />
               </div>
@@ -90,17 +90,17 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
                   <span className="text-gray-600">{user.email}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Tag color={getRoleColor(user.role)} className="text-sm px-3 py-1">
+                  <Tag color={getRoleColor(user.roleName)} className="text-sm px-3 py-1">
                     <Shield className="w-3 h-3 inline mr-1" />
-                    {user.role}
+                    {user.roleName}
                   </Tag>
                   <Badge
-                    status={getStatusColor(user.status) as any}
+                    status={getStatusColor(user.isActive === false ? 'Active' : user.isActive === true ? 'Pending' : 'Banned') as any}
                     text={
-                      <span className={`font-medium ${user.status === 'Active' ? 'text-green-600' :
-                        user.status === 'Pending' ? 'text-yellow-600' : 'text-red-600'
+                      <span className={`font-medium ${user.isActive === false ? 'text-green-600' :
+                        user.isActive === true ? 'text-yellow-600' : 'text-red-600'
                         }`}>
-                        {user.status}
+                        {user.isActive === false ? 'Active' : user.isActive === true ? 'Pending' : 'Banned'}
                       </span>
                     }
                   />
@@ -118,7 +118,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
           }>
             <Descriptions column={1} bordered size="middle">
               <Descriptions.Item label="User ID" span={1}>
-                <code className="bg-gray-100 px-2 py-1 rounded text-sm">{user.id}</code>
+                <code className="bg-gray-100 px-2 py-1 rounded text-sm">{user.userId}</code>
               </Descriptions.Item>
               <Descriptions.Item label="Display Name" span={1}>
                 {user.name}
@@ -130,19 +130,19 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
                 </div>
               </Descriptions.Item>
               <Descriptions.Item label="Account Role" span={1}>
-                <Tag color={getRoleColor(user.role)} className="text-sm">
+                <Tag color={getRoleColor(user.roleName)} className="text-sm">
                   <Shield className="w-3 h-3 inline mr-1" />
-                  {user.role}
+                  {user.roleName}
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Account Status" span={1}>
                 <Badge
-                  status={getStatusColor(user.status) as any}
+                  status={getStatusColor(user.isActive === false ? 'Active' : user.isActive === true ? 'Pending' : 'Banned') as any}
                   text={
-                    <span className={`font-medium ${user.status === 'Active' ? 'text-green-600' :
-                      user.status === 'Pending' ? 'text-yellow-600' : 'text-red-600'
+                    <span className={`font-medium ${user.isActive === false ? 'text-green-600' :
+                      user.isActive === true ? 'text-yellow-600' : 'text-red-600'
                       }`}>
-                      {user.status}
+                      {user.isActive === false ? 'Active' : user.isActive === true ? 'Pending' : 'Banned'}
                     </span>
                   }
                 />
@@ -150,7 +150,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
               <Descriptions.Item label="Join Date" span={1}>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-gray-500" />
-                  {user.joined}
+                  {user.createdAt}
                 </div>
               </Descriptions.Item>
             </Descriptions>
@@ -167,7 +167,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <img
-                    src={user.avatar}
+                    src={user.avatarUrl}
                     alt={`${user.name} profile`}
                     className="w-24 h-24 rounded-lg object-cover border border-gray-200 shadow-sm"
                   />
@@ -175,12 +175,12 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ userId, visible, onCl
                 <div className="flex-1">
                   <h4 className="font-semibold text-gray-800 mb-2">Profile Picture</h4>
                   <p className="text-sm text-gray-600 mb-2">
-                    <strong>Description:</strong> {user.imageHint}
+                    <strong>Description:</strong> {user.name}'s profile picture.
                   </p>
                   <p className="text-sm text-gray-600">
                     <strong>Avatar URL:</strong>
                     <code className="ml-2 bg-gray-100 px-2 py-1 rounded text-xs break-all">
-                      {user.avatar}
+                      {user.avatarUrl }
                     </code>
                   </p>
                 </div>

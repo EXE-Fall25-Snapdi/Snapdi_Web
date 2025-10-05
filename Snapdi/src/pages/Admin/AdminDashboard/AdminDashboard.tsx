@@ -1,12 +1,8 @@
 import { Card } from 'antd';
 import { UserCheck, UserPlus, Users, UserX } from 'lucide-react';
-// import AnalyticsCharts from '../../../components/WebtrafficChart/WebTrafficChart';
-import UsersTable from '../../../components/AdminComponents/UsersTable';
-import { users } from '../../../lib/mock-data';
+import { RecentSignups } from '../../../components/AdminComponents/RecentSignups';
 
 const AdminDashboard = () => {
-  const recentSignups = users.slice(0, 5);
-
   const analyticsData = [
     { label: 'Total Users', value: 2350, icon: Users, change: '+180.1%' },
     { label: 'Active User', value: 540, icon: UserPlus, change: '+25.4%' },
@@ -37,19 +33,12 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        <div>
-          <Card title={
-            <div>
-              <span className="font-headline">Recent Sign-ups</span>
-              <div className="text-xs text-muted-foreground">The latest users to join the platform.</div>
-            </div>
-          }>
-            <UsersTable users={recentSignups} />
-          </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <RecentSignups limit={5} />
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
