@@ -37,7 +37,7 @@ const BlogPage: React.FC = () => {
       // Handle different response structures
       let paginatedData: any = null;
 
-      if (response && response.data && response.data.data) {
+      if (response && response.data) {
         paginatedData = response.data;
         console.log("Featured blogs - Using ResponseModel structure");
       } else if (response && (response as any).data && Array.isArray((response as any).data)) {
@@ -77,7 +77,7 @@ const BlogPage: React.FC = () => {
       // Handle different response structures
       let paginatedData: any = null;
 
-      if (response && response.data && response.data.data) {
+      if (response && response.data) {
         paginatedData = response.data;
         console.log("Using ResponseModel structure");
       } else if (response && (response as any).data && Array.isArray((response as any).data)) {
@@ -131,7 +131,7 @@ const BlogPage: React.FC = () => {
       // Handle different response structures
       let paginatedData: any = null;
 
-      if (response && response.data && response.data.data) {
+      if (response && response.data) {
         paginatedData = response.data;
         console.log("Search - Using ResponseModel structure");
       } else if (response && (response as any).data && Array.isArray((response as any).data)) {

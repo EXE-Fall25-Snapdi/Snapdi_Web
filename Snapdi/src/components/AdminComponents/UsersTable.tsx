@@ -1,147 +1,138 @@
 import React from 'react';
-import { Dropdown, Table } from 'antd';
-import { UserCogIcon, UserLock } from 'lucide-react';
-import UserDetailModal from './UserDetailModal';
+import { Button, Table, Avatar } from 'antd';
+import { Edit, Trash2, Eye } from 'lucide-react';
+import type { User } from '../../lib/types';
 
-import { useState } from 'react';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
-interface UsersTableProps {
+export interface UsersTableProps {
   users: User[];
+  onEdit?: (user: User) => void;
+  onDelete?: (user: User) => void;
+  onView?: (user: User) => void;
 }
 
 
 // columns definition moved inside UsersTable component
 
-const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
-  const [pageSize, setPageSize] = useState(10);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  console.log('Users data:', pageSize);
+const UsersTable: React.FC<UsersTableProps> = ({
+  users,
+  onEdit,
+  onDelete,
+  onView
+}) => {
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (_: string, record: User) => (
-        <span
-          className="text-blue-600 hover:underline cursor-pointer"
-          onClick={e => {
-            e.stopPropagation();
-            setSelectedUser(record);
-            setModalVisible(true);
-          }}
-        >
-          {record.name}
-        </span>
+      title: 'User',
+      key: 'user',
+      render: (record: User) => (
+        <div className="flex items-center space-x-3">
+          <Avatar
+            src={record.avatarUrl}
+            alt={record.name}
+            size={40}
+          >
+            {record.name.charAt(0).toUpperCase()}
+          </Avatar>
+          <div>
+            <div className="font-medium text-sm">{record.name}</div>
+            <div className="text-xs text-gray-500">{record.email}</div>
+          </div>
+        </div>
       ),
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
     },
     {
       title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold ${status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}
-        >
-          {status}
+      dataIndex: 'roleName',
+      key: 'roleName',
+      render: (roleName: string) => (
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleName === 'Admin' ? 'bg-purple-100 text-purple-800' :
+            roleName === 'Photographer' ? 'bg-blue-100 text-blue-800' :
+              'bg-green-100 text-green-800'
+          }`}>
+          {roleName}
         </span>
       ),
     },
     {
-      title: 'Join Date',
-      dataIndex: 'joined',
-      key: 'joinDate',
-      // render: (date: string) => formatDate(date),
+      title: 'Contact',
+      key: 'contact',
+      render: (record: User) => (
+        <div className="text-sm">
+          <div>{record.phone || 'N/A'}</div>
+          <div className="text-gray-500">{record.locationCity || 'N/A'}</div>
+        </div>
+      ),
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, record: User) => (
-        <div>
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  key: 'view',
-                  label: (
-                    <a
-                      href={`/admin/users/${record.id}`}
-                      className="text-blue-600 hover:underline flex items-center gap-1"
-                    >
-                      <UserCogIcon className="inline-block" />
-                      View Details
-                    </a>
-                  ),
-                },
-                {
-                  key: 'ban',
-                  label: (
-                    <a href={`/admin/users/${record.id}/ban`} className="text-red-600 hover:underline">
-                      <UserLock className="inline-block" />
-                      Ban
-                    </a>
-                  ),
-                },
-              ],
-            }}
-            trigger={['click']}
-            placement="bottomRight"
-          >
-            <button className="border-none bg-transparent cursor-pointer p-2 text-white">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <circle cx="4" cy="10" r="2" />
-                <circle cx="10" cy="10" r="2" />
-                <circle cx="16" cy="10" r="2" />
-              </svg>
-            </button>
-          </Dropdown>
+      title: 'Status',
+      key: 'status',
+      render: (record: User) => (
+        <div className="flex flex-col space-y-1">
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${record.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            }`}>
+            {record.isActive ? 'Active' : 'Inactive'}
+          </span>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${record.isVerify ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+            }`}>
+            {record.isVerify ? 'Verified' : 'Unverified'}
+          </span>
+        </div>
+      ),
+    },
+    {
+      title: 'Created',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (createdAt: string) => (
+        <div className="text-sm text-gray-500">
+          {new Date(createdAt).toLocaleDateString()}
+        </div>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (record: User) => (
+        <div className="flex space-x-2">
+          {onView && (
+            <Button
+              type="text"
+              size="small"
+              icon={<Eye className="w-4 h-4" />}
+              onClick={() => onView(record)}
+              className="text-blue-600 hover:text-blue-800"
+            />
+          )}
+          {onEdit && (
+            <Button
+              type="text"
+              size="small"
+              icon={<Edit className="w-4 h-4" />}
+              onClick={() => onEdit(record)}
+              className="text-green-600 hover:text-green-800"
+            />
+          )}
+          {onDelete && (
+            <Button
+              type="text"
+              size="small"
+              icon={<Trash2 className="w-4 h-4" />}
+              onClick={() => onDelete(record)}
+              className="text-red-600 hover:text-red-800"
+            />
+          )}
         </div>
       ),
     },
   ];
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <Table
-        className='overflow-x-scroll'
-        rowKey="id"
         columns={columns}
-        dataSource={users}
-        pagination={{
-          onChange(_unused: number, pageSize: number) {
-            setPageSize(pageSize);
-          },
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '50', '100']
-        }}
-      />
-      <UserDetailModal
-        visible={modalVisible}
-        userId={selectedUser?.id ?? ''}
-        onClose={() => setModalVisible(false)}
+        dataSource={users || []} // Ensure dataSource is always an array
+        rowKey="userId"
+        pagination={false} // Pagination handled by parent component
+        className="w-full"
       />
     </div>
   );

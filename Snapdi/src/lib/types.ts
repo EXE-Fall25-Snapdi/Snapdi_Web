@@ -1,12 +1,51 @@
 export type User = {
-  id: string;
+  userId: number;
+  roleId: number;
+  roleName: string;
   name: string;
   email: string;
-  avatar: string;
-  imageHint: string;
-  role: 'Customer' | 'Photographer' | 'Admin';
-  status: 'Active' | 'Pending' | 'Banned';
-  joined: string;
+  phone: string;
+  isActive: boolean;
+  isVerify: boolean;
+  createdAt: string;
+  locationAddress: string;
+  locationCity: string;
+  avatarUrl: string;
+};
+
+export type CreateUserRequest = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  roleId: number;
+  locationAddress: string;
+  locationCity: string;
+  avatarUrl: string;
+};
+
+export type UpdateUserRequest = {
+  name: string;
+  phone: string;
+  locationAddress: string;
+  locationCity: string;
+  avatarUrl: string;
+  isActive: boolean;
+  isVerify: boolean;
+};
+
+export type UserFilterRequest = {
+  page: number;
+  pageSize: number;
+  searchTerm?: string;
+  roleId?: number;
+  isActive?: boolean;
+  isVerified?: boolean;
+  locationCity?: string;
+  sortBy?: string;
+  sortDirection?: string;
+  createdFrom?: string;
+  createdTo?: string;
 };
 
 export type Blog = {
@@ -27,13 +66,13 @@ export type Keyword = {
 };
 
 export type PaginatedResponse<T> = {
-  data: T[];
-  totalRecords: number;
-  pageNumber: number;
+  items: T[];
+  currentPage: number;
   pageSize: number;
+  totalItems: number;
   totalPages: number;
-  hasNextPage: boolean;
   hasPreviousPage: boolean;
+  hasNextPage: boolean;
 };
 
 export type SupportTicket = {

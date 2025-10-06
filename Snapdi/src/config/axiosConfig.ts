@@ -1,15 +1,7 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
-import { useLoadingStore } from "./zustand"; // Adjust path
+import { useLoadingStore, useUserStore } from "./zustand"; // Adjust path
 import { toast } from "react-toastify";
 
-// Log current configuration for debugging
-console.log('🔧 Axios Configuration:', {
-  environment: import.meta.env.VITE_APP_ENV || 'development',
-  baseURL: import.meta.env.VITE_APP_ENV === 'production'
-    ? import.meta.env.VITE_API_BASE_URL
-    : "/",
-  mode: import.meta.env.MODE
-});
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   showLoading?: boolean; // Allow requests to override loading behavior
@@ -18,7 +10,7 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_ENV === 'production'
     ? import.meta.env.VITE_API_BASE_URL
-    : "/", // Use proxy for development
+    : "https://localhost:7000", // Use proxy for development
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
@@ -40,7 +32,7 @@ axiosInstance.interceptors.request.use(
     }
 
     // Attach token if available
-    const token = localStorage.getItem("token");
+    const token = useUserStore.getState().getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -74,13 +66,39 @@ axiosInstance.interceptors.response.use(
     if (isLoadingFlag) {
       setLoading(false);
     }
+
     if (error.response) {
-      if (error.response.status == 400) {
-        if (error.response.data?.message) {
-          toast.error(error.response.data.message);
-        } else {
-          toast.error("An error occurred");
-        }
+      // Handle different status codes
+      switch (error.response.status) {
+        case 400:
+          if (error.response.data?.message) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error("Bad Request");
+          }
+          break;
+        case 401:
+          toast.error("Unauthorized - Please login again");
+          // Clear user data and redirect to login
+          useUserStore.getState().clearUser();
+          // You might want to redirect to login page here
+          window.location.href = '/login';
+          break;
+        case 403:
+          toast.error("Access denied - Insufficient permissions");
+          break;
+        case 404:
+          toast.error("Resource not found");
+          break;
+        case 500:
+          toast.error("Internal server error");
+          break;
+        default:
+          if (error.response.data?.message) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error("An error occurred");
+          }
       }
     } else if (error.request) {
       toast.error("No response from server");

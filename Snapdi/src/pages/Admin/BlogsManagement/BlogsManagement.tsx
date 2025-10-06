@@ -19,27 +19,7 @@ const BlogsManagement = () => {
   const [pages, setPages] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
   const [totalPosts, setTotalPosts] = React.useState(0);
-
-  // Debug logging for posts state
-  React.useEffect(() => {
-    console.log('BlogsManagement - Posts state updated:', {
-      postsCount: posts.length,
-      totalPosts,
-      isSearchMode,
-      posts
-    });
-  }, [posts, totalPosts]);
-
-  // Search and filter states
   const [keywords, setKeywords] = React.useState<Keyword[]>([]);
-
-  // Debug logging for keywords state
-  React.useEffect(() => {
-    console.log('BlogsManagement - Keywords state updated:', {
-      keywordsCount: keywords.length,
-      keywords
-    });
-  }, [keywords]);
   const [currentSearchParams, setCurrentSearchParams] = React.useState<BlogSearchParams | null>(null);
   const [isSearchMode, setIsSearchMode] = React.useState(false);
 
@@ -54,24 +34,15 @@ const BlogsManagement = () => {
   const fetchPosts = useCallback(async () => {
     try {
       const paginatedData = await getBlogWithPaging(pages, pageSize) as any;
-      console.log("Fetched blog posts - Full Response:", paginatedData);
-      console.log("Type of response:", typeof paginatedData);
-      console.log("Response keys:", Object.keys(paginatedData || {}));
 
-      // paginatedData đã là object pagination trực tiếp
-      console.log('Setting posts from fetchPosts:', paginatedData?.data || []);
-      console.log('Setting total from fetchPosts:', paginatedData?.totalRecords || 0);
-      setPosts(paginatedData?.data || []); // Extract the blog posts array
-      setTotalPosts(paginatedData?.totalRecords || 0);
+      // Handle ResponseModel wrapper structure
+      const paginationData = paginatedData?.data || {}; // Get pagination object
+      const postsData = paginationData?.data || []; // Get actual blogs array
+      const totalRecords = paginationData?.totalRecords || 0;
 
-      console.log("Pagination info:", {
-        totalRecords: paginatedData?.totalRecords,
-        pageNumber: paginatedData?.pageNumber,
-        pageSize: paginatedData?.pageSize,
-        totalPages: paginatedData?.totalPages,
-        hasNextPage: paginatedData?.hasNextPage,
-        hasPreviousPage: paginatedData?.hasPreviousPage
-      });
+      setPosts(postsData); // Extract the blog posts array
+      setTotalPosts(totalRecords);
+
     } catch (error) {
       console.error("Error fetching blog posts:", error);
       setPosts([]);
@@ -82,35 +53,21 @@ const BlogsManagement = () => {
   // Fetch keywords for filter
   const fetchKeywords = useCallback(async () => {
     try {
-      console.log('BlogsManagement - Fetching keywords...');
       const response = await getAllKeywords();
-      console.log('BlogsManagement - Keywords API response:', response);
-      console.log('BlogsManagement - Response type:', typeof response);
-      console.log('BlogsManagement - Response keys:', Object.keys(response || {}));
 
       // Handle different response structures
       let keywordsData: Keyword[] = [];
 
       if (response && (response as any).data && (response as any).data.data && Array.isArray((response as any).data.data)) {
-        // ResponseModel<ResponseModel<Keyword[]>> structure
         keywordsData = (response as any).data.data;
-        console.log("BlogsManagement - Keywords - Using nested ResponseModel structure");
       } else if (response && response.data && Array.isArray(response.data)) {
-        // ResponseModel<Keyword[]> structure
         keywordsData = response.data;
-        console.log("BlogsManagement - Keywords - Using ResponseModel structure");
       } else if (response && Array.isArray((response as any).data)) {
-        // Direct response with data array
         keywordsData = (response as any).data;
-        console.log("BlogsManagement - Keywords - Using direct data array");
       } else if (response && Array.isArray(response)) {
         // Direct array response
         keywordsData = response as Keyword[];
-        console.log("BlogsManagement - Keywords - Using direct response array");
       }
-
-      console.log("BlogsManagement - Final keywords data:", keywordsData);
-      console.log("BlogsManagement - Keywords count:", keywordsData.length);
       setKeywords(keywordsData);
     } catch (error) {
       console.error("BlogsManagement - Error fetching keywords:", error);
@@ -121,49 +78,35 @@ const BlogsManagement = () => {
   // Search blogs function
   const searchBlogs = useCallback(async (searchParams: BlogSearchParams) => {
     try {
-      console.log('Searching blogs with params:', searchParams);
-
       const response = await searchBlogsWithBody({
         ...searchParams,
         pageNumber: pages,
         pageSize: pageSize
       });
 
-      console.log('Search API response:', response);
-      console.log('Response type:', typeof response);
-      console.log('Response keys:', Object.keys(response || {}));
-
       // Handle different response structures
       let paginatedData: any = null;
 
-      if (response && response.data && response.data.data) {
-        // ResponseModel<PaginatedResponse<Blog>> structure
+      if (response && response.data && response.data) {
         paginatedData = response.data;
-        console.log("Search - Using ResponseModel structure");
       } else if (response && response.data && Array.isArray(response.data)) {
         // ResponseModel<Blog[]> structure  
         paginatedData = response;
-        console.log("Search - Using direct ResponseModel structure");
       } else if (response && Array.isArray((response as any).data)) {
         // Direct response with data array
         paginatedData = response;
-        console.log("Search - Using direct data response");
       } else if (response && Array.isArray(response)) {
         // Direct array response
         paginatedData = {
           data: response,
           totalRecords: (response as any[]).length
-        };
-        console.log("Search - Using direct array response");
+        }      
       }
-
+        
       if (paginatedData && paginatedData.data) {
-        console.log('Setting posts:', paginatedData.data);
-        console.log('Setting total:', paginatedData.totalRecords);
         setPosts(paginatedData.data || []);
         setTotalPosts(paginatedData.totalRecords || 0);
       } else {
-        console.log('No data found in response');
         setPosts([]);
         setTotalPosts(0);
       }
@@ -175,18 +118,10 @@ const BlogsManagement = () => {
   }, [pages, pageSize]);
 
   React.useEffect(() => {
-    console.log('BlogsManagement - useEffect triggered:', {
-      isSearchMode,
-      hasSearchParams: !!currentSearchParams,
-      pages,
-      pageSize
-    });
 
     if (isSearchMode && currentSearchParams) {
-      console.log('BlogsManagement - Calling searchBlogs');
       searchBlogs(currentSearchParams);
     } else {
-      console.log('BlogsManagement - Calling fetchPosts');
       fetchPosts();
     }
   }, [fetchPosts, searchBlogs, isSearchMode, currentSearchParams, pages]);
@@ -198,20 +133,16 @@ const BlogsManagement = () => {
 
   // Handle search
   const handleSearch = (searchParams: BlogSearchParams) => {
-    console.log('BlogsManagement - handleSearch called with params:', searchParams);
     setCurrentSearchParams(searchParams);
     setIsSearchMode(true);
     setPages(1); // Reset to first page
-    console.log('BlogsManagement - Search mode activated');
   };
 
   // Handle clear search
   const handleClearSearch = () => {
-    console.log('BlogsManagement - handleClearSearch called');
     setCurrentSearchParams(null);
     setIsSearchMode(false);
     setPages(1); // Reset to first page
-    console.log('BlogsManagement - Search mode deactivated');
   };
 
   // Handle blog creation success
@@ -238,7 +169,6 @@ const BlogsManagement = () => {
   };
 
   const handleDeleteBlog = (blog: Blog) => {
-    console.log('handleDeleteBlog called with blog:', blog);
     setBlogToDelete(blog);
     setDeleteConfirmVisible(true);
   };
@@ -247,18 +177,11 @@ const BlogsManagement = () => {
     if (!blogToDelete) return;
 
     try {
-      console.log('User confirmed delete. Deleting blog with ID:', blogToDelete.blogId);
-      const result = await deleteBlog(blogToDelete.blogId);
-      console.log('Delete API result:', result);
-      console.log('Delete API result data:', result?.data);
-      console.log('Delete API result message:', result?.message);
-      console.log('Delete API result success:', result?.success);
+      await deleteBlog(blogToDelete.blogId);
 
       // For HTTP 204 No Content, result might be null/undefined or have undefined properties
       // If no error was thrown, consider it successful
       toast.success('Blog deleted successfully');
-
-      console.log('Delete successful, refreshing posts...');
       fetchPosts(); // Refresh the list
 
     } catch (error) {
@@ -280,7 +203,6 @@ const BlogsManagement = () => {
   };
 
   const cancelDeleteBlog = () => {
-    console.log('User cancelled delete operation');
     setDeleteConfirmVisible(false);
     setBlogToDelete(null);
   };
@@ -341,7 +263,7 @@ const BlogsManagement = () => {
           </div>
 
           <BlogPostsTable
-            posts={posts}
+            posts={Array.isArray(posts) ? posts : []}
             onView={handleViewBlog}
             onEdit={handleEditBlog}
             onDelete={handleDeleteBlog}
@@ -354,7 +276,6 @@ const BlogsManagement = () => {
               pageSize={pageSize}
               total={totalPosts}
               onChange={(page, size) => {
-                console.log('Pagination changed:', { page, size });
                 setPages(page);
                 if (size && size !== pageSize) {
                   setPageSize(size);
