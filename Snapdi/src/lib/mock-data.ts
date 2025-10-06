@@ -1,21 +1,6 @@
-import type { User, SupportTicket } from './types';
+import type {SupportTicket } from './types';
 import { subDays, format } from 'date-fns';
 
-const placeholderImages = {
-  "user-avatar-2": { url: "https://picsum.photos/seed/avatar2/40/40", hint: "profile person" },
-  "user-avatar-3": { url: "https://picsum.photos/seed/avatar3/40/40", hint: "woman smiling" },
-  "user-avatar-4": { url: "https://picsum.photos/seed/avatar4/40/40", hint: "man glasses" },
-  "user-avatar-5": { url: "https://picsum.photos/seed/avatar5/40/40", hint: "woman nature" },
-  "user-avatar-6": { url: "https://picsum.photos/seed/avatar6/40/40", hint: "man city" },
-};
-
-export const users: User[] = [
-  { id: '1', name: 'Olivia Martin', email: 'olivia.martin@example.com', avatar: placeholderImages["user-avatar-3"].url, imageHint: placeholderImages["user-avatar-3"].hint, role: 'Customer', status: 'Active', joined: format(subDays(new Date(), 2), 'PPP') },
-  { id: '2', name: 'Jackson Lee', email: 'jackson.lee@example.com', avatar: placeholderImages["user-avatar-2"].url, imageHint: placeholderImages["user-avatar-2"].hint, role: 'Photographer', status: 'Active', joined: format(subDays(new Date(), 5), 'PPP') },
-  { id: '3', name: 'Isabella Nguyen', email: 'isabella.nguyen@example.com', avatar: placeholderImages["user-avatar-5"].url, imageHint: placeholderImages["user-avatar-5"].hint, role: 'Photographer', status: 'Pending', joined: format(subDays(new Date(), 10), 'PPP') },
-  { id: '4', name: 'William Kim', email: 'will@example.com', avatar: placeholderImages["user-avatar-4"].url, imageHint: placeholderImages["user-avatar-4"].hint, role: 'Customer', status: 'Active', joined: format(subDays(new Date(), 30), 'PPP') },
-  { id: '5', name: 'Sofia Davis', email: 'sofia.davis@example.com', avatar: placeholderImages["user-avatar-6"].url, imageHint: placeholderImages["user-avatar-6"].hint, role: 'Customer', status: 'Banned', joined: format(subDays(new Date(), 45), 'PPP') },
-];
 
 // export const posts: Post[] = [
 //   {
