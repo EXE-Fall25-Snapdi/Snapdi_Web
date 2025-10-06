@@ -43,7 +43,7 @@ export default defineConfig(({ command, mode }) => {
         '/api': {
           target: 'https://localhost:7000',
           changeOrigin: true,
-          secure: false, // Allow self-signed certificates
+          secure: true, // Allow self-signed certificates
           rewrite: (path) => path.replace(/^\/api/, '/api')
         }
       }

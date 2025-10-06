@@ -33,7 +33,7 @@ export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: Blog
       dataIndex: 'title',
       key: 'title',
       render: (text: string, record: Blog) => (
-        <a href={`/posts/${record.blogId}/${text}`} className="font-medium text-blue-600 hover:underline cursor-pointer">
+        <a href={`/blog/${record.blogId}`} className="font-medium text-blue-600 hover:underline cursor-pointer">
           {text}
         </a>
       ),

@@ -3,6 +3,7 @@ import { Button, Card, Input, Select } from "antd";
 import { UserPlus, Search } from "lucide-react";
 import { UserModal } from "../../../components/AdminComponents/UserModal";
 import { ConfirmationModal } from "../../../components/AdminComponents/ConfirmationModal";
+import UserDetailModal from "../../../components/AdminComponents/UserDetailModal";
 import { userService } from "../../../services/userService";
 import { toast } from "react-toastify";
 import type { User as ApiUser, UserFilterRequest, CreateUserRequest, UpdateUserRequest } from "../../../lib/types";
@@ -27,7 +28,12 @@ const UserManagement = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<ApiUser | null>(null);
 
+  // Detail modal states
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [userToView, setUserToView] = useState<ApiUser | null>(null);
+
   // Filter states
+  const [searchInput, setSearchInput] = useState<string>(''); // Separate search input state
   const [filters, setFilters] = useState<UserFilterRequest>({
     page: 1,
     pageSize: 10,
@@ -122,12 +128,62 @@ const UserManagement = () => {
     setIsConfirmModalOpen(true);
   };
 
+  const handleView = (user: ApiUser) => {
+    setUserToView(user);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleDetailModalClose = () => {
+    setIsDetailModalOpen(false);
+    setUserToView(null);
+  };
+
+  const handleEditFromDetail = (user: ApiUser) => {
+    setSelectedUser(user);
+    setIsEditing(true);
+    setIsUserModalOpen(true);
+    setIsDetailModalOpen(false);
+  };
+
   const handleFilterChange = (key: string, value: any) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,
       page: 1
     }));
+  };
+
+  const handleSearch = () => {
+    setFilters(prev => ({
+      ...prev,
+      searchTerm: searchInput,
+      page: 1
+    }));
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleClearFilters = () => {
+    setSearchInput('');
+    setFilters({
+      page: 1,
+      pageSize: 10,
+      searchTerm: '',
+      roleId: undefined,
+      isActive: undefined,
+      isVerified: undefined,
+      locationCity: '',
+      sortBy: 'createdAt',
+      sortDirection: 'desc'
+    });
   };
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -170,15 +226,29 @@ const UserManagement = () => {
       >
         {/* Filters */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Search Row */}
+          <div className="flex gap-2 mb-4">
             <Input
               placeholder="Search by name or email..."
               prefix={<Search className="w-4 h-4 text-gray-400" />}
-              value={filters.searchTerm}
-              onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              onKeyPress={handleKeyPress}
               allowClear
+              onClear={() => setSearchInput('')}
+              className="flex-1"
             />
+            <Button
+              type="primary"
+              icon={<Search className="w-4 h-4" />}
+              onClick={handleSearch}
+            >
+              Search
+            </Button>
+          </div>
 
+          {/* Filter Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <Select
               placeholder="Select Role"
               value={filters.roleId}
@@ -212,11 +282,24 @@ const UserManagement = () => {
               <Option value={false}>Unverified</Option>
             </Select>
           </div>
+
+          {/* Active Filters & Clear Button */}
+          <div className="flex justify-between items-center">
+            {filters.searchTerm && (
+              <div className="text-sm text-gray-600">
+                Searching for: <span className="font-medium">"{filters.searchTerm}"</span>
+              </div>
+            )}
+            <Button onClick={handleClearFilters}>
+              Clear All Filters
+            </Button>
+          </div>
         </div>
 
         {/* Users Table */}
         <UsersTable
           users={users}
+          onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -270,6 +353,14 @@ const UserManagement = () => {
         message={`Are you sure you want to delete ${userToDelete?.name}? This action cannot be undone.`}
         confirmText="Delete"
         type="danger"
+      />
+
+      {/* User Detail Modal */}
+      <UserDetailModal
+        user={userToView}
+        open={isDetailModalOpen}
+        onClose={handleDetailModalClose}
+        onEdit={handleEditFromDetail}
       />
     </div>
   );

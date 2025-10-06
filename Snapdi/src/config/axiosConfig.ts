@@ -10,7 +10,7 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_ENV === 'production'
     ? import.meta.env.VITE_API_BASE_URL
-    : "/", // Use proxy for development
+    : "https://localhost:7000", // Use proxy for development
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
     const token = useUserStore.getState().getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    } 
+    }
     return config;
   },
   (error) => {
@@ -82,7 +82,7 @@ axiosInstance.interceptors.response.use(
           // Clear user data and redirect to login
           useUserStore.getState().clearUser();
           // You might want to redirect to login page here
-          window.location.href = '/auth/login';
+          window.location.href = '/login';
           break;
         case 403:
           toast.error("Access denied - Insufficient permissions");
