@@ -9,11 +9,11 @@ interface MainSidebarProps {
 
 const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
   const menuItems = [
-    { path: "/", label: "Home", key: "home", icon: Icons.Dashboard },
+    { path: "/", label: "Trang chủ", key: "home", icon: Icons.Dashboard },
     { path: "/snaper", label: "Snaper", key: "snaper", icon: Icons.Camera },
     { path: "/blog", label: "Blog", key: "blog", icon: Icons.FormIcon },
-    { path: "/about", label: "About Us", key: "about", icon: Icons.Building },
-    { path: "/contact", label: "Contact", key: "contact", icon: Icons.Mail },
+    { path: "/about", label: "Giới thiệu", key: "about", icon: Icons.Building },
+    { path: "/contact", label: "Liên hệ", key: "contact", icon: Icons.Mail },
   ];
 
   return (
@@ -83,10 +83,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
         {/* Action Buttons */}
         <div className="p-4 border-t border-gray-300/50 space-y-3 bg-gradient-to-t from-gray-200/50 to-transparent">
           <button className="w-full bg-gradient-to-r from-[#34D399] to-[#10B981] text-white py-3 rounded-2xl font-sf-pro font-bold text-lg hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none">
-            Download now
-          </button>
-          <button className="w-full bg-gradient-to-r from-[#34D399] to-[#10B981] text-white py-3 rounded-2xl font-sf-pro font-bold text-lg hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none border border-emerald-400/20">
-            Sign In
+            Tải xuống ngay
           </button>
         </div>
       </div>

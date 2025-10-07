@@ -5,7 +5,7 @@ import "./MainPage.css";
 function MainPage() {
   return (
     <div className="flex justify-center">
-    <div className="lg:w-10/12 w-full">
+    <div className="lg:w-3/5 w-full">
       <Landing />
       <SnaperBenefit />
     </div>

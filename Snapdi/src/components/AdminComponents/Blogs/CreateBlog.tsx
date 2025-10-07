@@ -7,7 +7,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import { createBlog } from '../../../services/blogService';
 import { getAllKeywords } from '../../../services/keywordService';
 import type { Keyword } from '../../../lib/types';
-import { useLoadingStore } from '../../../config/zustand';
+import { useLoadingStore, useUserStore } from '../../../config/zustand';
 import { toast } from 'react-toastify';
 
 
@@ -27,14 +27,15 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [submitType, setSubmitType] = useState<'draft' | 'published'>('published');
   const { loading } = useLoadingStore();
+  const authorId = useUserStore((state) => state.user?.id);
 
   React.useEffect(() => {
     // Fetch existing keywords from API
     const fetchKeywords = async () => {
       try {
         const response = await getAllKeywords();
-        if (response && Array.isArray(response)) {
-          setKeywords(response);
+        if (response && Array.isArray(response.data)) {
+          setKeywords(response.data);
         } else {
           console.error('Failed to fetch keywords or invalid response format:', response);
         }
@@ -94,11 +95,6 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
-    console.log('Form submitted with values:', values);
-    console.log('Content:', content);
-    console.log('Tags:', tags);
-    console.log('Keyword method:', keywordMethod);
-    console.log('Selected keyword IDs:', selectedKeywordIds);
 
     // Validate content
     if (!content || content.trim() === '' || content === '<p><br></p>') {
@@ -121,7 +117,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
         title: values.title,
         thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl : '', // TODO: Handle uploaded file URL
         content: content,
-        authorId: 1, // TODO: Get actual authorId from user context/auth
+        authorId: authorId, // TODO: Get actual authorId from user context/auth
         keywordNames: keywordMethod === 'names' ? tags : [],
         keywordIds: keywordMethod === 'ids' ? selectedKeywordIds : [],
         isActive: isActive

@@ -5,7 +5,7 @@ const Landing: React.FC = () => {
   return (
     <section className="flex flex-col md:flex-row justify-center md:px-20 mt-10 bg-white">
       {/* Image */} 
-      <div className="hidden md:flex justify-center md:w-1/2">
+      <div className="hidden md:flex justify-center md:w-3/4">
         <img
           src={images.hero}
           alt="Snaper"
