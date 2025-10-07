@@ -33,8 +33,8 @@ function Header() {
               key={index}
               to={item.path}
               className={({ isActive }) =>
-                `w-full flex items-center font-sf-pro! font-bold text-black! gap-4 px-3 py-2 rounded-xl transition-all duration-300
-              ${isActive ? "bg-[#34D399] rounded-xl px-4 py-2 text-white!" : ""}
+                `w-full flex items-center font-sf-pro! font-bold text-black! gap-4 px-3 rounded-xl transition-all duration-300
+              ${isActive ? "bg-[#34D399] text-white!" : ""}
               ${hoveredIndex === index ? " scale-120" : ""}
               ${hoveredIndex !== null && hoveredIndex !== index ? "opacity-75" : ""}`
               }

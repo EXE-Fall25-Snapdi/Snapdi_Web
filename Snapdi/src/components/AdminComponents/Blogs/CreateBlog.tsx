@@ -33,8 +33,8 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     const fetchKeywords = async () => {
       try {
         const response = await getAllKeywords();
-        if (response && Array.isArray(response)) {
-          setKeywords(response);
+        if (response && Array.isArray(response.data)) {
+          setKeywords(response.data);
         } else {
           console.error('Failed to fetch keywords or invalid response format:', response);
         }
