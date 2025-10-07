@@ -37,7 +37,6 @@ export function parseJwt(token: string): any {
 export const login = async (email: string, password: string): Promise<ResponseModel<AuthResponse>> => {
   const response = await post<AuthResponse>(API_CONSTANTS.AUTH.LOGIN, { email, password });
   // Note: This function is deprecated, use loginUser instead
-  console.log(response.data.token)
   return response;
 };
 

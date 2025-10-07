@@ -80,9 +80,11 @@ axiosInstance.interceptors.response.use(
         case 401:
           toast.error("Unauthorized - Please login again");
           // Clear user data and redirect to login
-          useUserStore.getState().clearUser();
-          // You might want to redirect to login page here
-          window.location.href = '/login';
+          if (!window.location.pathname.includes('/login')) {
+            useUserStore.getState().clearUser();
+            // You might want to redirect to login page here
+            window.location.href = '/login';
+          }
           break;
         case 403:
           toast.error("Access denied - Insufficient permissions");

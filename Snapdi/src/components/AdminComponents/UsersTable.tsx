@@ -24,7 +24,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
       title: 'User',
       key: 'user',
       render: (record: User) => (
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-3">
           <Avatar
             src={record.avatarUrl}
             alt={record.name}
@@ -44,9 +44,9 @@ const UsersTable: React.FC<UsersTableProps> = ({
       dataIndex: 'roleName',
       key: 'roleName',
       render: (roleName: string) => (
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleName === 'Admin' ? 'bg-purple-100 text-purple-800' :
-            roleName === 'Photographer' ? 'bg-blue-100 text-blue-800' :
-              'bg-green-100 text-green-800'
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleName === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
+          roleName === 'PHOTOGRAPHER' ? 'bg-blue-100 text-blue-800' :
+            'bg-green-100 text-green-800'
           }`}>
           {roleName}
         </span>
