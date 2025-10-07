@@ -139,7 +139,7 @@ const AdminHeader: React.FC = () => {
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-md bg-brand-gradient text-white hover:scale-120 transition cursor-pointer"
+              className="px-4 py-2 rounded-md bg-red-600 text-white hover:scale-120 transition cursor-pointer"
               >
                 Confirm Logout
               </button>
