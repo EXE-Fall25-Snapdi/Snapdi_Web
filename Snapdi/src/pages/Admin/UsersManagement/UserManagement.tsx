@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Card, Input, Select } from "antd";
+import { Button, Card, Input, Select, Pagination } from "antd";
 import { UserPlus, Search } from "lucide-react";
 import { UserModal } from "../../../components/AdminComponents/UserModal";
 import { ConfirmationModal } from "../../../components/AdminComponents/ConfirmationModal";
@@ -18,7 +18,7 @@ const UserManagement = () => {
     pageSize: 10,
     total: 0,
     showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '50', '100']
+    pageSizeOptions: ['5', '10', '20', '50']
   });
 
   // Modal states
@@ -54,9 +54,9 @@ const UserManagement = () => {
         setUsers(response.data.items);
         setPagination(prev => ({
           ...prev,
-          current: response.data!.currentPage,
+          current: filters.page, // Use filters.page instead of response currentPage
           total: response.data!.totalItems,
-          pageSize: response.data!.pageSize
+          pageSize: filters.pageSize // Use filters.pageSize instead of response pageSize
         }));
       }
     } catch (error) {
@@ -189,15 +189,15 @@ const UserManagement = () => {
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setFilters(prev => ({
       ...prev,
-      page,
+      page: pageSize && pageSize !== prev.pageSize ? 1 : page, // Reset to page 1 if page size changes
       pageSize: pageSize || prev.pageSize
     }));
   };
 
   const roleOptions = [
-    { value: 1, label: 'Customer' },
-    { value: 2, label: 'Photographer' },
-    { value: 3, label: 'Admin' }
+    { value: 1, label: 'Admin' },
+    { value: 2, label: 'Customer' },
+    { value: 3, label: 'Photographer' }
   ];
 
   return (
@@ -305,27 +305,21 @@ const UserManagement = () => {
         />
 
         {/* Pagination */}
-        <div className="mt-6 flex justify-between items-center">
-          <div className="text-sm text-gray-500">
-            Showing {((pagination.current - 1) * pagination.pageSize) + 1} to {Math.min(pagination.current * pagination.pageSize, pagination.total)} of {pagination.total} users
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              disabled={pagination.current <= 1}
-              onClick={() => handlePaginationChange(pagination.current - 1)}
-            >
-              Previous
-            </Button>
-            <span className="px-3 py-1 bg-blue-600 text-white rounded">
-              {pagination.current}
-            </span>
-            <Button
-              disabled={pagination.current * pagination.pageSize >= pagination.total}
-              onClick={() => handlePaginationChange(pagination.current + 1)}
-            >
-              Next
-            </Button>
-          </div>
+        <div className='flex justify-end mt-4'>
+          <Pagination
+            showSizeChanger
+            pageSizeOptions={['5', '10', '20', '50']}
+            current={filters.page}
+            pageSize={filters.pageSize}
+            total={pagination.total}
+            onChange={(page, size) => {
+              handlePaginationChange(page, size);
+            }}
+            showQuickJumper
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} users`
+            }
+          />
         </div>
       </Card>
 

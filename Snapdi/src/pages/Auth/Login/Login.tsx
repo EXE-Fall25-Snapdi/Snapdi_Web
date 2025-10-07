@@ -8,14 +8,12 @@ import { useUserStore } from '../../../config/zustand';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
   const setLoginData = useUserStore((state) => state.setLoginData);
 
   const handleLogin = async (values: LoginRequest) => {
     try {
-      setLoading(true);
       setError('');
 
       const response = await loginUser(values);
@@ -31,8 +29,12 @@ const Login: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.');
       toast.error(err.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  const onFormSubmit = (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
     }
   };
 
@@ -87,6 +89,7 @@ const Login: React.FC = () => {
             form={form}
             name="login"
             onFinish={handleLogin}
+            onSubmitCapture={onFormSubmit}
             layout="vertical"
             requiredMark={false}
           >
@@ -143,12 +146,11 @@ const Login: React.FC = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={loading}
                 size="large"
                 className="w-full h-12 bg-gradient-to-r from-emerald-400 to-emerald-600 hover:from-emerald-600 hover:to-emerald-800 border-none rounded-xl text-base font-semibold shadow-lg shadow-emerald-400/40 hover:shadow-xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
                 block
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                Sign In
               </Button>
             </Form.Item>
           </Form>
