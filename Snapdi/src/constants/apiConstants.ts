@@ -21,6 +21,9 @@ export const API_CONSTANTS = {
     CHANGE_STATUS: "/users/change-status",
     SEARCH_USER: "/users/search",
     CHANGE_ROLE: "/users/change-role",
+    SEARCH_PHOTOGRAPHER_PENDING_LEVEL: "/api/Users/photographers/pending-level/search",
+    SEARCH_PHOTOGRAPHERS: "/api/Users/photographers/search",
+    UPDATE_PHOTOGRAPHER_LEVEL: (id: string | number) => `/api/Users/${id}/photographer-level`,
   },
   BLOGS: {
     GET_ALL: "/api/Blogs",

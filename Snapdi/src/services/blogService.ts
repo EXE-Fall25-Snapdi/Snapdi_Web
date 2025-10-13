@@ -68,7 +68,7 @@ export interface BlogSearchParams {
   searchTerm?: string;
   authorId?: number;
   keywords?: string[];
-  keywordIds?: number[];
+  keywordIds?: Array<string | number>;
   isActive?: boolean;
   dateFrom?: string;
   dateTo?: string;

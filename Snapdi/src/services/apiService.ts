@@ -97,3 +97,25 @@ export const del = async <T>(url: string, loading?: boolean): Promise<ResponseMo
     useLoadingStore.getState().setIsLoadingFlag(false); // Clear loading flag
   }
 };
+
+export const patch = async <T>(url: string, data: any, loading?: boolean): Promise<ResponseModel<T>> => {
+  try {
+    useLoadingStore.getState().setIsLoadingFlag(loading ?? true);
+    const response = await axiosInstance.patch<any>(url, data);
+
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      return response.data as ResponseModel<T>;
+    }
+
+    return {
+      success: true,
+      message: 'Success',
+      data: response.data,
+    } as ResponseModel<T>;
+  } catch (error) {
+    console.error(`Error patching ${url}:`, error);
+    throw error;
+  } finally {
+    useLoadingStore.getState().setIsLoadingFlag(false);
+  }
+};

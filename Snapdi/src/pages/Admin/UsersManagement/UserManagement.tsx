@@ -61,7 +61,7 @@ const UserManagement = () => {
       }
     } catch (error) {
       console.error('Error fetching users:', error);
-      if ((error as any)?.response?.status === 401) {
+      if (error === 401) {
         toast.error('Unauthorized access. Please login again.');
       } else {
         toast.error('Failed to fetch users');
@@ -145,7 +145,10 @@ const UserManagement = () => {
     setIsDetailModalOpen(false);
   };
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (
+    key: keyof UserFilterRequest,
+    value: string | number | boolean | undefined
+  ) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,

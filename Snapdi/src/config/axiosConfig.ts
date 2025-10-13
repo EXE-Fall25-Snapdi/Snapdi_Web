@@ -54,7 +54,7 @@ axiosInstance.interceptors.response.use(
     if (isLoadingFlag) {
       setLoading(false);
     }
-    if (response.data.success) {
+    if (response.status === 200) {
       toast.success(response.data.message);
     } else {
       toast.error(response.data.message);

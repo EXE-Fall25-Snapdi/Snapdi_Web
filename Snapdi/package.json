@@ -28,6 +28,7 @@
     "react-router-dom": "^7.9.1",
     "react-toastify": "^11.0.5",
     "recharts": "^3.2.1",
+    "@microsoft/signalr": "^8.0.7",
     "swr": "^2.3.6",
     "tailwindcss": "^4.1.13",
     "zustand": "^5.0.8"

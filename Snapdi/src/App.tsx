@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import UserManagement from "./pages/Admin/UsersManagement/UserManagement";
 import BlogsManagement from "./pages/Admin/BlogsManagement/BlogsManagement";
 import PhotographerApplication from "./pages/Admin/PhotographerApplication/PhotographerApplication";
+import TransactionHistory from "./pages/Admin/TransactionHistory/TransactionHistory";
 import AboutUs from "./pages/Main/AboutUs/AboutUs";
 import BlogPage from "./pages/Main/BlogPage/BlogPage";
 import BlogDetail from "./pages/Main/BlogDetail/BlogDetail";
@@ -29,6 +30,7 @@ import Contact from "./pages/Main/Contact/Contact";
 import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
+// import ChatBubble from "./components/ChatBubble";
 
 const router = createBrowserRouter([
   {
@@ -73,7 +75,7 @@ const router = createBrowserRouter([
         <AdminLayout />
       // </ProtectedRoute>
     ),
-    errorElement: <AdminDashboard />,
+    errorElement: <NotFound />,
     children: [
       {
         index: true,
@@ -92,12 +94,16 @@ const router = createBrowserRouter([
         element: <BlogsManagement />,
       },
       {
+        path: "transaction-history",
+        element: <TransactionHistory />,
+      },
+      {
         path: "photographer-applications",
         element: <PhotographerApplication />,
       },
       {
         path: "*",
-        element: <AdminDashboard />, // Fallback for any unmatched admin routes
+        element: <NotFound />, // Fallback for any unmatched admin routes
       },
     ],
   },
@@ -121,6 +127,7 @@ const App: React.FC = () => {
             </div>
           )}
           <RouterProvider router={router} />
+          {/* <ChatBubble /> */}
           <ToastContainer
             className="text-sm z-9999"
             position="bottom-right"

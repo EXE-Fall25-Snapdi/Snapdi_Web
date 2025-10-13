@@ -9,10 +9,17 @@ import { getAllKeywords } from '../../../services/keywordService';
 import type { Keyword } from '../../../lib/types';
 import { useLoadingStore, useUserStore } from '../../../config/zustand';
 import { toast } from 'react-toastify';
+import type { UploadProps } from 'antd';
 
 
 interface CreateBlogProps {
   onCreated?: () => void;
+}
+
+interface CreateBlogFormValues {
+  title: string;
+  thumbnailUrl?: string;
+  status?: 'published' | 'draft';
 }
 
 const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
@@ -23,7 +30,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   const [inputTag, setInputTag] = useState('');
   const [thumbnailMethod, setThumbnailMethod] = useState<'upload' | 'url'>('upload');
   const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('names');
-  const [selectedKeywordIds, setSelectedKeywordIds] = useState<number[]>([]);
+  const [selectedKeywordIds, setSelectedKeywordIds] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [submitType, setSubmitType] = useState<'draft' | 'published'>('published');
   const { loading } = useLoadingStore();
@@ -34,7 +41,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     const fetchKeywords = async () => {
       try {
         const response = await getAllKeywords();
-        if (response && Array.isArray(response.data)) {
+        if (response?.success && Array.isArray(response.data)) {
           setKeywords(response.data);
         } else {
           console.error('Failed to fetch keywords or invalid response format:', response);
@@ -94,7 +101,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   };
 
   // Handle form submission
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: CreateBlogFormValues) => {
 
     // Validate content
     if (!content || content.trim() === '' || content === '<p><br></p>') {
@@ -113,18 +120,20 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
 
       console.log('isDraft calculation:', isDraft);
       console.log('Blog status (submit type):', submitType);
-      console.log('Is Active (final):', isActive); const blogData = {
+      console.log('Is Active (final):', isActive);
+
+      const blogData = {
         title: values.title,
-        thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl : '', // TODO: Handle uploaded file URL
+        thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl ?? '' : '', // TODO: Handle uploaded file URL
         content: content,
         authorId: authorId, // TODO: Get actual authorId from user context/auth
         keywordNames: keywordMethod === 'names' ? tags : [],
         keywordIds: keywordMethod === 'ids' ? selectedKeywordIds : [],
-        isActive: isActive
+        isActive
       };
 
       const response = await createBlog(blogData);
-      const blogId = (response as any)?.blogId || (response?.data as any)?.blogId;
+      const blogId = response?.data?.blogId;
 
 
       if (blogId) {
@@ -155,20 +164,20 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       } else {
         toast.error('Blog creation failed: No blog ID in response');
       }
-    } catch (error) {
-      toast.error('Failed to create blog: ' + (error || 'Unknown error'));
+    } catch (error: unknown) {
+      toast.error('Failed to create blog: ' + (error instanceof Error ? error.message : 'Unknown error'));
       // Axios interceptor will handle error toast automatically
     }
   };
 
   // Handle image upload
-  const handleImageUpload = {
+  const handleImageUpload: UploadProps = {
     name: 'file',
     action: '/api/upload', // Replace with your upload endpoint
     headers: {
       authorization: 'authorization-text',
     },
-    onChange(info: any) {
+    onChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -257,7 +266,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
               mode="multiple"
               placeholder="Select existing keywords"
               value={selectedKeywordIds}
-              onChange={setSelectedKeywordIds}
+              onChange={(value) => setSelectedKeywordIds(value as string[])}
               style={{ width: '100%' }}
               size="large"
             >

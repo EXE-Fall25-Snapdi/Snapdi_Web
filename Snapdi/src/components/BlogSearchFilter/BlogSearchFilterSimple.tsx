@@ -3,6 +3,8 @@ import { Input, DatePicker, Button, Space, Card } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import type { BlogSearchParams } from "../../services/blogService";
 import "./BlogSearchFilterSimple.css";
+import type { Dayjs } from "dayjs";
+import type { RangePickerProps } from "antd/es/date-picker";
 
 const { RangePicker } = DatePicker;
 
@@ -22,19 +24,19 @@ const BlogSearchFilterSimple: React.FC<BlogSearchFilterSimpleProps> = ({
     pageSize: 10
   });
 
-  const handleInputChange = (field: keyof BlogSearchParams, value: any) => {
+  const handleInputChange = <K extends keyof BlogSearchParams>(field: K, value: BlogSearchParams[K]) => {
     setSearchForm(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleDateRangeChange = (dates: any) => {
-    if (dates && dates.length === 2) {
+  const handleDateRangeChange: RangePickerProps['onChange'] = (dates) => {
+    if (dates && dates[0] && dates[1]) {
       setSearchForm(prev => ({
         ...prev,
-        dateFrom: dates[0].toISOString(),
-        dateTo: dates[1].toISOString()
+        dateFrom: (dates[0] as Dayjs).toISOString(),
+        dateTo: (dates[1] as Dayjs).toISOString()
       }));
     } else {
       setSearchForm(prev => ({
