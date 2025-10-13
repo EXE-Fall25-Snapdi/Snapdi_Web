@@ -10,6 +10,14 @@ import { useLoadingStore } from '../../../config/zustand';
 
 const { Option } = Select;
 
+interface EditBlogFormValues {
+  title: string;
+  thumbnailUrl?: string;
+  status?: 'published' | 'draft';
+  keywordIds?: number[];
+  isActive: boolean;
+}
+
 interface EditBlogModalProps {
   blog: Blog | null;
   visible: boolean;
@@ -90,7 +98,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
         setTags([]);
       }
     }
-  }, [blog, visible, form]);
+  }, [blog, visible, form, keywords.length]);
 
   const fetchKeywords = async () => {
     try {
@@ -148,7 +156,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: EditBlogFormValues) => {
     if (!blog) return;
 
     try {

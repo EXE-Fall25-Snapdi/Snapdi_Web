@@ -42,6 +42,11 @@ const Sidebar: React.FC = () => {
         label: "Blogs Management",
       },
       {
+        path: "transaction-history",
+        icon: <Icons.History className="w-8 h-8" />,
+        label: "Transaction History",
+      },
+      {
         path: "photographer-applications",
         icon: <Icons.Camera className="w-8 h-8" />,
         label: "Photographer Applications",

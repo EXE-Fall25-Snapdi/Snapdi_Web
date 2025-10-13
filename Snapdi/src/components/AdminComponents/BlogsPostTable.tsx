@@ -63,7 +63,7 @@ export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: Blog
     {
       title: 'Actions',
       key: 'actions',
-      render: (_: any, record: Blog) => (
+      render: (_: unknown, record: Blog) => (
         <Space size="small">
           <Button
             type="text"
