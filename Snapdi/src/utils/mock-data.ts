@@ -114,7 +114,7 @@ export const dashboardMeta = {
 };
 
 export type PhotographerLevel =
-  ""
+  "Chưa có cấp độ"
   | 'Người mới'
   | 'Nghiệp Dư'
   | 'Bán Chuyên'
@@ -249,6 +249,7 @@ export const photographerApplicationsMock: PhotographerApplicationItem[] = [
 ];
 
 export const photographerLevelOptions: PhotographerLevelOption[] = [
+  { label: 'Chưa có cấp độ', value: 'Chưa có cấp độ', apiValue: '' },
   { label: 'Người mới', value: 'Người mới', apiValue: 'Người mới' },
   { label: 'Nghiệp Dư', value: 'Nghiệp Dư', apiValue: 'Nghiệp Dư' },
   { label: 'Bán Chuyên', value: 'Bán Chuyên', apiValue: 'Bán Chuyên' },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import "./Header.css";
-// import Logo from "../../assets/images/logo.png";
+import Logo from "../../assets/images/logo.png";
 import { NavLink } from "react-router-dom";
 import MainSidebar from "../MainSidebar/MainSidebar";
 
@@ -19,35 +19,34 @@ function Header() {
 
   return (
     <>
-      {/* <Container className="nav-container"> */}
-      <Navbar className="nav bg-[#D9D9D9] w-full h-16 md:h-20 flex justify-between px-4 md:px-10 py-2 font-sf-pro" expand="lg" fixed="top">
+      <Navbar className="w-full h-28 md:h-28 flex justify-between px-4 md:pl-24 md:pr-14 py-12 font-sf-pro" expand="lg" fixed="top">
         <Nav className="nav-logo">
-          {/* <Image src={Logo} alt="Logo" height={60} /> */}
-          <p className="font-sf-pro font-extrabold text-black text-2xl md:text-[32px]">SNAPDI</p>
+          <img src={Logo} alt="Logo" />
+          {/* <p className="font-sf-pro font-extrabold text-black text-2xl md:text-[32px]">SNAPDI</p> */}
         </Nav>
 
         {/* Desktop Navigation */}
-        <Nav className="font-sf-pro hidden lg:flex gap-6">
+        <Nav className="font-sf-pro hidden lg:flex h-12 px-8 rounded-full bg-[#126951]">
           {menuItems.map((item, index) => (
             <NavLink
               key={index}
               to={item.path}
               className={({ isActive }) =>
-                `w-full flex items-center font-sf-pro! font-bold text-black! gap-4 px-3 rounded-xl transition-all duration-300
-              ${isActive ? "bg-[#34D399] text-white!" : ""}
-              ${hoveredIndex === index ? " scale-120" : ""}
+                `w-full flex items-center px-4 
+              ${isActive ? " !text-[#98BF33]" : "!text-white"}
+              ${hoveredIndex === index ? " scale-110" : ""}
               ${hoveredIndex !== null && hoveredIndex !== index ? "opacity-75" : ""}`
               }
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <span className="font-sf-pro font-bold text-lg block whitespace-nowrap">{item.label}</span>
+              <span className="font-sf-pro text-lg block whitespace-nowrap ">{item.label}</span>
             </NavLink>
           ))}
         </Nav>
 
         {/* Desktop Buttons */}
-        <Nav className="hidden lg:flex gap-2 items-center">
+        {/* <Nav className="hidden lg:flex gap-2 items-center">
           <button className="bg-[#34D399] text-white px-4 py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform">
             Tải ngay
           </button>
@@ -57,7 +56,7 @@ function Header() {
           >
             Đăng nhập
           </a>
-        </Nav>
+        </Nav> */}
 
         {/* Mobile Menu Button */}
         <Nav className="lg:hidden">

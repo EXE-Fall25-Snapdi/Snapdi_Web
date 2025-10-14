@@ -57,6 +57,7 @@ export default function Footer() {
               <li><a className="text-black! hover:underline!" href="#">About Snapdi</a></li>
               <li><a className="text-black! hover:underline!" href="#">How it Works</a></li>
               <li><a className="text-black! hover:underline!" href="#">Download App</a></li>
+              <li><a className="text-black! hover:underline!" href="/login">Admin Login</a></li>
             </ul>
           </div>
 
