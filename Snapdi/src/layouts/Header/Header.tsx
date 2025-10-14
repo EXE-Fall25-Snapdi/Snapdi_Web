@@ -11,7 +11,7 @@ function Header() {
 
   const menuItems = [
     { path: "/", label: "Trang chủ", key: "home" },
-    { path: "/snaper", label: "Snaper", key: "snaper" },
+    // { path: "/snaper", label: "Snaper", key: "snaper" },
     { path: "/blog", label: "Blog", key: "blog" },
     { path: "/about", label: "Về chúng tôi", key: "about" },
     { path: "/contact", label: "Liên hệ", key: "contact" },
