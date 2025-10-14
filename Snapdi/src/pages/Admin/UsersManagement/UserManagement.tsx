@@ -204,14 +204,12 @@ const UserManagement = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div>
+      <p className="text-gray-500 pb-3">Manage your customers and photographers</p>
       <Card
         title={
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">User Management</h1>
-              <p className="text-gray-500">Manage your customers and photographers</p>
-            </div>
+            <p className="text-lg">Users list</p>
             <Button
               type="primary"
               size="large"

@@ -80,7 +80,7 @@ const PhotographerApplication = () => {
   const toPhotographerLevel = useCallback(
     (level: string | null | undefined): PhotographerLevel => {
       if (!level || !level.trim()) {
-        return '';
+        return 'Chưa có cấp độ';
       }
       const cleanedLevel = level.trim();
       return levelDisplayMap[cleanedLevel] ?? (cleanedLevel as PhotographerLevel) ?? '';
@@ -171,9 +171,9 @@ const PhotographerApplication = () => {
       prev.map((item: PhotographerApplicationItem) =>
         item.userId === userId
           ? {
-            ...item,
-            photographerLevel: level,
-          }
+              ...item,
+              photographerLevel: level as PhotographerLevel,
+            }
           : item,
       ),
     );
@@ -188,9 +188,9 @@ const PhotographerApplication = () => {
         prev.map((item: PhotographerApplicationItem) =>
           item.userId === userId
             ? {
-              ...item,
-              photographerLevel: previousLevel,
-            }
+                ...item,
+                photographerLevel: previousLevel as PhotographerLevel,
+              }
             : item,
         ),
       );
@@ -277,12 +277,9 @@ const PhotographerApplication = () => {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Photographer Applications</h1>
-          <p className="text-sm text-slate-500">
+          <p className=" text-slate-500">
             Review, promote, and approve availability for new photographers on Snapdi.
           </p>
-        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input.Search
             placeholder="Search by name, email, city, or keywords"
@@ -439,14 +436,25 @@ const PhotographerApplication = () => {
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photographer Level</label>
-                    <Select
-                      value={photographer.photographerLevel || undefined}
-                      placeholder="Chọn cấp độ"
-                      onChange={(value: PhotographerLevel) => {
-                        void handleLevelChange(photographer.userId, value);
-                      }}
-                      options={levelSelectOptions}
-                    />
+                    {photographer.photoPortfolio.length > 0 ? (
+                      <Select
+                        value={photographer.photographerLevel || undefined}
+                        onChange={(value: PhotographerLevel) => {
+                          void handleLevelChange(photographer.userId, value);
+                        }}
+                        options={levelSelectOptions}
+                      />
+                    ) : (
+                      <Select
+                        value={photographer.photographerLevel || undefined}
+                        placeholder="Chọn cấp độ"
+                        onChange={(value: PhotographerLevel) => {
+                          void handleLevelChange(photographer.userId, value);
+                        }}
+                        options={levelSelectOptions}
+                        disabled
+                      />
+                    )}
                   </div>
 
 

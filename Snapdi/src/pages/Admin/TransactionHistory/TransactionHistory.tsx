@@ -138,10 +138,7 @@ const TransactionHistory = () => {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Transaction History</h1>
-          <p className="text-sm text-slate-500">Monitor marketplace payments, statuses, and booking revenue.</p>
-        </div>
+          <p className=" text-slate-500 align-text-top">Monitor marketplace payments, statuses, and booking revenue.</p>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input
             prefix={<Search className="h-4 w-4 text-slate-400" />}

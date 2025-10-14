@@ -129,7 +129,7 @@ const PhotographerPortfolioModal = ({
         {/* Full Screen Image Viewer */}
         {isImageViewerOpen && photographer.photoPortfolio.length > 0 && (
           <div
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+            className="fixed inset-0 z-[9999] h-full bg-black/95 flex items-center justify-center"
             onClick={handleCloseImageViewer}
             onKeyDown={handleKeyDown}
             role="button"
@@ -170,6 +170,8 @@ const PhotographerPortfolioModal = ({
                 src={photographer.photoPortfolio[currentImageIndex]}
                 alt={`${photographer.name} portfolio ${currentImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain"
+                aria-disabled="true"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </div>
 
