@@ -63,10 +63,11 @@ const Sidebar: React.FC = () => {
         <div className="flex flex-col gap-4 mt-4 pl-4">
           <div className="flex items-center justify-center pr-4">
             <img
-              src={Images.logo}
+              src={Images.logoWhite}
               alt="logo"
-              className="lg:max-w-24 lg:h-24 max-w-16 transition-all duration-300"
+              className="lg:max-w-12 lg:h-12 max-w-16 transition-all duration-300"
             />
+            <span className="text-white text-3xl ml-4">Snapdi</span>
           </div>
           {/* {parseUser.role_code && menuItems[parseUser.role_code] && ( */}
           {/* {parseUser.role_code && menuItems[parseUser.role_code] && ( */}
