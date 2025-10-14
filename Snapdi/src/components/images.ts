@@ -28,8 +28,10 @@ import pose1 from "../assets/images/mascot-pose1.png";
 // import changelog from "../assets/images/changelog.png";
 // import Logo3 from "../assets/images/logo3.png";
 import hero from "../assets/images/snaper-hero.png";
+import logoWhite from "../assets/images/logo-white.svg";
 const Images = {
   logo,
+  logoWhite,
   hero,
   camera,
   map,
