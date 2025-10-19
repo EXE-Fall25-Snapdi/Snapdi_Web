@@ -2,10 +2,7 @@ import { Card } from 'antd';
 import {
   dashboardSummaryCards,
   dashboardRevenueTrend,
-  dashboardTransactionActivity,
-  dashboardReviewHighlights,
   dashboardMeta,
-  type DashboardTransaction,
 } from '../../../utils/mock-data';
 import {
   Area,
@@ -18,26 +15,26 @@ import {
 } from 'recharts';
 
 
-const getStatusBadge = (status: DashboardTransaction['status']) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-emerald-100 text-emerald-700';
-    case 'pending':
-      return 'bg-amber-100 text-amber-700';
-    case 'refunded':
-      return 'bg-rose-100 text-rose-700';
-    default:
-      return 'bg-slate-100 text-slate-700';
-  }
-};
+// const getStatusBadge = (status: DashboardTransaction['status']) => {
+//   switch (status) {
+//     case 'completed':
+//       return 'bg-emerald-100 text-emerald-700';
+//     case 'pending':
+//       return 'bg-amber-100 text-amber-700';
+//     case 'refunded':
+//       return 'bg-rose-100 text-rose-700';
+//     default:
+//       return 'bg-slate-100 text-slate-700';
+//   }
+// };
 
 const AdminDashboard = () => {
   const UpdatedIcon = dashboardMeta.lastUpdatedBadge.icon;
-  const ActivityIcon = dashboardMeta.activityBadgeIcon;
+  // const ActivityIcon = dashboardMeta.activityBadgeIcon;
   const updatedLabel = dashboardMeta.lastUpdatedBadge.text;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-h-screen overflow-y-clip">
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {dashboardSummaryCards.map((item) => {
           const Icon = item.icon;
@@ -58,7 +55,7 @@ const AdminDashboard = () => {
         })}
       </section>
 
-      <section className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
+      <section className="gap-6">
         <Card className="col-span-1 2xl:col-span-2 border border-slate-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -69,7 +66,7 @@ const AdminDashboard = () => {
               <UpdatedIcon className="h-4 w-4" /> {updatedLabel}
             </span>
           </div>
-          <div className="mt-6 h-72 w-full">
+          <div className="mt-6 h-96 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dashboardRevenueTrend}>
                 <defs>
@@ -121,7 +118,7 @@ const AdminDashboard = () => {
           </div>
         </Card>
 
-        <Card className="col-span-1 border border-slate-100 shadow-sm">
+        {/* <Card className="col-span-1 border border-slate-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Transaction Activity</h3>
@@ -149,9 +146,10 @@ const AdminDashboard = () => {
             ))}
           </div>
         </Card>
+        */}
       </section>
 
-      <section className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
+      {/* <section className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
         <Card className="border border-slate-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -180,7 +178,7 @@ const AdminDashboard = () => {
             ))}
           </div>
         </Card>
-      </section>
+      </section> */}
     </div>
   );
 };

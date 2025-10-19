@@ -171,9 +171,9 @@ const PhotographerApplication = () => {
       prev.map((item: PhotographerApplicationItem) =>
         item.userId === userId
           ? {
-              ...item,
-              photographerLevel: level as PhotographerLevel,
-            }
+            ...item,
+            photographerLevel: level as PhotographerLevel,
+          }
           : item,
       ),
     );
@@ -188,12 +188,14 @@ const PhotographerApplication = () => {
         prev.map((item: PhotographerApplicationItem) =>
           item.userId === userId
             ? {
-                ...item,
-                photographerLevel: previousLevel as PhotographerLevel,
-              }
+              ...item,
+              photographerLevel: previousLevel as PhotographerLevel,
+            }
             : item,
         ),
       );
+    } else {
+      toast.success('Photographer level updated successfully');
     }
   };
 
@@ -277,9 +279,9 @@ const PhotographerApplication = () => {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <p className=" text-slate-500">
-            Review, promote, and approve availability for new photographers on Snapdi.
-          </p>
+        <p className=" text-slate-500">
+          Review, promote, and approve availability for new photographers on Snapdi.
+        </p>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input.Search
             placeholder="Search by name, email, city, or keywords"
