@@ -15,6 +15,7 @@ function Header() {
     { path: "/blog", label: "Blog", key: "blog" },
     { path: "/about", label: "Về chúng tôi", key: "about" },
     { path: "/contact", label: "Liên hệ", key: "contact" },
+    { path: "/signup", label: "Đăng ký", key: "signup" },
   ];
 
   return (

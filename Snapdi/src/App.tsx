@@ -38,6 +38,10 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/signup",
+    element: <SnaperPage />,
+  },
+  {
     path: "/",
     element: <MainLayout />,
     errorElement: <NotFound />,
