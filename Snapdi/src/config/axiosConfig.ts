@@ -56,6 +56,8 @@ axiosInstance.interceptors.response.use(
     }
     if (response.status === 200) {
       toast.success(response.data.message);
+    } else if (response.status === 201 || response.status === 204 || response.status === 202) {
+      toast.success(response.data.message);
     } else {
       toast.error(response.data.message);
     }
@@ -73,6 +75,10 @@ axiosInstance.interceptors.response.use(
         case 400:
           if (error.response.data?.message) {
             toast.error(error.response.data.message);
+          } else if (error.response.data) {
+            toast.error(error.response.data);
+          } else if (error.message) {
+            toast.error(error.message);
           } else {
             toast.error("Bad Request");
           }

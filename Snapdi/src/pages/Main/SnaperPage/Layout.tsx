@@ -2,6 +2,7 @@ import React from 'react';
 // import Logo from '../../assets/logo.png'; // Thêm logo của bạn
 import RightImage from '../../../assets/images/signup_banner.svg'; // Thêm ảnh bên phải
 import logo from '../../../assets/images/logo.png'
+import Icons from '../../../components/icon';
 
 type Props = {
   children: React.ReactNode;
@@ -44,11 +45,6 @@ export default function SignUpLayout({ children, currentRole, onRoleChange }: Pr
               </button>
             </div>
           </div>
-          {/* <div className='w-1/6 flex items-center justify-center'>
-            <Button type="primary" shape="round" size="middle">
-              Đăng nhập
-            </Button>
-          </div> */}
         </div>
 
         {/* Nội dung form (các step) sẽ được render ở đây */}
@@ -59,6 +55,9 @@ export default function SignUpLayout({ children, currentRole, onRoleChange }: Pr
 
       {/* === CỘT BÊN PHẢI (ẢNH) === */}
       <div className="w-1/2 bg-gradient-to-br from-green-300 to-cyan-400 p-10 relative flex items-center justify-center overflow-hidden">
+        <a href="/" className='absolute z-50 top-6 right-6 hover:scale-110 text-[#0A9276]! rounded-full bg-white p-2'>
+          <Icons.ArrowLeft className='w-10 h-10' />
+        </a>
         {/* <p className="text-white opacity-50 text-2xl">[Placeholder cho ảnh photographer]</p> */}
         <img src={RightImage} alt="Photographer" className="absolute scale-110 -bottom-10 h-auto object-contain" />
       </div>

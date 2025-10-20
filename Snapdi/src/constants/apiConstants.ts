@@ -1,11 +1,36 @@
 export const API_CONSTANTS = {
   AUTH: {
     LOGIN: "api/auth/login",
-    LOGOUT: "/auth/logout",
-    USER_INFO: "/auth",
-    FORGOT_PASSWORD: "/auth/forgot-password",
-    VERIFY_TOKEN: "/auth/verify-token",
-    RESEND_TOKEN: "/auth/resend-token",
+    LOGOUT: "api/auth/logout",
+    USER_INFO: "api/auth",
+    FORGOT_PASSWORD: "api/auth/forgot-password",
+    VERIFY_TOKEN: "api/auth/verify-token",
+    RESEND_TOKEN: "api/auth/resend-token",
+    SIGNUP: "api/auth/register",
+    SIGNUP_PHOTOGRAPHER: "api/auth/register-photographer",
+    VERIFY_OTP: "api/auth/verify-email-code",
+    RESEND: "api/auth/resend-verification-code"
+  },
+  CLOUDINARY: {
+    UPLOAD: "/api/Cloudinary/upload",
+    UPLOAD_MULTIPLE: "/api/Cloudinary/upload-multiple",
+    DELETE: "api/Cloudinary/delete",
+    DELETE_MULTIPLE: "api/Cloudinary/delete-multiple",
+    DELETE_ALL: (uploadType: string) => `api/Cloudinary/delete-all/${uploadType}`,
+    TRANSFORM_URL: (publicId: string) => `/api/Cloudinary/transform-url${publicId}`
+  },
+  PHOTO_PORTFOLIO: {
+    GET_BY_USER_ID: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}`,
+    GET_MY_PORTFOLIOS: "/api/PhotoPortfolio/my-portfolios",
+    GET_BY_ID: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    UPDATE: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    DELETE: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    CREATE: "/api/PhotoPortfolio",
+    CREATE_MULTIPLE: "/api/PhotoPortfolio/multiple",
+    CREATE_MULTIPLE_FOR_USER: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}/multiple`,
+    DELETE_ALL: "/api/PhotoPortfolio/all",
+    HAS_PORTFOLIO: "/api/PhotoPortfolio/has-portfolio",
+    COUNT: "/api/PhotoPortfolio/count"
   },
   MEDIA: {
     SIGNATURE: "/api/Media/signature",

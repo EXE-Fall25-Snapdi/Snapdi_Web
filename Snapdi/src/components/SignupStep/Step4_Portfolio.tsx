@@ -1,6 +1,5 @@
-import { Form, Row, Col, Typography, Upload } from 'antd';
-import { UploadOutlined, CheckCircleFilled } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
+import { Form, Row, Col, Typography } from 'antd';
+import { CheckCircleFilled } from '@ant-design/icons';
 const { Title } = Typography;
 import phone from '../../assets/images/phone.svg';
 import digitalCamera from '../../assets/images/digital-camera.svg';
@@ -53,19 +52,7 @@ const EquipmentCard = ({
 
 export default function Step4_Portfolio() {
 
-  const uploadProps: UploadProps = {
-    name: 'file',
-    listType: "picture-card",
-    beforeUpload: () => false, // Ngăn auto-upload, ta sẽ upload thủ công
-    multiple: true,
-  };
-
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
+  
 
   return (
     <div>
@@ -92,20 +79,7 @@ export default function Step4_Portfolio() {
         </Col>
       </Row>
 
-      <Title level={4} className="mt-6 mb-2">Một số tác phẩm</Title>
-      <Form.Item
-        name="portfolio"
-        valuePropName="fileList"
-        getValueFromEvent={normFile}
-        rules={[{ required: true, message: 'Vui lòng tải lên ít nhất 1 ảnh!' }]}
-      >
-        <Upload {...uploadProps}>
-          <div>
-            <UploadOutlined />
-            <div style={{ marginTop: 8 }}>Tải lên</div>
-          </div>
-        </Upload>
-      </Form.Item>
+      
 
       <Title level={4} className="mt-6 mb-2">Thiết bị chính</Title>
       <Form.Item

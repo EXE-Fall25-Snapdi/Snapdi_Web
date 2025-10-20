@@ -30,11 +30,11 @@ import Contact from "./pages/Main/Contact/Contact";
 import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
-// import ChatBubble from "./components/ChatBubble";
+import ChatBubble from "./components/ChatBubble";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/admin-login",
     element: <Login />,
   },
   {
@@ -131,7 +131,7 @@ const App: React.FC = () => {
             </div>
           )}
           <RouterProvider router={router} />
-          {/* <ChatBubble /> */}
+          <ChatBubble />
           <ToastContainer
             className="text-sm z-9999"
             position="bottom-right"

@@ -34,7 +34,7 @@ import {
   Earth,
   Wallet2,
   UserCheck,
-TrendingUp
+  TrendingUp
 } from "lucide-react";
 import {
   FaUsers,
@@ -43,7 +43,8 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaClock,
-   FaFacebook, FaTiktok
+  FaFacebook, FaTiktok,
+  FaArrowLeft
 } from "react-icons/fa";
 
 import { BiMenuAltLeft } from "react-icons/bi";
@@ -80,6 +81,7 @@ const Icons: IconType = {
   Wallet: Wallet,
   ArrowUpRight: GoArrowUpRight,
   ArrowRight: FaArrowRight,
+  ArrowLeft: FaArrowLeft,
   Lock: CiLock,
   Unlock: CiUnlock,
   Approve: Check,

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Button, Table, Avatar, Upload } from 'antd';
-import { Edit, Trash2, Eye } from 'lucide-react';
+import { Button, Table, Upload, message } from 'antd';
+import { Edit, Trash2, Eye, Upload as UploadIcon } from 'lucide-react';
 import type { User } from '../../lib/types';
-import { getSignature, confirmUpload } from '../../services/mediaService';
+import CloudinaryAvatar from '../CloudinaryAvatar';
+import { cloudinaryService } from '../../services/uploadService';
+import { userService } from '../../services/userService';
 
 export interface UsersTableProps {
   users: User[];
@@ -26,13 +28,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
       key: 'user',
       render: (record: User) => (
         <div className="flex items-center gap-3">
-          <Avatar
-            src={record.avatarUrl}
-            alt={record.name}
+          <CloudinaryAvatar
+            publicId={record.avatarUrl}
+            fallbackText={record.name.charAt(0).toUpperCase()}
             size={40}
-          >
-            {record.name.charAt(0).toUpperCase()}
-          </Avatar>
+          />
           <div>
             <div className="font-medium text-sm">{record.name}</div>
             <div className="text-xs text-gray-500">{record.email}</div>
@@ -126,37 +126,39 @@ const UsersTable: React.FC<UsersTableProps> = ({
             showUploadList={false}
             customRequest={async ({ file, onSuccess, onError }) => {
               try {
-                const sigRes = await getSignature({ entityType: 'user', entityId: record.userId, role: 'avatar' });
-                const sig = sigRes.data;
-                const url = `https://api.cloudinary.com/v1_1/${sig.cloudName}/auto/upload`;
-                const publicId = `${sig.folder}/user/${record.userId}/avatar-${Date.now()}`;
-                const fd = new FormData();
-                fd.append('file', file as File);
-                fd.append('api_key', sig.apiKey);
-                fd.append('timestamp', String(sig.timestamp));
-                fd.append('signature', sig.signature);
-                fd.append('folder', sig.folder);
-                fd.append('public_id', publicId);
-                if (sig.eager) fd.append('eager', sig.eager);
-                const resp = await fetch(url, { method: 'POST', body: fd });
-                if (!resp.ok) throw new Error('Upload failed');
-                const up = await resp.json();
-                await confirmUpload({
-                  entityType: 'user',
-                  entityId: record.userId,
-                  role: 'avatar',
-                  public_id: up.public_id,
-                  secure_url: up.secure_url,
-                  width: up.width,
-                  height: up.height,
+                // 1. Upload to Cloudinary and get publicId
+                const uploadResult = await cloudinaryService.uploadSingle(
+                  file as File,
+                  'avatar'
+                );
+
+                // 2. Update user's avatarUrl with the publicId
+                // Keep all other fields the same
+                await userService.updateUser(record.userId, {
+                  name: record.name,
+                  phone: record.phone,
+                  locationAddress: record.locationAddress,
+                  locationCity: record.locationCity,
+                  avatarUrl: uploadResult.publicId, // Update only avatar
+                  isActive: record.isActive,
+                  isVerify: record.isVerify
                 });
+
+                message.success('Avatar updated successfully!');
                 onSuccess && onSuccess({}, new XMLHttpRequest());
-              } catch (e) {
-                onError && onError(e as any);
+
+                // Reload page or trigger parent refresh
+                window.location.reload();
+              } catch (error) {
+                console.error('Avatar upload failed:', error);
+                message.error('Failed to update avatar');
+                onError && onError(error as any);
               }
             }}
           >
-            <Button type="text" size="small">Update Avatar</Button>
+            <Button type="text" size="small" icon={<UploadIcon className="w-3 h-3" />}>
+              Update Avatar
+            </Button>
           </Upload>
         </div>
       ),

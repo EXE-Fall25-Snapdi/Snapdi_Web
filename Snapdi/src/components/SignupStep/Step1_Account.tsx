@@ -23,7 +23,6 @@ export default function Step1_Account() {
 
         <Col span={12}>
           <Form.Item
-            label="Ngày sinh"
             name="dob"
             rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}
           >
