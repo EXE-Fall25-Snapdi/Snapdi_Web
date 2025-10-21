@@ -85,5 +85,14 @@ export const API_CONSTANTS = {
     GET_OR_CREATE: "/api/Keywords/get-or-create",
     EXISTS_BY_ID: (id: string | number) => `/api/Keywords/${id}/exists`,
     EXISTS: "/api/Keywords/exists",
+  },
+  STYLES: {
+    GET_ALL: "/api/Styles",
+    CREATE: "/api/Styles",
+    UPDATE: (id: string | number) => `/api/Styles/${id}`,
+    DELETE: (id: string | number) => `/api/Styles/${id}`,
+  },
+  PHOTOGRAPHER_STYLES: {
+    ADD_MULTIPLE: (userId: string | number) => `/api/PhotographerStyles/photographer/${userId}/styles/multiple`,
   }
 };

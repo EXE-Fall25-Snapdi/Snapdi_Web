@@ -52,15 +52,15 @@ const EquipmentCard = ({
 
 export default function Step4_Portfolio() {
 
-  
+
 
   return (
     <div>
       <Title level={3} className="mb-6">Thông tin chuyên môn</Title>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item
-            name="description" // Map tới API
+            name="photoPrice" // Map tới API
             rules={[{ required: true, message: 'Vui lòng nhập chuyên môn!' }]}
           >
             <FilledInput
@@ -68,18 +68,9 @@ export default function Step4_Portfolio() {
               placeholder="xxx VND" />
           </Form.Item>
         </Col>
-        <Col span={12}>
-          <Form.Item
-            name="category" // Figma có, API không
-          >
-            <FilledInput
-              label="Thế loại"
-              placeholder="Vd: Nghệ thuật, đường phố..." />
-          </Form.Item>
-        </Col>
       </Row>
 
-      
+
 
       <Title level={4} className="mt-6 mb-2">Thiết bị chính</Title>
       <Form.Item

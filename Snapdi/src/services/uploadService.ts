@@ -53,12 +53,12 @@ class CloudinaryService {
   // Upload single image
   async uploadSingle(
     file: File,
-    publicId: string = "avatar",
-    uploadType: string = "avatar"
+    publicId: string | '',
+    uploadType: string
   ): Promise<CloudinaryUploadResponse> {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("publicId", publicId);
+    formData.append("publicId", publicId ? publicId : '');
     formData.append("uploadType", uploadType);
 
     const response = await axiosInstance.post<CloudinaryUploadResponse>(

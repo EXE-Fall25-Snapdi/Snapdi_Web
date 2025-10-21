@@ -31,6 +31,7 @@ import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import ChatBubble from "./components/ChatBubble";
+import AdminSetting from "./pages/Admin/AdminSetting/AdminSetting";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
       {
         path: "photographer-applications",
         element: <PhotographerApplication />,
+      },
+      {
+        path: "settings",
+        element: <AdminSetting />,
       },
       {
         path: "*",

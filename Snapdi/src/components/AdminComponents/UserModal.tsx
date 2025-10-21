@@ -81,7 +81,7 @@ export const UserModal: React.FC<UserModalProps> = ({
   const handleAvatarUpload = async (file: File) => {
     setIsUploadingAvatar(true);
     try {
-      const uploadResult = await cloudinaryService.uploadSingle(file, 'avatar');
+      const uploadResult = await cloudinaryService.uploadSingle(file, 'avatar', 'avatar');
       setFormData(prev => ({
         ...prev,
         avatarUrl: uploadResult.publicId

@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Avatar, Button, Card, DatePicker, Input, Pagination, Select, Tag } from 'antd';
+import { Button, Card, DatePicker, Input, Pagination, Select, Tag } from 'antd';
+// Avatar, 
 import { Camera, Eye, Mail, MapPin, Phone, Star } from 'lucide-react';
 import { photographerLevelOptions, type PhotographerApplicationItem, type PhotographerLevel, type PhotographerLevelOption } from '../../../utils/mock-data';
 import { photographerService } from '../../../services/photographerService';
+import CloudinaryImage from '../../../components/CloudinaryImage';
 import type {
   PhotographerPendingLevelItem,
   PhotographerSearchRequest,
-  PhotographerSearchSummary,
 } from '../../../lib/types';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { toast } from 'react-toastify';
 import PhotographerPortfolioModal from '../../../components/PhotographerPortfolioModal/PhotographerPortfolioModal';
+import CloudinaryAvatar from '../../../components/CloudinaryAvatar';
 
 const PhotographerApplication = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -23,7 +25,7 @@ const PhotographerApplication = () => {
     sortDirection: 'desc',
   });
   const [photographers, setPhotographers] = useState<PhotographerApplicationItem[]>([]);
-  const [summary, setSummary] = useState<PhotographerSearchSummary | null>(null);
+  const [totalPhotographers, setTotalPhotographers] = useState<number | null>(null);
   const [pagination, setPagination] = useState({ current: filters.pageNumber ?? 1, pageSize: filters.pageSize ?? 6, total: 0 });
   const [portfolioModalOpen, setPortfolioModalOpen] = useState(false);
   const [selectedPhotographer, setSelectedPhotographer] = useState<PhotographerApplicationItem | null>(null);
@@ -65,16 +67,17 @@ const PhotographerApplication = () => {
   const createdFromValue = useMemo(() => (filters.createdFrom ? dayjs(filters.createdFrom) : null), [filters.createdFrom]);
   const createdToValue = useMemo(() => (filters.createdTo ? dayjs(filters.createdTo) : null), [filters.createdTo]);
 
-  const normaliseYears = (value: PhotographerPendingLevelItem['photographerProfile'] | null | undefined): number => {
+  const normaliseYears = (value: PhotographerPendingLevelItem['photographerProfile'] | null | undefined): string => {
     const years = value?.yearsOfExperience;
     if (years === null || years === undefined) {
-      return 0;
+      return '0';
     }
     if (typeof years === 'number') {
-      return years;
+      return years.toString();
     }
-    const parsed = parseFloat(years);
-    return Number.isNaN(parsed) ? 0 : parsed;
+    // Format mới: "số năm | mô tả" (ví dụ: "3 | Intermediate")
+    // Trả về nguyên string để hiển thị đầy đủ
+    return years;
   };
 
   const toPhotographerLevel = useCallback(
@@ -108,7 +111,11 @@ const PhotographerApplication = () => {
       yearsOfExperience: normaliseYears(item.photographerProfile),
       avgRating: item.photographerProfile?.avgRating ?? 0,
       isAvailable: item.photographerProfile?.isAvailable ?? false,
+      photoPrice: item.photographerProfile?.photoPrice ?? 'Not provided yet.',
+      workLocation: item.photographerProfile?.workLocation ?? 'Not provided yet.',
+      photoType: item.photographerProfile?.photoType ?? 'Not provided yet.',
       description: item.photographerProfile?.description ?? 'No introduction has been added.',
+      photographerStyles: item.photographerProfile?.photographerStyles ?? [],
       photographerLevel: toPhotographerLevel(item.photographerProfile?.levelPhotographer),
       photoPortfolio: (item.photoPortfolios ?? [])
         .map((portfolio) => portfolio.photoUrl)
@@ -135,10 +142,11 @@ const PhotographerApplication = () => {
 
         if (!ignore && response.success && response.data) {
           const data = response.data;
+          console.log(data);
           const mapped = mapItemsToApplications(data.data);
 
           setPhotographers(mapped);
-          setSummary(data.summary ?? null);
+          setTotalPhotographers(data.totalRecords ?? 0);
           setPagination({
             current: data.pageNumber ?? payload.pageNumber ?? 1,
             pageSize: data.pageSize ?? payload.pageSize ?? 6,
@@ -148,7 +156,7 @@ const PhotographerApplication = () => {
       } catch (error) {
         if (!ignore) {
           setPhotographers([]);
-          setSummary(null);
+          setTotalPhotographers(null);
           setPagination({
             current: payload.pageNumber ?? 1,
             pageSize: payload.pageSize ?? 6,
@@ -344,36 +352,11 @@ const PhotographerApplication = () => {
         />
       </section>
 
-      {summary && (
+      {totalPhotographers && (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="border border-slate-100">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Photographers</p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{summary.totalPhotographers}</p>
-          </Card>
-          <Card className="border border-slate-100">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Currently Available</p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{summary.availableCount}</p>
-            <p className="text-xs text-slate-500">
-              {summary.totalPhotographers && summary.totalPhotographers > 0
-                ? `${Math.round((summary.availableCount / summary.totalPhotographers) * 100)}% of total`
-                : 'No availability data yet'}
-            </p>
-          </Card>
-          <Card className="border border-slate-100">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Verified Photographers</p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{summary.verifiedCount}</p>
-            <p className="text-xs text-slate-500">
-              {summary.totalPhotographers && summary.totalPhotographers > 0
-                ? `${Math.round((summary.verifiedCount / summary.totalPhotographers) * 100)}% verified`
-                : 'No verification data yet'}
-            </p>
-          </Card>
-          <Card className="border border-slate-100">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Portfolio Coverage</p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{summary.withPortfolioCount}</p>
-            <p className="text-xs text-slate-500">
-              Avg rating {summary.averageRating?.toFixed(2) ?? '0.00'} | {summary.mostCommonLocation ?? 'No top location'}
-            </p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">{totalPhotographers}</p>
           </Card>
         </section>
       )}
@@ -383,7 +366,12 @@ const PhotographerApplication = () => {
           <Card key={photographer.userId} className="border border-slate-100 shadow-sm">
             <div className="flex flex-col gap-4 lg:flex-row">
               <div className="flex flex-col items-center gap-3 text-center lg:w-40">
-                <Avatar size={96} src={photographer.avatarUrl} alt={photographer.name} className="shadow-sm" />
+                {/* <Avatar size={96} src={photographer.avatarUrl} alt={photographer.name} className="shadow-sm" /> */}
+                <CloudinaryAvatar
+                  publicId={photographer.avatarUrl}
+                  fallbackText={photographer.name.charAt(0).toUpperCase()}
+                  size={96}
+                />
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900">{photographer.name}</h2>
                   <div className="flex items-center justify-center gap-1 text-sm text-amber-500">
@@ -397,6 +385,28 @@ const PhotographerApplication = () => {
                 <Tag color={photographer.photoPortfolio.length > 0 ? 'blue' : 'default'} className="rounded-full px-4 text-xs font-medium">
                   {photographer.photoPortfolio.length > 0 ? 'Portfolio submitted' : 'No portfolio yet'}
                 </Tag>
+                <div className="space-y-2 text-sm text-slate-600">
+                  <p className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-slate-400" /> {photographer.email}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-slate-400" /> {photographer.phone}
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
+                    <span>
+                      {photographer.locationAddress && (
+                        <>
+                          {photographer.locationAddress}
+                          <br />
+                        </>
+                      )}
+                      {photographer.locationCity}
+                    </span>
+                  </p>
+                </div>
+
+
               </div>
 
               <div className="flex-1 space-y-4">
@@ -409,33 +419,53 @@ const PhotographerApplication = () => {
                   </div>
                   <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
                     <p className="text-sm text-slate-500">Experience</p>
-                    <p className="text-lg font-semibold text-slate-900">{photographer.yearsOfExperience} years</p>
-                    <p className="text-xs text-slate-500">Joined {new Date(photographer.createdAt).toLocaleDateString()}</p>
+                    <p className="text-lg font-semibold text-slate-900">
+                      {typeof photographer.yearsOfExperience === 'string' && photographer.yearsOfExperience.includes('|')
+                        ? photographer.yearsOfExperience.split('|')[0].trim()
+                        : photographer.yearsOfExperience}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {typeof photographer.yearsOfExperience === 'string' && photographer.yearsOfExperience.includes('|')
+                        ? photographer.yearsOfExperience.split('|')[1].trim()
+                        : `Joined ${new Date(photographer.createdAt).toLocaleDateString()}`}
+                    </p>
                   </div>
                 </div>
-
-                <div className="rounded-lg border border-slate-100 bg-white p-3">
+                <div>
+                  <div>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Price: </label>
+                    <span className="mt-1 text-sm leading-relaxed">{photographer.photoPrice}</span>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photo Type: </label>
+                    <span className="mt-1 text-sm leading-relaxed">{photographer.photoType}</span>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Work Location: </label>
+                    <span className="mt-1 text-sm leading-relaxed">{photographer.workLocation}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Styles: </label>
+                  {photographer.photographerStyles.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {photographer.photographerStyles.map((style) => (
+                        <Tag key={style.styleId} color="purple" className="rounded-full px-3 text-xs font-medium">
+                          {style.styleName}
+                        </Tag>
+                      ))}
+                    </div>
+                  )
+                  }
+                  {/* <div className="rounded-lg border border-slate-100 bg-white p-3">
                   <p className="text-sm text-slate-600">About</p>
                   <p className="mt-1 text-sm text-slate-500 leading-relaxed">{photographer.description}</p>
+                </div> */}
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div className="space-y-2 text-sm text-slate-600">
-                    <p className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-slate-400" /> {photographer.email}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-slate-400" /> {photographer.phone}
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
-                      <span>
-                        {photographer.locationAddress}
-                        <br />
-                        {photographer.locationCity}
-                      </span>
-                    </p>
-                  </div>
+
+
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photographer Level</label>
                     {photographer.photoPortfolio.length > 0 ? (
@@ -467,12 +497,13 @@ const PhotographerApplication = () => {
                   {photographer.photoPortfolio.length > 0 ? (
                     <div className="mt-2 space-y-2">
                       <div className="grid grid-cols-3 gap-2">
-                        {photographer.photoPortfolio.slice(0, 3).map((photoUrl: string, index: number) => (
-                          <div key={`${photographer.userId}-${photoUrl}`} className="group relative overflow-hidden rounded-lg border border-slate-200">
-                            <img
-                              src={photoUrl}
+                        {photographer.photoPortfolio.slice(0, 3).map((publicId: string, index: number) => (
+                          <div key={`${photographer.userId}-${publicId}-${index}`} className="group relative overflow-hidden rounded-lg border border-slate-200">
+                            <CloudinaryImage
+                              publicId={publicId}
                               alt={`${photographer.name} portfolio ${index + 1}`}
                               className="h-24 w-full object-cover transition duration-300 group-hover:scale-105"
+                              transformation="c_fill,q_auto,f_auto,w_300,h_300"
                             />
                           </div>
                         ))}

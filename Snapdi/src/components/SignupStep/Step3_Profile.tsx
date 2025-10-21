@@ -1,4 +1,4 @@
-import { Form,Radio, Row, Col, Typography } from 'antd';
+import { Form, Radio, Row, Col, Typography } from 'antd';
 import { FilledSelect } from '../UI/FilledSelect';
 import { FilledInput } from '../UI/FilledInput';
 
@@ -18,11 +18,12 @@ export default function Step3_Profile() {
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
-            name="workScope"
+            name="photoType" // Map tới API
+            rules={[{ required: true, message: 'Vui lòng chọn hình thức làm việc!' }]}
             initialValue="Tự do | Studio"
           >
             <FilledSelect
-              label="Chức vụ"
+              label="Hình thức làm việc"
               options={[
                 { value: 'Tự do | Studio', label: 'Tự do | Studio' },
                 { value: 'Chỉ Tự do', label: 'Chỉ Tự do' },
@@ -34,7 +35,7 @@ export default function Step3_Profile() {
 
         <Col span={24}>
           <Form.Item
-            name="locationCity" // Map tới API
+            name="workLocation" // Map tới API
             rules={[{ required: true, message: 'Vui lòng nhập Tỉnh/Thành phố!' }]}
           >
             <FilledInput
@@ -45,8 +46,8 @@ export default function Step3_Profile() {
 
         <Col span={24}>
           <Form.Item
-            name="locationAddress" // Map tới API (optional)
-            >
+            name="workLocationDetail" // Map tới API (optional)
+          >
             <FilledInput
               label="Địa chỉ cụ thể (nếu có)"
               placeholder="---" />
@@ -69,10 +70,10 @@ export default function Step3_Profile() {
       <Form.Item
         name="yearsOfExperience" // Map tới API
         rules={[{ required: true, message: 'Vui lòng nhập số năm kinh nghiệm!' }]}
-        >
-          <FilledInput
-            label="Kinh nghiệm của bạn (Nếu có)"
-            placeholder="10 năm" />
+      >
+        <FilledInput
+          label="Kinh nghiệm của bạn (Nếu có)"
+          placeholder="10 năm" />
       </Form.Item>
     </div>
   );

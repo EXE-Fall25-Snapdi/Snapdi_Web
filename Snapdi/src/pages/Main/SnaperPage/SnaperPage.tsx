@@ -11,6 +11,7 @@ import {
   loginUser,
 } from '../../../services/authService';
 import { cloudinaryService, photoPortfolioService } from '../../../services/uploadService';
+import { photographerStyleService } from '../../../services/photographerStyleService';
 import { useUserStore } from '../../../config/zustand';
 
 // Import các bước
@@ -59,7 +60,7 @@ export default function Snaper() {
     ['otp'], // Step 2
     ['locationCity', 'locationAddress', 'yearsOfExperience'], // Step 3
     ['description', 'equipment', 'category'], // Step 4
-    ['portfolio'] // Step 5
+    ['styleIds', 'portfolio'] // Step 5 - Added styleIds
   ];
 
   // --- LOGIC XỬ LÝ ---
@@ -137,7 +138,26 @@ export default function Snaper() {
   const handlePortfolioUpload = async () => {
     try {
       const formData = form.getFieldsValue();
-      // 1. Upload portfolio images to Cloudinary
+      const currentUser = useUserStore.getState().user;
+
+      if (!currentUser?.id) {
+        message.error('Không tìm thấy thông tin người dùng');
+        return;
+      }
+
+      // 1. Add styles to photographer
+      const styleIds = (formData.styleIds as number[]) || [];
+      if (styleIds.length > 0) {
+        try {
+          await photographerStyleService.addMultipleStyles(currentUser.id, styleIds);
+          message.success(`Đã thêm ${styleIds.length} thể loại thành công!`);
+        } catch (styleErr) {
+          console.error('Add styles failed:', styleErr);
+          message.warning('Không thể thêm thể loại. Bạn có thể thêm sau.');
+        }
+      }
+
+      // 2. Upload portfolio images to Cloudinary
       const portfolioFiles = (formData.portfolio as UploadFile[]) || [];
       const filesToUpload = portfolioFiles
         .map(file => file.originFileObj as File)
@@ -160,7 +180,7 @@ export default function Snaper() {
           );
         }
       }
-      // 2. Create photo portfolios if we have uploaded images
+      // 3. Create photo portfolios if we have uploaded images
       if (portfolioPublicIds.length > 0) {
         try {
           await photoPortfolioService.createMultiple(portfolioPublicIds);
@@ -171,7 +191,7 @@ export default function Snaper() {
         }
       }
 
-      // 3. Registration complete
+      // 4. Registration complete
       setIsSuccess(true);
     } catch (err: any) {
       toast.error(err.message || 'Upload thất bại. Vui lòng thử lại.');
@@ -194,24 +214,26 @@ export default function Snaper() {
 
       // 2. Register photographer
       const equipmentDescription = (formData.equipment as string[])?.join(', ') || '';
-      const category = formData.category || '';
+      // const category = formData.category || '';
 
       // Combine category into description field
-      const fullDescription = category
-        ? `Thể loại: ${category}. ${formData.description || ''}`
-        : formData.description || '';
+      // const fullDescription = category
+      //   ? `Thể loại: ${category}. ${formData.description || ''}`
+      //   : formData.description || '';
 
       const photographerData = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
-        locationCity: formData.locationCity,
-        locationAddress: formData.locationAddress || '',
-        yearsOfExperience: formData.yearsOfExperience || '0 năm',
-        equipmentDescription,
-        description: fullDescription,
+        locationCity: formData.workLocation,
+        yearsOfExperience: formData.yearsOfExperience + ' năm' + ' | ' + formData.experienceLevel || '0 năm',
+        equipmentDescription: equipmentDescription,
+        // description: fullDescription,
         isAvailable: false, // Default to false, admin will approve
+        photoPrice: formData.photoPrice || '0',
+        photoType: formData.photoType || '',
+        workLocation: formData.workLocationDetail + ' ' + formData.workLocation || '',
         avatarUrl: '', // Leave empty for later update
       };
 

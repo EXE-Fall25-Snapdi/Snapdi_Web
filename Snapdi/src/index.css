@@ -12,6 +12,28 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:autofill,
+input:autofill:hover,
+input:autofill:focus {
+  /* Mẹo dùng box-shadow:
+    Tạo một box-shadow bên trong, màu trắng (hoặc màu nền bạn muốn),
+    kích thước 1000px để che hoàn toàn màu nền autofill của trình duyệt.
+  */
+  box-shadow: inset 0 0 0 1000px #43ffc4; /* Thay 'white' bằng màu bạn muốn */
+
+  /* Buộc màu chữ:
+    Trình duyệt cũng có thể tự đổi màu chữ, 
+    dùng -webkit-text-fill-color để đặt lại màu chữ.
+  */
+  -webkit-text-fill-color: black; /* Thay 'black' bằng màu chữ bạn muốn */
+
+  /* Ngăn chặn hiệu ứng transition (đôi khi bị giật khi autofill) */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

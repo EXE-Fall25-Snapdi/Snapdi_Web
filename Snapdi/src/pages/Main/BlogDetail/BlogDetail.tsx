@@ -6,6 +6,7 @@ import { Helmet } from '@dr.pogodin/react-helmet';
 import { getBlogById } from '../../../services/blogService';
 import type { Blog } from '../../../lib/types';
 import './BlogDetail.css';
+import CloudinaryImage from '../../../components/CloudinaryImage';
 
 const BlogDetail: React.FC = () => {
   const { blogId } = useParams<{ blogId: string }>();
@@ -376,13 +377,19 @@ const BlogDetail: React.FC = () => {
           {/* Featured Image */}
           {blog.thumbnailUrl && (
             <figure className="blog-image-container">
-              <img
+              {/* <img
                 src={blog.thumbnailUrl}
                 alt={blog.title}
                 className="blog-featured-image"
                 loading="lazy"
                 width="800"
                 height="400"
+              /> */}
+              <CloudinaryImage
+                publicId={blog.thumbnailUrl}
+                alt={blog.title}
+                className="blog-featured-image"
+                transformation="c_fill,q_auto,f_auto,w_800,h_400"
               />
               <figcaption className="sr-only">{blog.title}</figcaption>
             </figure>

@@ -51,6 +51,11 @@ const Sidebar: React.FC = () => {
         icon: <Icons.Camera className="w-8 h-8" />,
         label: "Photographer Applications",
       },
+      {
+        path: "settings",
+        icon: <Icons.Settings className="w-8 h-8" />,
+        label: "Settings",
+      },
     ],
   };
 

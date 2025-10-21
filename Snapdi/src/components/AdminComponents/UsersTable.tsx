@@ -129,6 +129,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 // 1. Upload to Cloudinary and get publicId
                 const uploadResult = await cloudinaryService.uploadSingle(
                   file as File,
+                  'avatar',
                   'avatar'
                 );
 

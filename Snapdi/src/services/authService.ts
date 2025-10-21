@@ -142,6 +142,9 @@ export interface RegisterPhotographerRequest {
   equipmentDescription: string;
   description?: string;
   isAvailable?: boolean;
+  photoPrice: string;
+  photoType: string;
+  workLocation: string;
 }
 
 export interface VerifyEmailRequest {

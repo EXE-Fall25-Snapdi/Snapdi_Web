@@ -6,10 +6,11 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { createBlog } from '../../../services/blogService';
 import { getAllKeywords } from '../../../services/keywordService';
+import { cloudinaryService } from '../../../services/uploadService';
 import type { Keyword } from '../../../lib/types';
 import { useLoadingStore, useUserStore } from '../../../config/zustand';
 import { toast } from 'react-toastify';
-import type { UploadProps } from 'antd';
+import CloudinaryImage from '../../CloudinaryImage';
 
 
 interface CreateBlogProps {
@@ -29,6 +30,8 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [inputTag, setInputTag] = useState('');
   const [thumbnailMethod, setThumbnailMethod] = useState<'upload' | 'url'>('upload');
+  const [thumbnailPublicId, setThumbnailPublicId] = useState<string>('');
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
   const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('names');
   const [selectedKeywordIds, setSelectedKeywordIds] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
@@ -124,7 +127,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
 
       const blogData = {
         title: values.title,
-        thumbnailUrl: thumbnailMethod === 'url' ? values.thumbnailUrl ?? '' : '', // TODO: Handle uploaded file URL
+        thumbnailUrl: thumbnailMethod === 'url' ? (values.thumbnailUrl ?? '') : thumbnailPublicId, // Use publicId for upload, URL for url method
         content: content,
         authorId: authorId, // TODO: Get actual authorId from user context/auth
         keywordNames: keywordMethod === 'names' ? tags : [],
@@ -148,6 +151,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
         setContent('');
         setTags([]);
         setThumbnailMethod('upload');
+        setThumbnailPublicId('');
         setKeywordMethod('names');
         setSelectedKeywordIds([]);
         setSubmitType('published'); // Reset to default
@@ -171,23 +175,49 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   };
 
   // Handle image upload
-  const handleImageUpload: UploadProps = {
-    name: 'file',
-    action: '/api/upload', // Replace with your upload endpoint
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
+  const handleThumbnailUpload = async (file: File) => {
+    setIsUploadingThumbnail(true);
+    try {
+      // Delete old thumbnail from Cloudinary if exists
+      if (thumbnailPublicId) {
+        try {
+          await cloudinaryService.deleteSingle(thumbnailPublicId);
+          console.log('Old thumbnail deleted:', thumbnailPublicId);
+        } catch (deleteError) {
+          console.error('Failed to delete old thumbnail:', deleteError);
+          // Continue with upload even if delete fails
+        }
       }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+
+      // Upload new thumbnail
+      const uploadResult = await cloudinaryService.uploadSingle(file, '', 'blog');
+      setThumbnailPublicId(uploadResult.publicId);
+      message.success('Thumbnail uploaded successfully!');
+      return false; // Prevent default upload behavior
+    } catch (error) {
+      console.error('Thumbnail upload failed:', error);
+      message.error('Failed to upload thumbnail');
+      return false;
+    } finally {
+      setIsUploadingThumbnail(false);
+    }
   };
+
+  // Handle thumbnail removal
+  const handleRemoveThumbnail = async () => {
+    if (!thumbnailPublicId) return;
+
+    try {
+      // Delete from Cloudinary
+      await cloudinaryService.deleteSingle(thumbnailPublicId);
+      message.success('Thumbnail removed successfully!');
+      setThumbnailPublicId('');
+    } catch (error) {
+      console.error('Failed to delete thumbnail from Cloudinary:', error);
+      message.error('Failed to remove thumbnail');
+    }
+  };
+
   return (
     <Form
       form={form}
@@ -298,12 +328,42 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
 
           {/* Upload Method */}
           {thumbnailMethod === 'upload' && (
-            <Upload {...handleImageUpload} listType="picture-card" maxCount={1}>
-              <div>
-                <UploadOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
+            <div className="space-y-3">
+              {thumbnailPublicId && (
+                <div className="flex items-center gap-3">
+                  <CloudinaryImage
+                    publicId={thumbnailPublicId}
+                    alt="Thumbnail preview"
+                    className="w-200 h-auto object-cover rounded-lg border"
+                    transformation="c_fill,q_auto,f_auto,w_300,h_300"
+                  />
+                  <Button
+                    danger
+                    onClick={handleRemoveThumbnail}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleThumbnailUpload}
+                disabled={isUploadingThumbnail}
+              >
+                <Button
+                  icon={<UploadOutlined />}
+                  loading={isUploadingThumbnail}
+                  size="large"
+                  block
+                >
+                  {isUploadingThumbnail ? 'Uploading...' : thumbnailPublicId ? 'Change Thumbnail' : 'Upload Thumbnail'}
+                </Button>
+              </Upload>
+              <p className="text-xs text-gray-500">
+                Recommended: 1200x630px for best display on social media
+              </p>
+            </div>
           )}
 
           {/* URL Method */}
@@ -361,6 +421,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
             setContent('');
             setTags([]);
             setThumbnailMethod('upload');
+            setThumbnailPublicId('');
             setKeywordMethod('names');
             setSelectedKeywordIds([]);
             setSubmitType('published');

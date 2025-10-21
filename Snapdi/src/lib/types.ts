@@ -99,9 +99,17 @@ export type PhotographerProfileDetails = {
   yearsOfExperience?: number | string | null;
   avgRating?: number | null;
   isAvailable?: boolean | null;
+  photoPrice?: string | null;
+  workLocation?: string | null;
+  photoType?: string | null;
   description?: string | null;
   levelPhotographer?: string | null;
+  photographerStyles: Style[];
 };
+export interface Style {
+  styleId: number;
+  styleName: string;
+}
 
 export type PhotographerPendingLevelItem = User & {
   roleName?: string;
@@ -184,7 +192,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 export interface SignUpFormData {
   // Step 0
   role: 'client' | 'photographer';
-  
+
   // Step 1: Account (Từ Figma 1 & API)
   name: string;
   dob: string; // Từ figma, không có trong API
@@ -198,15 +206,21 @@ export interface SignUpFormData {
   otp: string;
 
   // Step 3: Profile (Từ Figma 2 & API)
-  workScope: string; // Từ figma, không có trong API
+  photoType: string; // Từ figma, không có trong API
   locationCity: string; // Map từ "Tỉnh / Thành phố"
-  locationAddress: string; // Map từ "Địa chỉ cụ thể"
+  workLocation: string; // Map từ "Địa chỉ cụ thể"
+  workLocationDetail: string; // Map từ "Địa chỉ cụ thể"
   experienceLevel: string; // Từ figma (radio), không có trong API
   yearsOfExperience: string; // Map từ "X năm"
 
   // Step 4: Portfolio (Từ Figma 3 & API)
+  photoPrice: string; // Map từ "Chi phí sàn"
+
   description: string; // Map từ "Chuyên môn"
-  category: string; // Từ figma, không có trong API
+  // category: string; // Từ figma, không có trong API
   portfolio: UploadFile[]; // Dùng cho AntD Upload
   equipment: string[]; // Mảng các thiết bị
+
+  // Step 5: Portfolio Photos & Styles
+  styleIds: number[]; // Mảng ID của các style được chọn
 }

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, Descriptions, Tag, Image, Button, Space } from 'antd';
+import { Modal, Descriptions, Tag, Button, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Blog } from '../../../lib/types';
 import { formatDate } from '../../../utils/formatDate';
+import CloudinaryImage from '../../CloudinaryImage';
 
 interface BlogDetailModalProps {
   blog: Blog | null;
@@ -75,15 +76,15 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
           )}
 
           <Descriptions.Item label="Thumbnail">
-            {blog.thumbnailUrl && (
-              <Image
-                src={blog.thumbnailUrl}
+            {blog.thumbnailUrl ? (
+              <CloudinaryImage
+                publicId={blog.thumbnailUrl}
                 alt="Blog thumbnail"
-                width={200}
-                height={120}
-                className="object-cover rounded-lg"
-                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1RnG4W+FgYxN..."
+                className="w-64 h-auto object-cover rounded-lg"
+                transformation="c_fill,q_auto,f_auto,w_600,h_400"
               />
+            ) : (
+              <span className="text-gray-400">No thumbnail</span>
             )}
           </Descriptions.Item>
 

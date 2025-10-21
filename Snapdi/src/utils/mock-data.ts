@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Users,
 } from 'lucide-react';
+import type { Style } from '../lib/types';
 
 export type DashboardSummaryCard = {
   label: string;
@@ -140,113 +141,19 @@ export type PhotographerApplicationItem = {
   locationCity: string;
   avatarUrl: string;
   equipmentDescription: string;
-  yearsOfExperience: number;
+  yearsOfExperience: string | number; // Format: "số năm | mô tả" (ví dụ: "3 | Intermediate") hoặc số
+  photoType: string;
+  photoPrice?: string;
+  workLocation?: string;
   avgRating: number;
   isAvailable: boolean;
   description: string;
+  photographerStyles: Style[];
   photographerLevel: PhotographerLevel;
   photoPortfolio: string[];
 };
 
-export const photographerApplicationsMock: PhotographerApplicationItem[] = [
-  {
-    userId: 101,
-    roleId: 4,
-    name: 'Nguyen Anh Tuan',
-    email: 'anh.tuan@snapdi.com',
-    phone: '+84 912 345 678',
-    isActive: true,
-    isVerify: true,
-    createdAt: '2024-03-18T09:35:10Z',
-    locationAddress: '12 Nguyen Truong To',
-    locationCity: 'Ha Noi',
-    avatarUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=facearea&w=200&h=200&q=80',
-    equipmentDescription: 'Canon EOS R5, RF 28-70mm f/2L, Profoto B10X system',
-    yearsOfExperience: 7,
-    avgRating: 4.9,
-    isAvailable: false,
-    description:
-      'Specialises in wedding storytelling with a fine-art aesthetic. Featured in Vietnam Wedding Magazine 2023.',
-    photographerLevel: 'Chuyên Nghiệp',
-    photoPortfolio: [
-      'https://images.unsplash.com/photo-1520854221050-0f4caff449fb?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d6?auto=format&fit=crop&w=320&q=80',
-    ],
-  },
-  {
-    userId: 102,
-    roleId: 4,
-    name: 'Tran Gia Han',
-    email: 'gia.han@snapdi.com',
-    phone: '+84 936 765 224',
-    isActive: true,
-    isVerify: true,
-    createdAt: '2023-11-04T13:12:04Z',
-    locationAddress: '88 Nguyen Van Linh',
-    locationCity: 'Da Nang',
-    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=200&h=200&q=80',
-    equipmentDescription: 'Sony A7R IV, FE 24-70mm f/2.8 GM, DJI Ronin-S',
-    yearsOfExperience: 4,
-    avgRating: 4.6,
-    isAvailable: true,
-    description: 'Event and lifestyle photographer capturing vibrant stories and authentic emotions.',
-    photographerLevel: 'Nghiệp Dư',
-    photoPortfolio: [
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1510731893799-2cb0bfaefd0c?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1519183071298-a2962be90b8e?auto=format&fit=crop&w=320&q=80',
-    ],
-  },
-  {
-    userId: 103,
-    roleId: 4,
-    name: 'Le Minh Khoa',
-    email: 'minh.khoa@snapdi.com',
-    phone: '+84 918 223 344',
-    isActive: true,
-    isVerify: false,
-    createdAt: '2024-01-22T08:42:55Z',
-    locationAddress: '456 Tran Hung Dao',
-    locationCity: 'Ho Chi Minh',
-    avatarUrl: 'https://images.unsplash.com/photo-1527010154944-f2241763d806?auto=format&fit=facearea&w=200&h=200&q=80',
-    equipmentDescription: 'Fujifilm X-T5, XF 56mm f/1.2 R WR, Godox AD200',
-    yearsOfExperience: 6,
-    avgRating: 4.8,
-    isAvailable: false,
-    description: 'Portrait artist with a cinematic look. Previously collaborated with major fashion brands.',
-    photographerLevel: 'Bán Chuyên',
-    photoPortfolio: [
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1527583907951-725ff1ea47e5?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=320&q=80',
-    ],
-  },
-  {
-    userId: 104,
-    roleId: 4,
-    name: 'Hoang Thu Trang',
-    email: 'thu.trang@snapdi.com',
-    phone: '+84 903 456 890',
-    isActive: true,
-    isVerify: true,
-    createdAt: '2022-09-12T10:20:32Z',
-    locationAddress: '23 Nguyen Dinh Chieu',
-    locationCity: 'Da Lat',
-    avatarUrl: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=facearea&w=200&h=200&q=80',
-    equipmentDescription: 'Nikon Z8, Nikkor Z 70-200mm f/2.8 VR S, Godox AD600Pro',
-    yearsOfExperience: 10,
-    avgRating: 4.95,
-    isAvailable: true,
-    description: 'Landscape and adventure photography specialist with award-winning series on National Geographic.',
-    photographerLevel: 'Chuyên Gia',
-    photoPortfolio: [
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1526481280695-3c4697d22e30?auto=format&fit=crop&w=320&q=80',
-      'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=320&q=80',
-    ],
-  },
-];
+
 
 export const photographerLevelOptions: PhotographerLevelOption[] = [
   { label: 'Chưa có cấp độ', value: 'Chưa có cấp độ', apiValue: '' },

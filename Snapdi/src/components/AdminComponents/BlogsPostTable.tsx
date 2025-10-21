@@ -3,6 +3,7 @@
 import type { Blog } from "../../lib/types";
 import { Table, Tag, Button, Space } from "antd";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import CloudinaryImage from "../CloudinaryImage";
 
 type BlogPostsTableProps = {
   posts: Blog[];
@@ -24,8 +25,20 @@ export default function BlogPostsTable({ posts, onView, onEdit, onDelete }: Blog
       title: 'Thumbnail',
       dataIndex: 'thumbnailUrl',
       key: 'thumbnail',
-      render: (url: string) => (
-        <img src={url} loading="lazy" alt="Thumbnail" className="w-16 h-16 object-cover" />
+      width: 100,
+      render: (thumbnailUrl: string) => (
+        thumbnailUrl ? (
+          <CloudinaryImage
+            publicId={thumbnailUrl}
+            alt="Blog thumbnail"
+            className="w-16 h-16 object-cover rounded"
+            transformation="c_fill,q_auto,f_auto,w_100,h_100"
+          />
+        ) : (
+          <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-400">
+            No image
+          </div>
+        )
       ),
     },
     {
