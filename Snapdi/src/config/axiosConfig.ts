@@ -89,7 +89,7 @@ axiosInstance.interceptors.response.use(
           if (!window.location.pathname.includes('/login')) {
             useUserStore.getState().clearUser();
             // You might want to redirect to login page here
-            window.location.href = '/login';
+            window.location.href = '/admin-login';
           }
           break;
         case 403:
