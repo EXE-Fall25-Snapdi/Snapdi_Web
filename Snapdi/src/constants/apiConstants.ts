@@ -94,5 +94,14 @@ export const API_CONSTANTS = {
   },
   PHOTOGRAPHER_STYLES: {
     ADD_MULTIPLE: (userId: string | number) => `/api/PhotographerStyles/photographer/${userId}/styles/multiple`,
+  },
+  BOOKING: {
+    GET_BY_ID: (id: string | number) => `/api/Booking/${id}`,
+    UPDATE: (id: string | number) => `/api/Booking/${id}`,
+    DELETE: (id: string | number) => `/api/Booking/${id}`,
+    GET_BY_STATUS: (statusId: string | number) => `/api/Booking/status/${statusId}`,
+    SEARCH: "/api/Booking/search",
+    UPDATE_STATUS: (id: string | number) => `/api/Booking/${id}/status`,
+    STATISTICS: "/api/Booking/statistics/detailed",
   }
 };

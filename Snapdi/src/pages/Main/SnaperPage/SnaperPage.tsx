@@ -12,7 +12,7 @@ import {
 } from '../../../services/authService';
 import { cloudinaryService, photoPortfolioService } from '../../../services/uploadService';
 import { photographerStyleService } from '../../../services/photographerStyleService';
-import { useUserStore } from '../../../config/zustand';
+import { useLoadingStore, useUserStore } from '../../../config/zustand';
 
 // Import các bước
 import Step1_Account from '../../../components/SignupStep/Step1_Account';
@@ -33,6 +33,7 @@ const themeConfig = {
 };
 
 export default function Snaper() {
+  const loading = useLoadingStore((state) => state.loading);
   const [form] = Form.useForm<SignUpFormData>();
   const [currentStep, setCurrentStep] = useState(1);
   const [role, setRole] = useState<'client' | 'photographer'>('photographer');
@@ -202,14 +203,12 @@ export default function Snaper() {
   const handlePhotographerSubmit = async () => {
     try {
       const formData = form.getFieldsValue();
-
       // Debug: Log all form data
       console.log('All form data:', formData);
       console.log('Name:', formData.name);
       console.log('Email:', formData.email);
       console.log('Password:', formData.password);
       console.log('LocationCity:', formData.locationCity);
-
 
 
       // 2. Register photographer
@@ -366,6 +365,7 @@ export default function Snaper() {
             {/* Nút điều hướng */}
             <div className="flex justify-end items-center mt-6">
               <Button
+                disabled={loading}
                 htmlType="button"
                 onClick={onNext}
                 className='rounded-full! w-16! h-16! bg-[#34D399]! text-white! hover:scale-105! transition-transform!'
@@ -379,3 +379,4 @@ export default function Snaper() {
     </div>
   );
 }
+

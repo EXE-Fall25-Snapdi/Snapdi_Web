@@ -32,6 +32,7 @@ import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import ChatBubble from "./components/ChatBubble";
 import AdminSetting from "./pages/Admin/AdminSetting/AdminSetting";
+import BookingManagement from "./pages/Admin/BookingManagement/BookingManagement";
 
 const router = createBrowserRouter([
   {
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute requireAdmin={true}>
         <AdminLayout />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
     errorElement: <NotFound />,
     children: [
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: "blogs-management",
         element: <BlogsManagement />,
+      },
+      {
+        path: "bookings-management",
+        element: <BookingManagement />,
       },
       {
         path: "transaction-history",

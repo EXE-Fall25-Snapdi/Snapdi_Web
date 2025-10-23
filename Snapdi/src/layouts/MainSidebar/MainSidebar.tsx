@@ -12,8 +12,11 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
     { path: "/", label: "Trang chủ", key: "home", icon: Icons.Dashboard },
     // { path: "/snaper", label: "Snaper", key: "snaper", icon: Icons.Camera },
     { path: "/blog", label: "Blog", key: "blog", icon: Icons.FormIcon },
-    { path: "/about", label: "Giới thiệu", key: "about", icon: Icons.Building },
+    { path: "/about", label: "Về chúng tôi", key: "about", icon: Icons.Building },
     { path: "/contact", label: "Liên hệ", key: "contact", icon: Icons.Mail },
+    {
+      path: "signup", label: "Đăng ký", key: "signup", icon: Icons.User
+    },
   ];
 
   return (

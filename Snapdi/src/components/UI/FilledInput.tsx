@@ -15,12 +15,21 @@ export const FilledInput = ({ label, placeholder, ...props }: FilledInputProps) 
         {label}
       </label>
       {/* Đây là Input của AntD, đã loại bỏ viền và nền */}
-      <Input
-        placeholder={placeholder}
-        variant="borderless" // Rất quan trọng: Xóa style mặc định
-        className="!p-0 !text-base !leading-tight font-sf-pro" // Reset padding và căn chỉnh text
-        {...props}
-      />
+      {label.includes("khẩu") ? (
+        <Input.Password
+          placeholder={placeholder}
+          variant="borderless" // Rất quan trọng: Xóa style mặc định
+          className="!p-0 !text-base !leading-tight font-sf-pro" // Reset padding và căn chỉnh text
+          {...props}
+        />
+      ) : (
+        <Input
+          placeholder={placeholder}
+          variant="borderless" // Rất quan trọng: Xóa style mặc định
+          className="!p-0 !text-base !leading-tight font-sf-pro" // Reset padding và căn chỉnh text
+          {...props}
+        />
+      )}
     </div>
   );
 };

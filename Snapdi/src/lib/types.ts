@@ -99,7 +99,7 @@ export type PhotographerProfileDetails = {
   yearsOfExperience?: number | string | null;
   avgRating?: number | null;
   isAvailable?: boolean | null;
-  photoPrice?: string | null;
+  photoPrice: string;
   workLocation?: string | null;
   photoType?: string | null;
   description?: string | null;
@@ -223,4 +223,17 @@ export interface SignUpFormData {
 
   // Step 5: Portfolio Photos & Styles
   styleIds: number[]; // Mảng ID của các style được chọn
+}
+
+export interface StatusStatistic {
+  statusId: number;
+  statusName: string;
+  count: number;
+  percentage: number;
+}
+
+export interface BookingStatistics {
+  totalBookings: number;
+  statusStatistics: StatusStatistic[];
+  generatedAt: string;
 }

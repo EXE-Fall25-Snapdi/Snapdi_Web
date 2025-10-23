@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
 }) => {
   if (!isAuthenticated()) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/admin-login" />;
   }
 
   if (requireAdmin && !checkRole(1)) {

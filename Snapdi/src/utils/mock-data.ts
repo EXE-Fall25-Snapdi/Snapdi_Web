@@ -143,7 +143,7 @@ export type PhotographerApplicationItem = {
   equipmentDescription: string;
   yearsOfExperience: string | number; // Format: "số năm | mô tả" (ví dụ: "3 | Intermediate") hoặc số
   photoType: string;
-  photoPrice?: string;
+  photoPrice: string;
   workLocation?: string;
   avgRating: number;
   isAvailable: boolean;

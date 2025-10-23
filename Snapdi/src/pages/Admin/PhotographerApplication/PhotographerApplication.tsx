@@ -14,6 +14,7 @@ import type { Dayjs } from 'dayjs';
 import { toast } from 'react-toastify';
 import PhotographerPortfolioModal from '../../../components/PhotographerPortfolioModal/PhotographerPortfolioModal';
 import CloudinaryAvatar from '../../../components/CloudinaryAvatar';
+import { formatPrice } from '../../../utils/formatPrice';
 
 const PhotographerApplication = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -47,15 +48,15 @@ const PhotographerApplication = () => {
       return acc;
     }, {} as Record<PhotographerLevel, string>);
   }, [levelOptions]);
-  const yearsOfExperienceOptions = useMemo(
-    () => [
-      { label: 'Under 1 year', value: 'Under 1 year' },
-      { label: '1-3 years', value: '1-3 years' },
-      { label: '3-5 years', value: '3-5 years' },
-      { label: '5+ years', value: '5+ years' },
-    ],
-    [],
-  );
+  // const yearsOfExperienceOptions = useMemo(
+  //   () => [
+  //     { label: 'Under 1 year', value: 'Under 1 year' },
+  //     { label: '1-3 years', value: '1-3 years' },
+  //     { label: '3-5 years', value: '3-5 years' },
+  //     { label: '5+ years', value: '5+ years' },
+  //   ],
+  //   [],
+  // );
   const portfolioOptions = useMemo(
     () => [
       { label: 'All portfolios', value: 'all' },
@@ -225,13 +226,13 @@ const PhotographerApplication = () => {
     }));
   };
 
-  const handleYearsOfExperienceChange = (value?: string | null) => {
-    setFilters((prev) => ({
-      ...prev,
-      pageNumber: 1,
-      yearsOfExperience: value ?? undefined,
-    }));
-  };
+  // const handleYearsOfExperienceChange = (value?: string | null) => {
+  //   setFilters((prev) => ({
+  //     ...prev,
+  //     pageNumber: 1,
+  //     yearsOfExperience: value ?? undefined,
+  //   }));
+  // };
 
   const handleCreatedFromChange = (date: Dayjs | null) => {
     setFilters((prev) => {
@@ -323,8 +324,8 @@ const PhotographerApplication = () => {
         </div>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Select
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+        {/* <Select
           allowClear
           placeholder="Years of experience"
           className="w-full"
@@ -332,7 +333,7 @@ const PhotographerApplication = () => {
           options={yearsOfExperienceOptions}
           onChange={(value) => handleYearsOfExperienceChange(typeof value === 'string' ? value : undefined)}
           onClear={() => handleYearsOfExperienceChange(undefined)}
-        />
+        /> */}
         <DatePicker
           className="w-full"
           allowClear
@@ -365,7 +366,7 @@ const PhotographerApplication = () => {
         {photographers.map((photographer: PhotographerApplicationItem) => (
           <Card key={photographer.userId} className="border border-slate-100 shadow-sm">
             <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="flex flex-col items-center gap-3 text-center lg:w-40">
+              <div className="flex flex-col items-center gap-3 text-center lg:w-48 lg:items-start lg:text-left">
                 {/* <Avatar size={96} src={photographer.avatarUrl} alt={photographer.name} className="shadow-sm" /> */}
                 <CloudinaryAvatar
                   publicId={photographer.avatarUrl}
@@ -405,8 +406,6 @@ const PhotographerApplication = () => {
                     </span>
                   </p>
                 </div>
-
-
               </div>
 
               <div className="flex-1 space-y-4">
@@ -434,7 +433,7 @@ const PhotographerApplication = () => {
                 <div>
                   <div>
                     <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Price: </label>
-                    <span className="mt-1 text-sm leading-relaxed">{photographer.photoPrice}</span>
+                    <span className="mt-1 text-sm leading-relaxed">{formatPrice(photographer.photoPrice)}</span>
                   </div>
                   <div>
                     <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photo Type: </label>
