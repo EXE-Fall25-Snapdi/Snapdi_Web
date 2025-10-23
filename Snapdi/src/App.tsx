@@ -30,12 +30,18 @@ import Contact from "./pages/Main/Contact/Contact";
 import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
-// import ChatBubble from "./components/ChatBubble";
+import ChatBubble from "./components/ChatBubble";
+import AdminSetting from "./pages/Admin/AdminSetting/AdminSetting";
+import BookingManagement from "./pages/Admin/BookingManagement/BookingManagement";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/admin-login",
     element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SnaperPage />,
   },
   {
     path: "/",
@@ -73,7 +79,7 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute requireAdmin={true}>
         <AdminLayout />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
     errorElement: <NotFound />,
     children: [
@@ -94,12 +100,20 @@ const router = createBrowserRouter([
         element: <BlogsManagement />,
       },
       {
+        path: "bookings-management",
+        element: <BookingManagement />,
+      },
+      {
         path: "transaction-history",
         element: <TransactionHistory />,
       },
       {
         path: "photographer-applications",
         element: <PhotographerApplication />,
+      },
+      {
+        path: "settings",
+        element: <AdminSetting />,
       },
       {
         path: "*",
@@ -127,7 +141,7 @@ const App: React.FC = () => {
             </div>
           )}
           <RouterProvider router={router} />
-          {/* <ChatBubble /> */}
+          <ChatBubble />
           <ToastContainer
             className="text-sm z-9999"
             position="bottom-right"

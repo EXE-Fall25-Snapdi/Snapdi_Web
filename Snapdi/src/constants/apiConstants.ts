@@ -1,11 +1,40 @@
 export const API_CONSTANTS = {
   AUTH: {
     LOGIN: "api/auth/login",
-    LOGOUT: "/auth/logout",
-    USER_INFO: "/auth",
-    FORGOT_PASSWORD: "/auth/forgot-password",
-    VERIFY_TOKEN: "/auth/verify-token",
-    RESEND_TOKEN: "/auth/resend-token",
+    LOGOUT: "api/auth/logout",
+    USER_INFO: "api/auth",
+    FORGOT_PASSWORD: "api/auth/forgot-password",
+    VERIFY_TOKEN: "api/auth/verify-token",
+    RESEND_TOKEN: "api/auth/resend-token",
+    SIGNUP: "api/auth/register",
+    SIGNUP_PHOTOGRAPHER: "api/auth/register-photographer",
+    VERIFY_OTP: "api/auth/verify-email-code",
+    RESEND: "api/auth/resend-verification-code"
+  },
+  CLOUDINARY: {
+    UPLOAD: "/api/Cloudinary/upload",
+    UPLOAD_MULTIPLE: "/api/Cloudinary/upload-multiple",
+    DELETE: "api/Cloudinary/delete",
+    DELETE_MULTIPLE: "api/Cloudinary/delete-multiple",
+    DELETE_ALL: (uploadType: string) => `api/Cloudinary/delete-all/${uploadType}`,
+    TRANSFORM_URL: (publicId: string) => `/api/Cloudinary/transform-url${publicId}`
+  },
+  PHOTO_PORTFOLIO: {
+    GET_BY_USER_ID: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}`,
+    GET_MY_PORTFOLIOS: "/api/PhotoPortfolio/my-portfolios",
+    GET_BY_ID: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    UPDATE: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    DELETE: (id: string | number) => `/api/PhotoPortfolio/${id}`,
+    CREATE: "/api/PhotoPortfolio",
+    CREATE_MULTIPLE: "/api/PhotoPortfolio/multiple",
+    CREATE_MULTIPLE_FOR_USER: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}/multiple`,
+    DELETE_ALL: "/api/PhotoPortfolio/all",
+    HAS_PORTFOLIO: "/api/PhotoPortfolio/has-portfolio",
+    COUNT: "/api/PhotoPortfolio/count"
+  },
+  MEDIA: {
+    SIGNATURE: "/api/Media/signature",
+    CONFIRM: "/api/Media/confirm",
   },
   ROLES: {
     GET_ALL: "/roles/get-all",
@@ -21,9 +50,9 @@ export const API_CONSTANTS = {
     CHANGE_STATUS: "/users/change-status",
     SEARCH_USER: "/users/search",
     CHANGE_ROLE: "/users/change-role",
-    SEARCH_PHOTOGRAPHER_PENDING_LEVEL: "/api/Users/photographers/pending-level/search",
-    SEARCH_PHOTOGRAPHERS: "/api/Users/photographers/search",
-    UPDATE_PHOTOGRAPHER_LEVEL: (id: string | number) => `/api/Users/${id}/photographer-level`,
+    SEARCH_PHOTOGRAPHER_PENDING_LEVEL: "/api/Photographer/photographers/pending-level/search",
+    SEARCH_PHOTOGRAPHERS: "/api/Photographer/photographers/search",
+    UPDATE_PHOTOGRAPHER_LEVEL: (id: string | number) => `/api/Photographer/${id}/photographer-level`,
   },
   BLOGS: {
     GET_ALL: "/api/Blogs",
@@ -56,5 +85,23 @@ export const API_CONSTANTS = {
     GET_OR_CREATE: "/api/Keywords/get-or-create",
     EXISTS_BY_ID: (id: string | number) => `/api/Keywords/${id}/exists`,
     EXISTS: "/api/Keywords/exists",
+  },
+  STYLES: {
+    GET_ALL: "/api/Styles",
+    CREATE: "/api/Styles",
+    UPDATE: (id: string | number) => `/api/Styles/${id}`,
+    DELETE: (id: string | number) => `/api/Styles/${id}`,
+  },
+  PHOTOGRAPHER_STYLES: {
+    ADD_MULTIPLE: (userId: string | number) => `/api/PhotographerStyles/photographer/${userId}/styles/multiple`,
+  },
+  BOOKING: {
+    GET_BY_ID: (id: string | number) => `/api/Booking/${id}`,
+    UPDATE: (id: string | number) => `/api/Booking/${id}`,
+    DELETE: (id: string | number) => `/api/Booking/${id}`,
+    GET_BY_STATUS: (statusId: string | number) => `/api/Booking/status/${statusId}`,
+    SEARCH: "/api/Booking/search",
+    UPDATE_STATUS: (id: string | number) => `/api/Booking/${id}/status`,
+    STATISTICS: "/api/Booking/statistics/detailed",
   }
 };

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import type { User, CreateUserRequest, UpdateUserRequest } from '../../lib/types';
-import { Modal } from 'antd';
+import { Modal, Upload, Button, message } from 'antd';
+import { Upload as UploadIcon } from 'lucide-react';
+import { cloudinaryService } from '../../services/uploadService';
+import CloudinaryAvatar from '../CloudinaryAvatar';
 
 interface UserModalProps {
   isOpen: boolean;
@@ -31,6 +34,7 @@ export const UserModal: React.FC<UserModalProps> = ({
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (isEditing && user) {
@@ -72,6 +76,25 @@ export const UserModal: React.FC<UserModalProps> = ({
           ? parseInt(value) || 0
           : value
     }));
+  };
+
+  const handleAvatarUpload = async (file: File) => {
+    setIsUploadingAvatar(true);
+    try {
+      const uploadResult = await cloudinaryService.uploadSingle(file, 'avatar', 'avatar');
+      setFormData(prev => ({
+        ...prev,
+        avatarUrl: uploadResult.publicId
+      }));
+      message.success('Avatar uploaded successfully!');
+      return false; // Prevent default upload behavior
+    } catch (error) {
+      console.error('Avatar upload failed:', error);
+      message.error('Failed to upload avatar');
+      return false;
+    } finally {
+      setIsUploadingAvatar(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -239,15 +262,36 @@ export const UserModal: React.FC<UserModalProps> = ({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Avatar URL
+            Avatar
           </label>
-          <input
-            type="url"
-            name="avatarUrl"
-            value={formData.avatarUrl}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <CloudinaryAvatar
+                publicId={formData.avatarUrl}
+                fallbackText={formData.name ? formData.name.charAt(0).toUpperCase() : 'U'}
+                size={80}
+              />
+            </div>
+            <div className="flex-1">
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleAvatarUpload}
+                disabled={isUploadingAvatar}
+              >
+                <Button
+                  icon={<UploadIcon size={16} />}
+                  loading={isUploadingAvatar}
+                  className="w-full"
+                >
+                  {isUploadingAvatar ? 'Uploading...' : 'Upload Avatar'}
+                </Button>
+              </Upload>
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended: Square image, at least 200x200px
+              </p>
+            </div>
+          </div>
         </div>
 
         {isEditing && (

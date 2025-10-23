@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Avatar, Button, Modal, Select, Tag } from 'antd';
 import { ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
 import type { PhotographerApplicationItem, PhotographerLevel, PhotographerLevelOption } from '../../utils/mock-data';
+import CloudinaryImage from '../CloudinaryImage';
 
 interface PhotographerPortfolioModalProps {
   open: boolean;
@@ -84,7 +85,11 @@ const PhotographerPortfolioModal = ({
                 <span className="font-medium">{photographer.avgRating.toFixed(2)}</span>
               </div>
               <span className="text-slate-300">•</span>
-              <span className="text-sm text-slate-600">{photographer.yearsOfExperience} years experience</span>
+              <span className="text-sm text-slate-600">
+                {typeof photographer.yearsOfExperience === 'string' && photographer.yearsOfExperience.includes('|')
+                  ? photographer.yearsOfExperience.split('|')[0].trim() + ' năm (' + photographer.yearsOfExperience.split('|')[1].trim() + ')'
+                  : photographer.yearsOfExperience + ' năm'}
+              </span>
               <span className="text-slate-300">•</span>
               <Tag color={photographer.photographerLevel ? 'blue' : 'default'}>
                 {photographer.photographerLevel || 'Chưa phân cấp'}
@@ -99,17 +104,18 @@ const PhotographerPortfolioModal = ({
           </h3>
           {photographer.photoPortfolio.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              {photographer.photoPortfolio.map((photoUrl: string, index: number) => (
+              {photographer.photoPortfolio.map((publicId: string, index: number) => (
                 <button
-                  key={`${photographer.userId}-modal-${photoUrl}-${index}`}
+                  key={`${photographer.userId}-modal-${publicId}-${index}`}
                   type="button"
                   onClick={() => handleImageClick(index)}
                   className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <img
-                    src={photoUrl}
+                  <CloudinaryImage
+                    publicId={publicId}
                     alt={`${photographer.name} portfolio ${index + 1}`}
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-110"
+                    transformation="c_fill,q_auto,f_auto,w_400,h_400"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="absolute bottom-2 left-2 text-xs font-medium text-white">
@@ -166,11 +172,11 @@ const PhotographerPortfolioModal = ({
             </button>
 
             <div className="relative w-full h-full flex items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
-              <img
-                src={photographer.photoPortfolio[currentImageIndex]}
+              <CloudinaryImage
+                publicId={photographer.photoPortfolio[currentImageIndex]}
                 alt={`${photographer.name} portfolio ${currentImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain"
-                aria-disabled="true"
+                transformation="c_fit,q_auto,f_auto,w_1920,h_1080"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </div>

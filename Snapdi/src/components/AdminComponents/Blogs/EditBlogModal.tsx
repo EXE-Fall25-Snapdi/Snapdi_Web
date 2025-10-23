@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, Switch, Button, Space, Radio, Upload, message, Tag } from 'antd';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import { UploadOutlined, PlusOutlined, LinkOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import type { Blog, Keyword } from '../../../lib/types';
 import { updateBlog } from '../../../services/blogService';
 import { getAllKeywords } from '../../../services/keywordService';
+import { cloudinaryService } from '../../../services/uploadService';
 import { useLoadingStore } from '../../../config/zustand';
+import CloudinaryImage from '../../CloudinaryImage';
 
 const { Option } = Select;
 
@@ -34,7 +36,9 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
   const [form] = Form.useForm();
   const [content, setContent] = useState('');
   const [keywords, setKeywords] = useState<Keyword[]>([]);
-  const [thumbnailMethod, setThumbnailMethod] = useState<'url' | 'upload'>('url');
+  const [thumbnailMethod, setThumbnailMethod] = useState<'url' | 'upload'>('upload');
+  const [thumbnailPublicId, setThumbnailPublicId] = useState<string>('');
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
   const [keywordMethod, setKeywordMethod] = useState<'names' | 'ids'>('ids');
   const [tags, setTags] = useState<string[]>([]);
   const [inputTag, setInputTag] = useState('');
@@ -65,7 +69,8 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
         isActive: blog.isActive,
       });
       setContent(blog.content);
-      setThumbnailMethod('url'); // Default to URL method
+      setThumbnailPublicId(blog.thumbnailUrl || ''); // Set publicId from blog
+      setThumbnailMethod('upload'); // Default to upload method
       setKeywordMethod('ids'); // Default to existing keywords
 
       // Set tags from existing keywords for display
@@ -88,7 +93,8 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
         isActive: blog.isActive,
       });
       setContent(blog.content);
-      setThumbnailMethod('url');
+      setThumbnailPublicId(blog.thumbnailUrl || ''); // Set publicId from blog
+      setThumbnailMethod('upload');
       setKeywordMethod('ids');
 
       // Set tags from blog keywords for display
@@ -156,6 +162,47 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  // Handle thumbnail upload
+  const handleThumbnailUpload = async (file: File) => {
+    setIsUploadingThumbnail(true);
+    try {
+      // Delete old thumbnail from Cloudinary if exists
+      if (thumbnailPublicId) {
+        try {
+          await cloudinaryService.deleteSingle(thumbnailPublicId);
+        } catch (deleteError) {
+          console.error('Failed to delete old thumbnail:', deleteError);
+        }
+      }
+
+      // Upload new thumbnail
+      const uploadResult = await cloudinaryService.uploadSingle(file, '', 'blog');
+      setThumbnailPublicId(uploadResult.publicId);
+      message.success('Thumbnail uploaded successfully!');
+      return false;
+    } catch (error) {
+      console.error('Thumbnail upload failed:', error);
+      message.error('Failed to upload thumbnail');
+      return false;
+    } finally {
+      setIsUploadingThumbnail(false);
+    }
+  };
+
+  // Handle thumbnail removal
+  const handleRemoveThumbnail = async () => {
+    if (!thumbnailPublicId) return;
+
+    try {
+      await cloudinaryService.deleteSingle(thumbnailPublicId);
+      message.success('Thumbnail removed successfully!');
+      setThumbnailPublicId('');
+    } catch (error) {
+      console.error('Failed to delete thumbnail from Cloudinary:', error);
+      message.error('Failed to remove thumbnail');
+    }
+  };
+
   const handleSubmit = async (values: EditBlogFormValues) => {
     if (!blog) return;
 
@@ -163,7 +210,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
       const blogData = {
         title: values.title,
         content: content,
-        thumbnailUrl: values.thumbnailUrl,
+        thumbnailUrl: thumbnailMethod === 'url' ? (values.thumbnailUrl || '') : thumbnailPublicId, // Use publicId for upload, URL for url method
         keywordNames: keywordMethod === 'names' ? tags : [],
         keywordIds: keywordMethod === 'ids' ? (values.keywordIds || []) : [],
         isActive: values.isActive,
@@ -223,42 +270,85 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({
           <Input placeholder="Enter blog title" />
         </Form.Item>
 
-        <Form.Item label="Thumbnail Method">
-          <Radio.Group
-            value={thumbnailMethod}
-            onChange={(e) => setThumbnailMethod(e.target.value)}
-          >
-            <Radio value="url">URL</Radio>
-            <Radio value="upload">Upload File</Radio>
-          </Radio.Group>
-        </Form.Item>
-
-        {thumbnailMethod === 'url' ? (
-          <Form.Item
-            label="Thumbnail URL"
-            name="thumbnailUrl"
-            rules={[
-              { required: true, message: 'Please enter thumbnail URL' },
-              { type: 'url', message: 'Please enter a valid URL' }
-            ]}
-          >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
-        ) : (
-          <Form.Item
-            label="Upload Thumbnail"
-            name="thumbnailFile"
-            rules={[{ required: true, message: 'Please upload a thumbnail' }]}
-          >
-            <Upload
-              listType="picture"
-              maxCount={1}
-              beforeUpload={() => false}
+        <Form.Item label="Thumbnail Image">
+          <div className="space-y-4">
+            {/* Method Selection */}
+            <Radio.Group
+              value={thumbnailMethod}
+              onChange={(e) => setThumbnailMethod(e.target.value)}
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
-        )}
+              <Radio.Button value="upload">
+                <UploadOutlined /> Upload Image
+              </Radio.Button>
+              <Radio.Button value="url">
+                <LinkOutlined /> Image URL
+              </Radio.Button>
+            </Radio.Group>
+
+            {/* Upload Method */}
+            {thumbnailMethod === 'upload' && (
+              <div className="space-y-3">
+                {thumbnailPublicId && (
+                  <div className="flex items-center gap-3">
+                    <CloudinaryImage
+                      publicId={thumbnailPublicId}
+                      alt="Thumbnail preview"
+                      className="w-200 h-auto object-cover rounded-lg border"
+                      transformation="c_fill,q_auto,f_auto,w_300,h_300"
+                    />
+                    <Button
+                      danger
+                      onClick={handleRemoveThumbnail}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
+                <Upload
+                  accept="image/*"
+                  showUploadList={false}
+                  beforeUpload={handleThumbnailUpload}
+                  disabled={isUploadingThumbnail}
+                >
+                  <Button
+                    icon={<UploadOutlined />}
+                    loading={isUploadingThumbnail}
+                    size="large"
+                    block
+                  >
+                    {isUploadingThumbnail ? 'Uploading...' : thumbnailPublicId ? 'Change Thumbnail' : 'Upload Thumbnail'}
+                  </Button>
+                </Upload>
+                <p className="text-xs text-gray-500">
+                  Recommended: 1200x630px for best display on social media
+                </p>
+              </div>
+            )}
+
+            {/* URL Method */}
+            {thumbnailMethod === 'url' && (
+              <Form.Item
+                name="thumbnailUrl"
+                rules={[
+                  {
+                    type: 'url',
+                    message: 'Please enter a valid URL!'
+                  },
+                  {
+                    pattern: /\.(jpg|jpeg|png|gif|webp)$/i,
+                    message: 'URL must point to an image file (jpg, jpeg, png, gif, webp)'
+                  }
+                ]}
+              >
+                <Input
+                  placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                  prefix={<LinkOutlined />}
+                  size="large"
+                />
+              </Form.Item>
+            )}
+          </div>
+        </Form.Item>
 
         <Form.Item label="Content" required>
           <ReactQuill

@@ -2,6 +2,7 @@ import { get, post, put } from "./apiService";
 import type { ResponseModel } from "../models/ResponseModel";
 import { API_CONSTANTS } from "../constants/apiConstants";
 import axiosInstance from '../config/axiosConfig';
+import { toast } from "react-toastify";
 
 interface AuthResponse {
   token: string;
@@ -28,8 +29,8 @@ export function parseJwt(token: string): any {
         .join('')
     );
     return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error("Error decoding JWT:", error);
+  } catch (error: string | any) {
+    toast.error("Error decoding JWT: " + error.message);
     return null;
   }
 }
@@ -114,5 +115,114 @@ export const loginUser = async (credentials: LoginRequest): Promise<LoginRespons
       throw new Error('Please check your login credentials');
     }
     throw new Error('Login failed. Please try again.');
+  }
+};
+
+// Registration Types
+export interface RegisterClientRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+  roleId?: number;
+  locationAddress?: string;
+  locationCity?: string;
+  avatarUrl?: string;
+}
+
+export interface RegisterPhotographerRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+  locationAddress?: string;
+  locationCity: string;
+  avatarUrl?: string;
+  yearsOfExperience: string;
+  equipmentDescription: string;
+  description?: string;
+  isAvailable?: boolean;
+  photoPrice: string;
+  photoType: string;
+  workLocation: string;
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+  code: string;
+}
+
+export interface UserResponse {
+  userId: number;
+  roleId: number;
+  roleName: string;
+  name: string;
+  email: string;
+  phone: string;
+  isActive: boolean;
+  isVerify: boolean;
+  createdAt: string;
+  locationAddress: string;
+  locationCity: string;
+  avatarUrl: string;
+}
+
+export interface PhotographerResponse {
+  user: UserResponse & {
+    photographerProfile: {
+      userId: number;
+      equipmentDescription: string;
+      yearsOfExperience: string;
+      avgRating: number;
+      isAvailable: boolean;
+      description: string;
+      levelPhotographer: string;
+    };
+    photoPortfolios: Array<{
+      photoPortfolioId: number;
+      userId: number;
+      photoUrl: string;
+    }>;
+  };
+  message: string;
+}
+
+// Send verification code (resend OTP)
+export const sendVerificationCode = async (email: string): Promise<void> => {
+  await axiosInstance.post(API_CONSTANTS.AUTH.RESEND, { email });
+};
+
+// Register as client
+export const registerClient = async (data: RegisterClientRequest): Promise<UserResponse> => {
+  const response = await axiosInstance.post<UserResponse>(
+    API_CONSTANTS.AUTH.SIGNUP,
+    data
+  );
+  return response.data;
+};
+
+// Register as photographer
+export const registerPhotographer = async (
+  data: RegisterPhotographerRequest
+): Promise<PhotographerResponse> => {
+  const response = await axiosInstance.post<PhotographerResponse>(
+    API_CONSTANTS.AUTH.SIGNUP_PHOTOGRAPHER,
+    data
+  );
+  return response.data;
+};
+
+// Verify email with OTP code
+export const verifyEmailCode = async (data: VerifyEmailRequest): Promise<void> => {
+  try {
+    await axiosInstance.post(API_CONSTANTS.AUTH.VERIFY_OTP, data);
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      throw new Error(error.response.data.detail);
+    }
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error('Verification failed. Please check your code.');
   }
 };

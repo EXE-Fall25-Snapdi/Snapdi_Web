@@ -1,7 +1,8 @@
 import React from 'react'
-import { Modal, Badge, Card, Avatar, Tag, Descriptions, Button } from 'antd';
+import { Modal, Badge, Card, Tag, Descriptions, Button } from 'antd';
 import { User, Mail, Calendar, Shield, UserCheck, AlertCircle, Edit, Ban } from 'lucide-react';
 import type { User as ApiUser } from '../../lib/types';
+import CloudinaryAvatar from '../CloudinaryAvatar';
 
 interface UserDetailModalProps {
   user: ApiUser | null;
@@ -65,8 +66,9 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, open, onClose, 
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-none">
             <div className="flex items-center gap-6">
               <div className="relative">
-                <Avatar
-                  src={user.avatarUrl}
+                <CloudinaryAvatar
+                  publicId={user.avatarUrl}
+                  fallbackText={user.name.charAt(0).toUpperCase()}
                   size={120}
                   className="border-4 border-white shadow-lg"
                 />

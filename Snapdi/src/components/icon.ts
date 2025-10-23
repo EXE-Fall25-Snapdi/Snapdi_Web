@@ -34,7 +34,8 @@ import {
   Earth,
   Wallet2,
   UserCheck,
-TrendingUp
+  TrendingUp,
+  FilterIcon
 } from "lucide-react";
 import {
   FaUsers,
@@ -43,7 +44,9 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaClock,
-   FaFacebook, FaTiktok
+  FaFacebook, FaTiktok,
+  FaArrowLeft,
+  FaCalendar
 } from "react-icons/fa";
 
 import { BiMenuAltLeft } from "react-icons/bi";
@@ -58,6 +61,7 @@ type IconType = {
 };
 
 const Icons: IconType = {
+  Booking: FaCalendar,
   Facebook: FaFacebook,
   Tiktok: FaTiktok,
   Email: MdEmail,
@@ -80,11 +84,12 @@ const Icons: IconType = {
   Wallet: Wallet,
   ArrowUpRight: GoArrowUpRight,
   ArrowRight: FaArrowRight,
+  ArrowLeft: FaArrowLeft,
   Lock: CiLock,
   Unlock: CiUnlock,
   Approve: Check,
   Reject: X,
-  // Return: RotateCcw,
+  Filter: FilterIcon,
   Check: Check,
   // CircleUser: CircleUser,
   ChevronRight: ChevronRight,

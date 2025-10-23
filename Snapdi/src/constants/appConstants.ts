@@ -11,6 +11,9 @@ export const APP_CONSTANTS = {
     "/admin/admin-dashboard": "Dashboard",
     "/admin/user-management": "User Management",
     "/admin/blogs-management": "Blogs Management",
-    "/admin/photographer-applications": "Photographer Applications"
+    "/admin/photographer-applications": "Photographer Applications",
+    "/admin/bookings-management": "Bookings Management",
+    "/admin/transaction-history": "Transaction History"
+
   }
 };

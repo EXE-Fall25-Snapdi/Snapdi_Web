@@ -42,6 +42,11 @@ const Sidebar: React.FC = () => {
         label: "Blogs Management",
       },
       {
+        path: "bookings-management",
+        icon: <Icons.Booking className="w-8 h-8" />,
+        label: "Bookings Management",
+      },
+      {
         path: "transaction-history",
         icon: <Icons.History className="w-8 h-8" />,
         label: "Transaction History",
@@ -50,6 +55,11 @@ const Sidebar: React.FC = () => {
         path: "photographer-applications",
         icon: <Icons.Camera className="w-8 h-8" />,
         label: "Photographer Applications",
+      },
+      {
+        path: "settings",
+        icon: <Icons.Settings className="w-8 h-8" />,
+        label: "Settings",
       },
     ],
   };
