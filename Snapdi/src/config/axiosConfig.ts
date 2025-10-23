@@ -86,10 +86,10 @@ axiosInstance.interceptors.response.use(
         case 401:
           toast.error("Unauthorized - Please login again");
           // Clear user data and redirect to login
-          if (!window.location.pathname.includes('/login')) {
+          if (!window.location.pathname.includes('/admin-login')) {
             useUserStore.getState().clearUser();
             // You might want to redirect to login page here
-            window.location.href = '/login';
+            window.location.href = '/admin-login';
           }
           break;
         case 403:
