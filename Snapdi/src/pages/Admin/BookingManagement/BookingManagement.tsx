@@ -377,14 +377,14 @@ const BookingManagement: React.FC = () => {
   return (
     <div className="">
       {/* Header */}
-      <div className="">
+      <div className="mb-2">
         {/* <div className="flex items-center gap-2 text-sm">
           <div className={`w-2 h-2 rounded-full ${isSignalRConnected() ? "bg-green-500" : "bg-red-500"}`}></div>
           <span>{isSignalRConnected() ? "Đã kết nối thời gian thực" : "Chưa kết nối"}</span>
         </div>
         <Divider /> */}
         {statistics.totalBookings !== undefined && (
-          <Col xs={24} sm={12} lg={6} key="totalBookings" className="border-2 rounded-2xl p-2 border-gray-300 mb-2 bg-red-400 text-white">
+          <Col xs={24} sm={12} lg={6} key="totalBookings" className="border-1 rounded-2xl p-2 border-gray-300 ">
             <h2 className="font-sf-pro text-xl">
               Tổng số đơn hàng hiện tại:{" "}
               <span className="font-semibold">{statistics.totalBookings}</span>
