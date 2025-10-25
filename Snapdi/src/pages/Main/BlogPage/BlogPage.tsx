@@ -203,7 +203,7 @@ const BlogPage: React.FC = () => {
   // Empty state - but we still show the page layout
   const isEmpty = posts.length === 0;
   return (
-    <div className="px-4 md:px-6 py-10 lg:w-3/5 w-full mx-auto">
+    <div className="px-4 md:px-6 py-10 lg:w-3/5 w-full mx-auto pt-[240px]">
       {/* Featured section */}
       <h1 className="text-4xl font-bold mb-10 text-center block md:hidden">Latest Blogs</h1>
       <div className="mb-10">

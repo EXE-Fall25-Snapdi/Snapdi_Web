@@ -1,109 +1,82 @@
-import { FaFacebook, FaTiktok } from "react-icons/fa";
-import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
+import React from 'react';
+// 1. Import các hình ảnh của bạn
+import snapdiLogo from '../../assets/images/logo-withBG.svg';
+import appStoreBadge from '../../assets/icons/Appstore.svg';
+import googlePlayBadge from '../../assets/icons/googlePlay.svg';
 
-export default function Footer() {
+// 2. Import icons
+import { BiRegistered, BiEnvelope } from 'react-icons/bi';
+
+/**
+ * Component Footer chính cho trang web Snapdi
+ */
+const Footer: React.FC = () => {
   return (
-    <footer className="bg-white border-t border-gray-200 text-black px-6 md:px-12 lg:px-20 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
-        {/* Left Section */}
-        <div className="md:col-span-2">
-          <h2 className="text-2xl md:text-4xl font-bold">SNAPDI</h2>
-          <p className="text-lg md:text-xl mt-1">Snapdi Company</p>
-          <p className="text-lg md:text-xl mb-4">Founded in 2025</p>
+    // A. Container Chính
+    // - `bg-[#00FA9A]`: Mã màu xanh lá mạ siêu sáng (bạn có thể
+    //   thay bằng màu gradient 5 màu của mình nếu muốn).
+    // - `rounded-t-3xl`: Bo góc lớn ở phía trên.
+    // - `text-black`: Màu chữ mặc định là đen.
+    <footer className="w-full bg-[#00FA9A] rounded-t-3xl p-12 md:p-16 text-black">
+      <div className="container mx-auto flex flex-col items-center gap-16">
 
-          <ul className="text-sm space-y-2">
-            <li className="flex items-center gap-2">
-              <MdEmail /> snapdi.co@gmail.com
-            </li>
-            <li className="flex items-center gap-2">
-              <MdPhone /> 012345678
-            </li>
-            <li className="flex items-center gap-2">
-              <MdLocationOn /> Thu Duc City
-            </li>
-          </ul>
-
-          <p className="text-xs mt-4">
-            © 2025 Snapdi. All rights reserved.
-          </p>
-
-          <div className="mt-4">
-            <p className="text-sm mb-2">Get more information about us.</p>
-            <div className="flex gap-4 text-xl">
-              <a href="#">
-                <FaFacebook />
-              </a>
-              <a href="#">
-                <FaTiktok />
-              </a>
-            </div>
-          </div>
-
-          {/* Language Selector */}
-          <div className="mt-4">
-            <select className="border border-gray-300 rounded px-2 py-1 text-sm">
-              <option>🇻🇳 Viet Nam</option>
-              <option>🇺🇸 English</option>
-            </select>
-          </div>
+        {/* B. Hàng Trên: Logo & Tên Thương Hiệu */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+          <img
+            src={snapdiLogo}
+            alt="Snapdi Logo"
+            className="h-24 w-24" // Kích thước logo
+          />
+          <span className="text-8xl lg:text-9xl font-extrabold text-black tracking-tighter">
+            SNAPDI
+          </span>
         </div>
 
-        {/* Right Section */}
-        <div className="md:col-span-3 grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
-          <div>
-            <h3 className="font-bold mb-3">SNAPDI</h3>
-            <ul className="space-y-2">
-              <li><a className="text-black! hover:underline!" href="#">Home</a></li>
-              <li><a className="text-black! hover:underline!" href="#">About Snapdi</a></li>
-              <li><a className="text-black! hover:underline!" href="#">How it Works</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Download App</a></li>
-              <li><a className="text-black! hover:underline!" href="/admin-login">Admin Login</a></li>
-            </ul>
+        {/* C. Hàng Dưới: Links, Copyright, Icons */}
+        {/* - `flex-col lg:flex-row`: Xếp chồng trên mobile, xếp ngang trên desktop.
+            - `justify-between`: Đẩy các item ra xa nhau.
+        */}
+        <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-10">
+
+          {/* C1. Nút Tải Ứng Dụng (Bên trái) */}
+          <div className="flex items-center gap-4 order-2 lg:order-1">
+            <a href="#" aria-label="Download on the App Store">
+              <img
+                src={appStoreBadge}
+                alt="Download on the App Store"
+                className="h-12 lg:h-14"
+              />
+            </a>
+            <a href="#" aria-label="Get it on Google Play">
+              <img
+                src={googlePlayBadge}
+                alt="Get it on Google Play"
+                className="h-12 lg:h-14"
+              />
+            </a>
           </div>
 
-          <div>
-            <h3 className="font-bold mb-3">CLIENT</h3>
-            <ul className="space-y-2">
-              <li><a className="text-black! hover:underline!" href="#">Book</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Snapdi Premium</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Event Photography</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Portrait & Studio</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Booking Guide</a></li>
-            </ul>
+          {/* C2. Copyright (Ở giữa) */}
+          {/* - `order-3`: Đẩy xuống cuối trên mobile.
+              - `lg:order-2`: Đưa về giữa trên desktop.
+          */}
+          <p className="text-base font-medium text-black text-center order-3 lg:order-2">
+            &copy; 2025 Snapdi Media. All Rights Reserved.
+          </p>
+
+          {/* C3. Icons (Bên phải) */}
+          {/* - `order-1`: Đẩy lên đầu trên mobile.
+              - `lg:order-3`: Đưa về cuối bên phải trên desktop.
+          */}
+          <div className="flex items-center gap-5 order-1 lg:order-3">
+            <BiRegistered className="text-3xl text-black" />
+            <BiEnvelope className="text-3xl text-black" />
           </div>
 
-          <div>
-            <h3 className="font-bold mb-3">SNAPER</h3>
-            <ul className="space-y-2">
-              <li><a className="text-black! hover:underline!" href="#">Join as Photographer</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Snapdi Pro Tools</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Pricing & Commission</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Resources & Community</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-bold mb-3">DISCOVER</h3>
-            <ul className="space-y-2">
-              <li><a className="text-black! hover:underline!" href="#">Photography Styles</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Trending Photographers</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Client Stories</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Blog & Tips</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-bold mb-3">SUPPORT</h3>
-            <ul className="space-y-2">
-              <li><a className="text-black! hover:underline!" href="#">Help Center</a></li>
-              <li><a className="text-black! hover:underline!" href="#">FAQ</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Contact Us</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Terms of Service</a></li>
-              <li><a className="text-black! hover:underline!" href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

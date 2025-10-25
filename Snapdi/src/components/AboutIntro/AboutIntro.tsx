@@ -1,7 +1,7 @@
 
 
 // Giả sử bạn có hình banner tại đường dẫn này
-import AboutUsBanner from '../../assets/images/AboutUs-banner.png';
+import AboutUsBanner from '../../assets/images/AboutUs-banner.svg';
 
 // ============================================================================
 // Introduction Section

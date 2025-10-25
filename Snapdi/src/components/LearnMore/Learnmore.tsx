@@ -4,7 +4,7 @@ import { icons } from "lucide-react";
 
 const LearnMore: React.FC = () => {
   return (
-    <section className="text-center min-h-[450px] border-t-1 border-gray-200 flex flex-col justify-center items-center">
+    <section className="text-center min-h-[450px] border-gray-200 flex flex-col justify-center items-center">
       <p className="text-3xl! font-pro-sf! md:text-6xl! mb-6">
         Liên hệ chúng tôi
       </p>

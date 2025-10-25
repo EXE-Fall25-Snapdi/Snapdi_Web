@@ -364,9 +364,9 @@ const PhotographerApplication = () => {
 
       <section className="grid gap-5 xl:grid-cols-2">
         {photographers.map((photographer: PhotographerApplicationItem) => (
-          <Card key={photographer.userId} className="border border-slate-100 shadow-sm">
+            <Card key={photographer.userId} className="border border-slate-100 shadow-sm" bodyStyle={{ padding: 12 }}>
             <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="flex flex-col items-center gap-3 text-center lg:w-48 lg:items-start lg:text-left">
+              <div className="flex flex-col items-center gap-3 text-center lg:w-60 lg:items-start lg:text-left">
                 {/* <Avatar size={96} src={photographer.avatarUrl} alt={photographer.name} className="shadow-sm" /> */}
                 <CloudinaryAvatar
                   publicId={photographer.avatarUrl}
@@ -388,14 +388,14 @@ const PhotographerApplication = () => {
                 </Tag>
                 <div className="space-y-2 text-sm text-slate-600">
                   <p className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-slate-400" /> {photographer.email}
+                    <Mail className="h-4 w-4 text-slate-400" /> <span className="break-all">{photographer.email}</span>
                   </p>
                   <p className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-slate-400" /> {photographer.phone}
                   </p>
                   <p className="flex items-start gap-2">
                     <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
-                    <span>
+                    <span className='break-all'>
                       {photographer.locationAddress && (
                         <>
                           {photographer.locationAddress}
