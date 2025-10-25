@@ -68,3 +68,60 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/*
+  Lớp này sẽ tạo ra một hình dạng bị cắt góc (beveled)
+  - `40px`: Đây là kích thước của vết cắt. Bạn có thể thay đổi số này
+    (ví dụ: 20px, 2rem, 3vw) để điều chỉnh độ lớn của góc cắt.
+  - `polygon(...)`: Xác định các điểm của hình dạng mới.
+*/
+.shape-cut-top-right {
+  clip-path: polygon(
+    /* 1. Top-left */ 0% 0%,
+    /* 2. Điểm bắt đầu cắt (trên cạnh trên) */ 50% 0%,
+    /* 3. Điểm kết thúc cắt (trên cạnh phải) */ 100% 50%,
+    /* 4. Bottom-right */ 100% 100%,
+    /* 5. Bottom-left */ 0% 100%
+  );
+}
+/* Class này tạo ra một hình dạng bị cắt góc trên bên trái (top-left)
+  - Bạn có thể thay đổi `40%` (điểm bắt đầu trên cạnh trái)
+  - và `40%` (điểm kết thúc trên cạnh trên)
+  để điều chỉnh độ dốc của đường cắt.
+*/
+.shape-cut-top-left {
+  clip-path: polygon(
+    /* 1. Điểm bắt đầu cắt (trên cạnh trái) */ 0% 73%,
+    /* 2. Điểm kết thúc cắt (trên cạnh trên) */ 95% 0%,
+    /* 3. Top-right */ 100% 0%,
+    /* 4. Bottom-right */ 100% 100%,
+    /* 5. Bottom-left */ 0% 100%
+  );
+}
+.shape-cut-top-right2 {
+  clip-path: polygon(
+    /* 1. Top-left */ 0% 0%,
+    /* 2. Điểm bắt đầu cắt (trên cạnh trên) */ 10% 0%,
+    /* 3. Điểm kết thúc cắt (trên cạnh phải) */ 100% 70%,
+    /* 4. Bottom-right */ 100% 100%,
+    /* 5. Bottom-left */ 0% 100%
+  );
+}
+
+/*
+  Class này tạo hình dạng "cắt góc" cho thẻ giá trị.
+  - Nó cắt góc trên-phải (top-right) và góc dưới-trái (bottom-left).
+  - Bạn có thể thay đổi `2.5rem` (40px) để điều chỉnh độ lớn vết cắt.
+*/
+.shape-value-card {
+  clip-path: polygon(
+    /* 1. Góc trên-trái (không cắt) */ 0% 0%,
+    /* 2. Điểm bắt đầu cắt góc trên-phải (trên cạnh trên) */ calc(100% - 2.5rem)
+      0%,
+    /* 3. Điểm kết thúc cắt góc trên-phải (trên cạnh phải) */ 100% 2.5rem,
+    /* 4. Góc dưới-phải (không cắt) */ 100% 100%,
+    /* 5. Điểm bắt đầu cắt góc dưới-trái (trên cạnh dưới) */ 2.5rem 100%,
+    /* 6. Điểm kết thúc cắt góc dưới-trái (trên cạnh trái) */ 0%
+      calc(100% - 2.5rem)
+  );
+} 

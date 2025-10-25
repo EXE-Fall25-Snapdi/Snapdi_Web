@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Icons from "../../components/icon";
-
+import logoWithBg from "../../assets/images/logo-withBG.svg";
 interface MainSidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,9 +36,12 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-300/50 bg-gradient-to-r from-gray-200 to-gray-300">
-          <h2 className="font-sf-pro font-extrabold text-2xl drop-shadow-sm bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-            SNAPDI
-          </h2>
+          <div className="flex gap-2">
+            <img src={logoWithBg} alt="" className="w-8 h-8" />
+            <h2 className="font-sf-pro font-extrabold text-2xl drop-shadow-sm bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              SNAPDI
+            </h2>
+          </div>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-gray-300/60 hover:shadow-md transition-all duration-200 active:scale-90 group"

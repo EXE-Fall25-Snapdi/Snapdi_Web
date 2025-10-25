@@ -2,22 +2,19 @@ import React from "react";
 import { Outlet } from "react-router";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import LearnMore from "../../components/LearnMore/Learnmore";
 
 
 const MainLayout: React.FC = () => {
 
   return (
     <>
-      <div className="app">
+      <div className="app relative">
         <Header />
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full overflow-hidden relative">
           <Outlet />
         </div>
       </div>
-      <div className="lg:w-10/12 w-full mx-auto">
-        <LearnMore />
-      </div>
+      
       <div className="footer">
         <Footer />
       </div>
