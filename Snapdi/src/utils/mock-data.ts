@@ -7,7 +7,7 @@ import {
   MessageSquare,
   Users,
 } from 'lucide-react';
-import type { Style } from '../lib/types';
+import type { Style, Type } from '../lib/types';
 
 export type DashboardSummaryCard = {
   label: string;
@@ -116,11 +116,9 @@ export const dashboardMeta = {
 
 export type PhotographerLevel =
   "Chưa có cấp độ"
-  | 'Người mới'
   | 'Nghiệp Dư'
   | 'Bán Chuyên'
-  | 'Chuyên Nghiệp'
-  | 'Chuyên Gia';
+  | 'Chuyên Nghiệp';
 
 export type PhotographerLevelOption = {
   label: string;
@@ -142,8 +140,7 @@ export type PhotographerApplicationItem = {
   avatarUrl: string;
   equipmentDescription: string;
   yearsOfExperience: string | number; // Format: "số năm | mô tả" (ví dụ: "3 | Intermediate") hoặc số
-  photoType: string;
-  photoPrice: string;
+  photoType: Type[];
   workLocation?: string;
   avgRating: number;
   isAvailable: boolean;
@@ -157,11 +154,9 @@ export type PhotographerApplicationItem = {
 
 export const photographerLevelOptions: PhotographerLevelOption[] = [
   { label: 'Chưa có cấp độ', value: 'Chưa có cấp độ', apiValue: '' },
-  { label: 'Người mới', value: 'Người mới', apiValue: 'Người mới' },
   { label: 'Nghiệp Dư', value: 'Nghiệp Dư', apiValue: 'Nghiệp Dư' },
   { label: 'Bán Chuyên', value: 'Bán Chuyên', apiValue: 'Bán Chuyên' },
   { label: 'Chuyên Nghiệp', value: 'Chuyên Nghiệp', apiValue: 'Chuyên Nghiệp' },
-  { label: 'Chuyên Gia', value: 'Chuyên Gia', apiValue: 'Chuyên Gia' },
 ];
 
 export type TransactionRecord = {

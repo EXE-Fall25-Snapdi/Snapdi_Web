@@ -99,9 +99,8 @@ export type PhotographerProfileDetails = {
   yearsOfExperience?: number | string | null;
   avgRating?: number | null;
   isAvailable?: boolean | null;
-  photoPrice: string;
   workLocation?: string | null;
-  photoType?: string | null;
+  photoTypes: Type[];
   description?: string | null;
   levelPhotographer?: string | null;
   photographerStyles: Style[];
@@ -110,6 +109,14 @@ export interface Style {
   styleId: number;
   styleName: string;
 }
+
+export interface Type {
+  photoTypeId: number;
+  photoTypeName: string;
+  photoPrice: number;
+  time: number;
+}
+
 
 export type PhotographerPendingLevelItem = User & {
   roleName?: string;
