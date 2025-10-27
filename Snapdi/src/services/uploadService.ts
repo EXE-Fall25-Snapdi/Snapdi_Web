@@ -109,6 +109,31 @@ class CloudinaryService {
       data: publicIds,
     });
   }
+
+  // Transform URL - Get Cloudinary image URL from publicId
+  async transformUrl(
+    publicId: string,
+    transformOptions?: {
+      autoOptimize?: boolean;
+      crop?: string;
+      gravity?: string;
+      quality?: number;
+      width?: number;
+      height?: number;
+      format?: string;
+    }
+  ): Promise<{ url: string }> {
+    const response = await axiosInstance.post<{ url: string }>(
+      `${API_CONSTANTS.CLOUDINARY.TRANSFORM_URL}?publicId=${encodeURIComponent(publicId)}`,
+      transformOptions || {
+        autoOptimize: true,
+        crop: 'fill',
+        gravity: 'auto',
+        quality: 80
+      }
+    );
+    return response.data;
+  }
 }
 
 class PhotoPortfolioService {

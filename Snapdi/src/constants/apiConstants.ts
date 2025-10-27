@@ -17,7 +17,7 @@ export const API_CONSTANTS = {
     DELETE: "api/Cloudinary/delete",
     DELETE_MULTIPLE: "api/Cloudinary/delete-multiple",
     DELETE_ALL: (uploadType: string) => `api/Cloudinary/delete-all/${uploadType}`,
-    TRANSFORM_URL: (publicId: string) => `/api/Cloudinary/transform-url${publicId}`
+    TRANSFORM_URL: "/api/Cloudinary/transform-url"
   },
   PHOTO_PORTFOLIO: {
     GET_BY_USER_ID: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}`,

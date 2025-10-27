@@ -14,7 +14,7 @@ const LearnMore: React.FC = () => {
       </p>
       <Button
         type="primary"
-        className="bg-[#34D399]! text-xl! h-12! w-3/6 lg:w-[600px]! hover:bg-teal-600 border-none rounded-2xl!"
+        className="bg-linear-to-r! from-[#00EA80] to-[#12C6A3] text-xl! h-12! w-3/6 lg:w-[600px]! hover:scale-105 border-none rounded-2xl!"
       >
         Tìm hiểu thêm <icons.MoveUpRight className="w-3 h-3 items-center" />
       </Button>
