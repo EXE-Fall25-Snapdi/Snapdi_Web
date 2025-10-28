@@ -18,6 +18,8 @@ export interface Booking {
   statusName: string;
   price: string;
   note: string;
+  time?: number; // Thời gian chụp (giờ)
+  photoTypeId?: number; // ID loại chụp ảnh
 }
 
 export interface BookingSearchRequest {
@@ -61,7 +63,9 @@ class BookingService {
   // Get booking by ID
   async getBookingById(id: number): Promise<Booking> {
     const response = await get<Booking>(
-      API_CONSTANTS.BOOKING.GET_BY_ID(id), true
+      API_CONSTANTS.BOOKING.GET_BY_ID(id),
+      undefined,
+      true
     );
     return response.data;
   }
@@ -83,7 +87,9 @@ class BookingService {
   // Get bookings by status
   async getBookingsByStatus(statusId: number): Promise<Booking[]> {
     const response = await get<Booking[]>(
-      API_CONSTANTS.BOOKING.GET_BY_STATUS(statusId), true
+      API_CONSTANTS.BOOKING.GET_BY_STATUS(statusId),
+      undefined,
+      true
     );
     return response.data;
   }
@@ -109,7 +115,9 @@ class BookingService {
   // Get booking statistics
   async getBookingStatistics(): Promise<BookingStatistics> {
     const response = await get<BookingStatistics>(
-      API_CONSTANTS.BOOKING.STATISTICS, true
+      API_CONSTANTS.BOOKING.STATISTICS,
+      undefined,
+      true
     );
     return response.data;
   }

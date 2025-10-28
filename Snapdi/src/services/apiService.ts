@@ -10,7 +10,7 @@ interface ApiConfig extends AxiosRequestConfig {
 export const get = async <T>(url: string, params?: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
     const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
-    const axiosConfig = typeof config === 'object' ? config : undefined;
+    const axiosConfig = typeof config === 'object' ? config : {};
 
     useLoadingStore.getState().setIsLoadingFlag(isLoading);
     const response = await axiosInstance.get<any>(url, { params, ...axiosConfig });
@@ -35,7 +35,7 @@ export const get = async <T>(url: string, params?: any, config?: boolean | ApiCo
 export const post = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
     const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
-    const axiosConfig = typeof config === 'object' ? config : undefined;
+    const axiosConfig = typeof config === 'object' ? config : {};
 
     useLoadingStore.getState().setIsLoadingFlag(isLoading);
     const response = await axiosInstance.post<any>(url, data, axiosConfig);
@@ -60,7 +60,7 @@ export const post = async <T>(url: string, data: any, config?: boolean | ApiConf
 export const put = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
     const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
-    const axiosConfig = typeof config === 'object' ? config : undefined;
+    const axiosConfig = typeof config === 'object' ? config : {};
 
     useLoadingStore.getState().setIsLoadingFlag(isLoading);
     const response = await axiosInstance.put<any>(url, data, axiosConfig);
@@ -85,7 +85,7 @@ export const put = async <T>(url: string, data: any, config?: boolean | ApiConfi
 export const del = async <T>(url: string, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
     const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
-    const axiosConfig = typeof config === 'object' ? config : undefined;
+    const axiosConfig = typeof config === 'object' ? config : {};
 
     useLoadingStore.getState().setIsLoadingFlag(isLoading);
     const response = await axiosInstance.delete<any>(url, axiosConfig);
@@ -110,7 +110,7 @@ export const del = async <T>(url: string, config?: boolean | ApiConfig): Promise
 export const patch = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
     const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
-    const axiosConfig = typeof config === 'object' ? config : undefined;
+    const axiosConfig = typeof config === 'object' ? config : {};
 
     useLoadingStore.getState().setIsLoadingFlag(isLoading);
     const response = await axiosInstance.patch<any>(url, data, axiosConfig);
