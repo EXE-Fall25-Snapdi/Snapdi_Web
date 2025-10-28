@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Input, Modal, Table, message, Popconfirm } from 'antd';
 import { Edit, Plus, Trash2 } from 'lucide-react';
-import { styleService} from '../../../services/styleService';
+import { styleService } from '../../../services/styleService';
 import type { ColumnsType } from 'antd/es/table';
 import type { Style } from '../../../lib/types';
 
@@ -140,10 +140,7 @@ const AdminSetting = () => {
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-          <p className="text-slate-500">Manage photography styles</p>
-        </div>
+        <p className="text-slate-500">Manage photography styles</p>
         <Button
           type="primary"
           icon={<Plus className="h-4 w-4" />}

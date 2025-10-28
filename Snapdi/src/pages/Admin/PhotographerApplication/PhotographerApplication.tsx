@@ -1,33 +1,39 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Card, DatePicker, Input, Pagination, Select, Tag } from 'antd';
-// Avatar, 
-import { Camera, Eye, Mail, MapPin, Phone, Star } from 'lucide-react';
-import { photographerLevelOptions, type PhotographerApplicationItem, type PhotographerLevel, type PhotographerLevelOption } from '../../../utils/mock-data';
-import { photographerService } from '../../../services/photographerService';
-import CloudinaryImage from '../../../components/CloudinaryImage';
-import type {
-  PhotographerPendingLevelItem,
-  PhotographerSearchRequest,
-} from '../../../lib/types';
-import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
-import { toast } from 'react-toastify';
-import PhotographerPortfolioModal from '../../../components/PhotographerPortfolioModal/PhotographerPortfolioModal';
-import CloudinaryAvatar from '../../../components/CloudinaryAvatar';
-import { formatPrice } from '../../../utils/formatPrice';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Card, DatePicker, Input, Pagination, Select, Tag } from "antd";
+// Avatar,
+import { Camera, Eye, Mail, MapPin, Phone, Star } from "lucide-react";
+import {
+  photographerLevelOptions,
+  type PhotographerApplicationItem,
+  type PhotographerLevel,
+  type PhotographerLevelOption,
+} from "../../../utils/mock-data";
+import { photographerService } from "../../../services/photographerService";
+import CloudinaryImage from "../../../components/CloudinaryImage";
+import type { PhotographerPendingLevelItem, PhotographerSearchRequest } from "../../../lib/types";
+import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
+import { toast } from "react-toastify";
+import PhotographerPortfolioModal from "../../../components/PhotographerPortfolioModal/PhotographerPortfolioModal";
+import CloudinaryAvatar from "../../../components/CloudinaryAvatar";
+import { formatPrice } from "../../../utils/formatPrice";
 
 const PhotographerApplication = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const [portfolioFilter, setPortfolioFilter] = useState<'all' | 'with' | 'without'>('all');
+  const [searchValue, setSearchValue] = useState("");
+  const [portfolioFilter, setPortfolioFilter] = useState<"all" | "with" | "without">("all");
   const [filters, setFilters] = useState<PhotographerSearchRequest>({
     pageNumber: 1,
     pageSize: 6,
-    sortBy: 'createdAt',
-    sortDirection: 'desc',
+    sortBy: "createdAt",
+    sortDirection: "desc",
   });
   const [photographers, setPhotographers] = useState<PhotographerApplicationItem[]>([]);
   const [totalPhotographers, setTotalPhotographers] = useState<number | null>(null);
-  const [pagination, setPagination] = useState({ current: filters.pageNumber ?? 1, pageSize: filters.pageSize ?? 6, total: 0 });
+  const [pagination, setPagination] = useState({
+    current: filters.pageNumber ?? 1,
+    pageSize: filters.pageSize ?? 6,
+    total: 0,
+  });
   const [portfolioModalOpen, setPortfolioModalOpen] = useState(false);
   const [selectedPhotographer, setSelectedPhotographer] = useState<PhotographerApplicationItem | null>(null);
 
@@ -39,7 +45,7 @@ const PhotographerApplication = () => {
       map[option.apiValue] = option.value;
       map[option.value] = option.value;
     });
-    map.Unassigned = map.Unassigned ?? 'Người mới';
+    map.Unassigned = map.Unassigned ?? "Người mới";
     return map;
   }, [levelOptions]);
   const levelApiMap = useMemo<Record<PhotographerLevel, string>>(() => {
@@ -59,21 +65,24 @@ const PhotographerApplication = () => {
   // );
   const portfolioOptions = useMemo(
     () => [
-      { label: 'All portfolios', value: 'all' },
-      { label: 'With portfolio only', value: 'with' },
-      { label: 'Without portfolio only', value: 'without' },
+      { label: "All portfolios", value: "all" },
+      { label: "With portfolio only", value: "with" },
+      { label: "Without portfolio only", value: "without" },
     ],
-    [],
+    []
   );
-  const createdFromValue = useMemo(() => (filters.createdFrom ? dayjs(filters.createdFrom) : null), [filters.createdFrom]);
+  const createdFromValue = useMemo(
+    () => (filters.createdFrom ? dayjs(filters.createdFrom) : null),
+    [filters.createdFrom]
+  );
   const createdToValue = useMemo(() => (filters.createdTo ? dayjs(filters.createdTo) : null), [filters.createdTo]);
 
-  const normaliseYears = (value: PhotographerPendingLevelItem['photographerProfile'] | null | undefined): string => {
+  const normaliseYears = (value: PhotographerPendingLevelItem["photographerProfile"] | null | undefined): string => {
     const years = value?.yearsOfExperience;
     if (years === null || years === undefined) {
-      return '0';
+      return "0";
     }
-    if (typeof years === 'number') {
+    if (typeof years === "number") {
       return years.toString();
     }
     // Format mới: "số năm | mô tả" (ví dụ: "3 | Intermediate")
@@ -84,15 +93,17 @@ const PhotographerApplication = () => {
   const toPhotographerLevel = useCallback(
     (level: string | null | undefined): PhotographerLevel => {
       if (!level || !level.trim()) {
-        return 'Chưa có cấp độ';
+        return "Chưa có cấp độ";
       }
       const cleanedLevel = level.trim();
-      return levelDisplayMap[cleanedLevel] ?? (cleanedLevel as PhotographerLevel) ?? '';
+      return levelDisplayMap[cleanedLevel] ?? (cleanedLevel as PhotographerLevel) ?? "";
     },
-    [levelDisplayMap],
+    [levelDisplayMap]
   );
 
-  const mapItemsToApplications = (items: PhotographerPendingLevelItem[] | undefined | null): PhotographerApplicationItem[] => {
+  const mapItemsToApplications = (
+    items: PhotographerPendingLevelItem[] | undefined | null
+  ): PhotographerApplicationItem[] => {
     if (!items || items.length === 0) {
       return [];
     }
@@ -108,14 +119,13 @@ const PhotographerApplication = () => {
       locationAddress: item.locationAddress,
       locationCity: item.locationCity,
       avatarUrl: item.avatarUrl,
-      equipmentDescription: item.photographerProfile?.equipmentDescription ?? 'Not provided yet.',
+      equipmentDescription: item.photographerProfile?.equipmentDescription ?? "Not provided yet.",
       yearsOfExperience: normaliseYears(item.photographerProfile),
       avgRating: item.photographerProfile?.avgRating ?? 0,
       isAvailable: item.photographerProfile?.isAvailable ?? false,
-      photoPrice: item.photographerProfile?.photoPrice ?? 'Not provided yet.',
-      workLocation: item.photographerProfile?.workLocation ?? 'Not provided yet.',
-      photoType: item.photographerProfile?.photoType ?? 'Not provided yet.',
-      description: item.photographerProfile?.description ?? 'No introduction has been added.',
+      workLocation: item.photographerProfile?.workLocation ?? "Not provided yet.",
+      photoType: item.photographerProfile?.photoTypes ?? [],
+      description: item.photographerProfile?.description ?? "No introduction has been added.",
       photographerStyles: item.photographerProfile?.photographerStyles ?? [],
       photographerLevel: toPhotographerLevel(item.photographerProfile?.levelPhotographer),
       photoPortfolio: (item.photoPortfolios ?? [])
@@ -131,15 +141,14 @@ const PhotographerApplication = () => {
       ...filters,
       pageNumber: filters.pageNumber ?? 1,
       pageSize: filters.pageSize ?? 6,
-      hasPortfolio:
-        portfolioFilter === 'all'
-          ? undefined
-          : portfolioFilter === 'with',
+      hasPortfolio: portfolioFilter === "all" ? undefined : portfolioFilter === "with",
     };
 
     const fetchPhotographers = async () => {
       try {
         const response = await photographerService.searchPhotographers(payload);
+
+        console.log("Photographer search response:", response);
 
         if (!ignore && response.success && response.data) {
           const data = response.data;
@@ -175,39 +184,38 @@ const PhotographerApplication = () => {
   }, [filters, portfolioFilter]);
 
   const handleLevelChange = async (userId: number, level: PhotographerLevel) => {
-    const previousLevel = photographers.find((item) => item.userId === userId)?.photographerLevel ?? '';
+    const previousLevel = photographers.find((item) => item.userId === userId)?.photographerLevel ?? "";
     setPhotographers((prev: PhotographerApplicationItem[]) =>
       prev.map((item: PhotographerApplicationItem) =>
         item.userId === userId
           ? {
-            ...item,
-            photographerLevel: level as PhotographerLevel,
-          }
-          : item,
-      ),
+              ...item,
+              photographerLevel: level as PhotographerLevel,
+            }
+          : item
+      )
     );
 
     const payloadLevel = levelApiMap[level] ?? level;
 
     const response = await photographerService.updatePhotographerLevel(userId, payloadLevel);
-    console.log('Update level response:', response);
+    console.log("Update level response:", response);
     if (response.success !== true) {
-      toast.error('Failed to update photographer level');
+      toast.error("Failed to update photographer level");
       setPhotographers((prev: PhotographerApplicationItem[]) =>
         prev.map((item: PhotographerApplicationItem) =>
           item.userId === userId
             ? {
-              ...item,
-              photographerLevel: previousLevel as PhotographerLevel,
-            }
-            : item,
-        ),
+                ...item,
+                photographerLevel: previousLevel as PhotographerLevel,
+              }
+            : item
+        )
       );
     } else {
-      toast.success('Photographer level updated successfully');
+      toast.success("Photographer level updated successfully");
     }
   };
-
 
   const handleSearch = (value: string) => {
     setSearchValue(value);
@@ -218,7 +226,7 @@ const PhotographerApplication = () => {
     }));
   };
 
-  const handlePortfolioFilter = (value: 'all' | 'with' | 'without') => {
+  const handlePortfolioFilter = (value: "all" | "with" | "without") => {
     setPortfolioFilter(value);
     setFilters((prev) => ({
       ...prev,
@@ -236,10 +244,10 @@ const PhotographerApplication = () => {
 
   const handleCreatedFromChange = (date: Dayjs | null) => {
     setFilters((prev) => {
-      const nextCreatedFrom = date ? date.startOf('day') : null;
+      const nextCreatedFrom = date ? date.startOf("day") : null;
       const formattedCreatedFrom = nextCreatedFrom ? nextCreatedFrom.toISOString() : undefined;
       const shouldClearCreatedTo = Boolean(
-        formattedCreatedFrom && prev.createdTo && dayjs(prev.createdTo).isBefore(formattedCreatedFrom),
+        formattedCreatedFrom && prev.createdTo && dayjs(prev.createdTo).isBefore(formattedCreatedFrom)
       );
 
       return {
@@ -255,11 +263,11 @@ const PhotographerApplication = () => {
     setFilters((prev) => ({
       ...prev,
       pageNumber: 1,
-      createdTo: date ? date.endOf('day').toISOString() : undefined,
+      createdTo: date ? date.endOf("day").toISOString() : undefined,
     }));
   };
 
-  const handleSortDirectionChange = (value: 'asc' | 'desc') => {
+  const handleSortDirectionChange = (value: "asc" | "desc") => {
     setFilters((prev) => ({
       ...prev,
       pageNumber: 1,
@@ -288,9 +296,7 @@ const PhotographerApplication = () => {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <p className=" text-slate-500">
-          Review, promote, and approve availability for new photographers on Snapdi.
-        </p>
+        <p className=" text-slate-500">Review, promote, and approve availability for new photographers on Snapdi.</p>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input.Search
             placeholder="Search by name, email, city, or keywords"
@@ -301,7 +307,7 @@ const PhotographerApplication = () => {
               const { value } = evt.target;
               setSearchValue(value);
               if (!value) {
-                handleSearch('');
+                handleSearch("");
               }
             }}
             onSearch={handleSearch}
@@ -309,16 +315,16 @@ const PhotographerApplication = () => {
           <Select
             className="w-full sm:w-48"
             value={portfolioFilter}
-            onChange={(value) => handlePortfolioFilter(value as 'all' | 'with' | 'without')}
+            onChange={(value) => handlePortfolioFilter(value as "all" | "with" | "without")}
             options={portfolioOptions}
           />
           <Select
             className="w-full sm:w-48"
             value={filters.sortDirection}
-            onChange={(value) => handleSortDirectionChange(value as 'asc' | 'desc')}
+            onChange={(value) => handleSortDirectionChange(value as "asc" | "desc")}
             options={[
-              { label: 'Newest applications', value: 'desc' },
-              { label: 'Oldest applications', value: 'asc' },
+              { label: "Newest applications", value: "desc" },
+              { label: "Oldest applications", value: "asc" },
             ]}
           />
         </div>
@@ -348,7 +354,7 @@ const PhotographerApplication = () => {
           value={createdToValue}
           onChange={(date) => handleCreatedToChange(date)}
           disabledDate={(current) => {
-            return Boolean(createdFromValue && current && current.isBefore(createdFromValue, 'day'));
+            return Boolean(createdFromValue && current && current.isBefore(createdFromValue, "day"));
           }}
         />
       </section>
@@ -364,7 +370,7 @@ const PhotographerApplication = () => {
 
       <section className="grid gap-5 xl:grid-cols-2">
         {photographers.map((photographer: PhotographerApplicationItem) => (
-            <Card key={photographer.userId} className="border border-slate-100 shadow-sm" bodyStyle={{ padding: 12 }}>
+          <Card key={photographer.userId} className="border border-slate-100 shadow-sm" bodyStyle={{ padding: 12 }}>
             <div className="flex flex-col gap-4 lg:flex-row">
               <div className="flex flex-col items-center gap-3 text-center lg:w-60 lg:items-start lg:text-left">
                 {/* <Avatar size={96} src={photographer.avatarUrl} alt={photographer.name} className="shadow-sm" /> */}
@@ -380,11 +386,17 @@ const PhotographerApplication = () => {
                     <span>{photographer.avgRating.toFixed(2)}</span>
                   </div>
                 </div>
-                <Tag color={photographer.isVerify ? 'green' : 'orange'} className="rounded-full px-4 text-xs font-medium">
-                  {photographer.isVerify ? 'Verified ID' : 'Pending Verification'}
+                <Tag
+                  color={photographer.isVerify ? "green" : "orange"}
+                  className="rounded-full px-4 text-xs font-medium"
+                >
+                  {photographer.isVerify ? "Verified ID" : "Pending Verification"}
                 </Tag>
-                <Tag color={photographer.photoPortfolio.length > 0 ? 'blue' : 'default'} className="rounded-full px-4 text-xs font-medium">
-                  {photographer.photoPortfolio.length > 0 ? 'Portfolio submitted' : 'No portfolio yet'}
+                <Tag
+                  color={photographer.photoPortfolio.length > 0 ? "blue" : "default"}
+                  className="rounded-full px-4 text-xs font-medium"
+                >
+                  {photographer.photoPortfolio.length > 0 ? "Portfolio submitted" : "No portfolio yet"}
                 </Tag>
                 <div className="space-y-2 text-sm text-slate-600">
                   <p className="flex items-center gap-2">
@@ -395,7 +407,7 @@ const PhotographerApplication = () => {
                   </p>
                   <p className="flex items-start gap-2">
                     <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
-                    <span className='break-all'>
+                    <span className="break-all">
                       {photographer.locationAddress && (
                         <>
                           {photographer.locationAddress}
@@ -419,29 +431,53 @@ const PhotographerApplication = () => {
                   <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
                     <p className="text-sm text-slate-500">Experience</p>
                     <p className="text-lg font-semibold text-slate-900">
-                      {typeof photographer.yearsOfExperience === 'string' && photographer.yearsOfExperience.includes('|')
-                        ? photographer.yearsOfExperience.split('|')[0].trim()
+                      {typeof photographer.yearsOfExperience === "string" &&
+                      photographer.yearsOfExperience.includes("|")
+                        ? photographer.yearsOfExperience.split("|")[0].trim()
                         : photographer.yearsOfExperience}
                     </p>
                     <p className="text-xs text-slate-500">
-                      {typeof photographer.yearsOfExperience === 'string' && photographer.yearsOfExperience.includes('|')
-                        ? photographer.yearsOfExperience.split('|')[1].trim()
+                      {typeof photographer.yearsOfExperience === "string" &&
+                      photographer.yearsOfExperience.includes("|")
+                        ? photographer.yearsOfExperience.split("|")[1].trim()
                         : `Joined ${new Date(photographer.createdAt).toLocaleDateString()}`}
                     </p>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Price: </label>
-                    <span className="mt-1 text-sm leading-relaxed">{formatPrice(photographer.photoPrice)}</span>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Photo Types & Prices
+                    </label>
+                    {photographer.photoType && photographer.photoType.length > 0 ? (
+                      <div className="mt-2 space-y-2">
+                        {photographer.photoType.map((type) => (
+                          <div
+                            key={`${photographer.userId}-type-${type.photoTypeId}`}
+                            className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 p-3"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Tag color="blue" className="rounded-full px-3 text-xs font-medium">
+                                {type.photoTypeName}
+                              </Tag>
+                              <Tag color="orange" className="rounded-full px-3 text-xs font-medium">
+                                {type.time}h
+                              </Tag>
+                            </div>
+                            <Tag color="red" className="rounded-full px-3 text-xs font-medium">
+                              {formatPrice(type.photoPrice.toString())}
+                            </Tag>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="mt-1 text-sm text-slate-500">No photo types specified</p>
+                    )}
                   </div>
+
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photo Type: </label>
-                    <span className="mt-1 text-sm leading-relaxed">{photographer.photoType}</span>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Work Location: </label>
-                    <span className="mt-1 text-sm leading-relaxed">{photographer.workLocation}</span>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Work Location</label>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-600">{photographer.workLocation}</p>
                   </div>
                 </div>
                 <div>
@@ -454,8 +490,7 @@ const PhotographerApplication = () => {
                         </Tag>
                       ))}
                     </div>
-                  )
-                  }
+                  )}
                   {/* <div className="rounded-lg border border-slate-100 bg-white p-3">
                   <p className="text-sm text-slate-600">About</p>
                   <p className="mt-1 text-sm text-slate-500 leading-relaxed">{photographer.description}</p>
@@ -463,10 +498,10 @@ const PhotographerApplication = () => {
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-2">
-
-
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">Photographer Level</label>
+                    <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Photographer Level
+                    </label>
                     {photographer.photoPortfolio.length > 0 ? (
                       <Select
                         value={photographer.photographerLevel || undefined}
@@ -487,8 +522,6 @@ const PhotographerApplication = () => {
                       />
                     )}
                   </div>
-
-
                 </div>
 
                 <div>
@@ -497,7 +530,10 @@ const PhotographerApplication = () => {
                     <div className="mt-2 space-y-2">
                       <div className="grid grid-cols-3 gap-2">
                         {photographer.photoPortfolio.slice(0, 3).map((publicId: string, index: number) => (
-                          <div key={`${photographer.userId}-${publicId}-${index}`} className="group relative overflow-hidden rounded-lg border border-slate-200">
+                          <div
+                            key={`${photographer.userId}-${publicId}-${index}`}
+                            className="group relative overflow-hidden rounded-lg border border-slate-200"
+                          >
                             <CloudinaryImage
                               publicId={publicId}
                               alt={`${photographer.name} portfolio ${index + 1}`}
@@ -550,7 +586,7 @@ const PhotographerApplication = () => {
           <div className="col-span-full flex justify-end">
             <Pagination
               showSizeChanger
-              pageSizeOptions={['6', '12', '24']}
+              pageSizeOptions={["6", "12", "24"]}
               current={pagination.current}
               pageSize={pagination.pageSize}
               total={pagination.total}
