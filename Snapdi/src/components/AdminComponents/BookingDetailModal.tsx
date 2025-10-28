@@ -1,9 +1,10 @@
-import React from "react";
-import { Modal, Card, Descriptions, Divider, Button, Space, message } from "antd";
+import React, { useEffect, useState } from "react";
+import { Modal, Card, Descriptions, Divider, Button, Space, message, Spin } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import type { Booking } from "../../services/bookingService";
-import { formatPrice } from "../../utils/formatPrice";
+import { photoTypeService } from "../../services/photoTypeService";
+import { formatPriceDisplay } from "../../utils/formatPrice";
 
 interface BookingDetailModalProps {
   open: boolean;
@@ -16,6 +17,32 @@ const BookingDetailModal: React.FC<BookingDetailModalProps> = ({
   onClose,
   booking,
 }) => {
+  const [photoTypeName, setPhotoTypeName] = useState<string>("");
+  const [loadingPhotoType, setLoadingPhotoType] = useState(false);
+
+  useEffect(() => {
+    const fetchPhotoTypeName = async () => {
+      if (booking.photoTypeId) {
+        setLoadingPhotoType(true);
+        try {
+          const photoType = await photoTypeService.getPhotoTypeById(booking.photoTypeId);
+          setPhotoTypeName(photoType.photoTypeName);
+        } catch (error) {
+          console.error("Failed to fetch photo type:", error);
+          setPhotoTypeName("Không xác định");
+        } finally {
+          setLoadingPhotoType(false);
+        }
+      } else {
+        setPhotoTypeName("-");
+      }
+    };
+
+    if (open) {
+      fetchPhotoTypeName();
+    }
+  }, [open, booking.photoTypeId]);
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     message.success("Đã sao chép");
@@ -113,8 +140,14 @@ const BookingDetailModal: React.FC<BookingDetailModalProps> = ({
             <Descriptions.Item label="Địa Điểm">
               {booking.locationAddress}
             </Descriptions.Item>
+            <Descriptions.Item label="Loại Chụp">
+              {loadingPhotoType ? <Spin size="small" /> : photoTypeName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Thời Gian Chụp">
+              {booking.time ? `${booking.time} giờ` : "-"}
+            </Descriptions.Item>
             <Descriptions.Item label="Giá">
-              {formatPrice(booking.price)}
+              {formatPriceDisplay(booking.price)} VND
             </Descriptions.Item>
             <Descriptions.Item label="Trạng Thái">
               <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded">

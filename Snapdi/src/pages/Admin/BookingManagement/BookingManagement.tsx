@@ -18,6 +18,8 @@ import {
   Statistic,
   Tooltip,
   Input,
+  FloatButton,
+  Drawer,
 } from "antd";
 import {
   DeleteOutlined,
@@ -69,6 +71,7 @@ const BookingManagement: React.FC = () => {
   const [sortDirection] = useState<"asc" | "desc">("desc");
   const [filters, setFilters] = useState<Filters>({});
   const [statistics, setStatistics] = useState<BookingStatistics>({ totalBookings: 0, statusStatistics: [], generatedAt: "" });
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -115,8 +118,15 @@ const BookingManagement: React.FC = () => {
     try {
       const stats = await bookingService.getBookingStatistics();
       setStatistics(stats);
+      console.log("Fetched statistics:", stats);
     } catch (error) {
       console.error("Failed to fetch statistics:", error);
+      // Set default values if statistics fetch fails
+      setStatistics({
+        totalBookings: 0,
+        statusStatistics: [],
+        generatedAt: new Date().toISOString()
+      });
     }
   };
 
@@ -204,8 +214,16 @@ const BookingManagement: React.FC = () => {
     fetchBookings();
   }, [pagination.current, pagination.pageSize]);
 
+  // Fetch when filters change
+  useEffect(() => {
+    if (Object.keys(filters).length > 0 || pagination.current > 1) {
+      fetchBookings();
+    }
+  }, [filters]);
+
   // Handle filter
-  const handleFilter = (values: any) => {
+  const handleFilter = () => {
+    const values = form.getFieldsValue();
     const newFilters: Filters = {
       searchTerm: values.searchTerm || undefined,
       statusId: values.statusId || undefined,
@@ -216,6 +234,7 @@ const BookingManagement: React.FC = () => {
     };
     setFilters(newFilters);
     setPagination((prev) => ({ ...prev, current: 1 }));
+    setFilterDrawerOpen(false);
   };
 
   // Handle status update
@@ -323,10 +342,11 @@ const BookingManagement: React.FC = () => {
             items: [
               { key: 1, label: "Pending" },
               { key: 2, label: "Confirmed" },
-              { key: 3, label: "In Progress" },
-              { key: 4, label: "Completed" },
-              { key: 5, label: "Cancelled" },
-              { key: 6, label: "Payment Pending" }
+              { key: 3, label: "Paid" },
+              { key: 4, label: "Going" },
+              { key: 5, label: "Processing" },
+              { key: 6, label: "Done" },
+              { key: 7, label: "Completed" },
             ],
             onClick: ({ key }) => handleStatusUpdate(record.bookingId, Number(key)),
           }}
@@ -411,88 +431,88 @@ const BookingManagement: React.FC = () => {
         ))}
       </Row>
 
-      {/* Filter Form */}
-      <Card className="bg-gray-300!">
-        <Form form={form} layout="vertical" onValuesChange={(_, values) => handleFilter(values)}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item name="searchTerm" label="Tìm Kiếm">
-                <Input
-                  type="text"
-                  placeholder="Tên khách, nhiếp ảnh gia..."
-                  className="w-full px-3 py-2 border rounded"
-                />
-              </Form.Item>
-            </Col>
+      {/* FloatButton for Filter */}
+      <FloatButton
+        icon={<FilterOutlined />}
+        type="primary"
+        style={{ right: 24, bottom: 24 }}
+        onClick={() => setFilterDrawerOpen(true)}
+        tooltip="Bộ lọc"
+      />
 
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item name="statusId" label="Trạng Thái">
-                <Select
-                  placeholder="Chọn trạng thái"
-                  allowClear
-                  options={[
-                    { label: "Pending", value: 1 },
-                    { label: "In Progress", value: 2 },
-                    { label: "Confirmed", value: 3 },
-                    { label: "Completed", value: 4 },
-                    { label: "Cancelled", value: 5 },
-                    { label: "Payment Pending", value: 6 },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
+      {/* Filter Drawer */}
+      <Drawer
+        title="Bộ Lọc Booking"
+        placement="right"
+        onClose={() => setFilterDrawerOpen(false)}
+        open={filterDrawerOpen}
+        width={400}
+        extra={
+          <Space>
+            <Button
+              onClick={() => {
+                form.resetFields();
+                setFilters({});
+                setPagination((prev) => ({ ...prev, current: 1 }));
+              }}
+            >
+              Xóa Lọc
+            </Button>
+            <Button type="primary" onClick={handleFilter}>
+              Áp Dụng
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="searchTerm" label="Tìm Kiếm">
+            <Input
+              placeholder="Tên khách, nhiếp ảnh gia..."
+            />
+          </Form.Item>
 
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item name="dateRange" label="Ngày Chụp">
-                <DatePicker.RangePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-              </Form.Item>
-            </Col>
+          <Form.Item name="statusId" label="Trạng Thái">
+            <Select
+              placeholder="Chọn trạng thái"
+              allowClear
+              options={[
+                { label: "Pending", value: 1 },
+                { label: "In Progress", value: 2 },
+                { label: "Confirmed", value: 3 },
+                { label: "Completed", value: 4 },
+                { label: "Cancelled", value: 5 },
+                { label: "Payment Pending", value: 6 },
+              ]}
+            />
+          </Form.Item>
 
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item name="priceMin" label="Giá Tối Thiểu">
-                <InputNumber
-                  placeholder="0"
-                  style={{ width: "100%" }}
-                  formatter={(value) =>
-                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                />
-              </Form.Item>
-            </Col>
+          <Form.Item name="dateRange" label="Ngày Chụp">
+            <DatePicker.RangePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+          </Form.Item>
 
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item name="priceMax" label="Giá Tối Đa">
-                <InputNumber
-                  placeholder="999999999"
-                  style={{ width: "100%" }}
-                  formatter={(value) =>
-                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                />
-              </Form.Item>
-            </Col>
+          <Form.Item name="priceMin" label="Giá Tối Thiểu">
+            <InputNumber
+              placeholder="0"
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/,/g, "")}
+            />
+          </Form.Item>
 
-            <Col xs={24} sm={12} lg={6} className="pt-7">
-              <Space>
-                <Button
-                  type="default"
-                  icon={<FilterOutlined />}
-                  onClick={() => {
-                    form.resetFields();
-                    setFilters({});
-                    setPagination((prev) => ({ ...prev, current: 1 }));
-                  }}
-                >
-                  Xóa
-                </Button>
-                <Button type="primary" onClick={() => fetchBookings()}>
-                  Tìm
-                </Button>
-              </Space>
-            </Col>
-          </Row>
+          <Form.Item name="priceMax" label="Giá Tối Đa">
+            <InputNumber
+              placeholder="999999999"
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/,/g, "")}
+            />
+          </Form.Item>
         </Form>
-      </Card>
+      </Drawer>
 
       {/* Table */}
       <Card className="mt-2!">
