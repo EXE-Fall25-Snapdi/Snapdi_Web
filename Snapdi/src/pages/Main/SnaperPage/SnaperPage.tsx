@@ -59,9 +59,9 @@ export default function Snaper() {
     [], // Step 0
     ['name', 'email', 'phone', 'password', 'confirmPassword', 'dob', 'gender'], // Step 1
     ['otp'], // Step 2
-    ['locationCity', 'locationAddress', 'yearsOfExperience'], // Step 3
-    ['description', 'equipment', 'category'], // Step 4
-    ['styleIds', 'portfolio'] // Step 5 - Added styleIds
+    ['locationCity', 'yearsOfExperience'], // Step 3
+    ['description', 'photographerPhotoTypes', 'equipment'], // Step 4
+    ['styleIds', 'portfolio'] // Step 5
   ];
 
   // --- LOGIC XỬ LÝ ---
@@ -203,37 +203,42 @@ export default function Snaper() {
   const handlePhotographerSubmit = async () => {
     try {
       const formData = form.getFieldsValue();
-      // Debug: Log all form data
       console.log('All form data:', formData);
       console.log('Name:', formData.name);
       console.log('Email:', formData.email);
       console.log('Password:', formData.password);
       console.log('LocationCity:', formData.locationCity);
+      console.log('PhotographerPhotoTypes:', formData.photographerPhotoTypes);
 
-
-      // 2. Register photographer
+      // Build equipment description from selected equipment
       const equipmentDescription = (formData.equipment as string[])?.join(', ') || '';
-      // const category = formData.category || '';
 
-      // Combine category into description field
-      // const fullDescription = category
-      //   ? `Thể loại: ${category}. ${formData.description || ''}`
-      //   : formData.description || '';
+      // Use photographerPhotoTypes directly from form data
+      const photographerPhotoTypes = (formData.photographerPhotoTypes as Array<{
+        photoTypeId: number;
+        photoPrice: number;
+        time?: number;
+      }> || []).map((item) => ({
+        photoTypeId: item.photoTypeId,
+        photoPrice: item.photoPrice,
+        time: item.time || 0
+      }));
 
-      const photographerData = {
+      // Build photographer data matching new API format
+      const photographerData: any = {
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
+        phone: formData.phone || undefined,
         password: formData.password,
-        locationCity: formData.workLocation,
-        yearsOfExperience: formData.yearsOfExperience + ' năm' + ' | ' + formData.experienceLevel || '0 năm',
+        locationAddress: formData.locationAddress || undefined,
+        locationCity: formData.locationCity,
+        yearsOfExperience: formData.yearsOfExperience + ' năm' || '0 năm',
         equipmentDescription: equipmentDescription,
-        // description: fullDescription,
+        description: formData.description || undefined,
         isAvailable: false, // Default to false, admin will approve
-        photoPrice: formData.photoPrice || '0',
-        photoType: formData.photoType || '',
-        workLocation: formData.workLocationDetail + ' ' + formData.workLocation || '',
-        avatarUrl: '', // Leave empty for later update
+        photographerPhotoTypes: photographerPhotoTypes,
+        photographerStyleIds: (formData.styleIds as number[]) || [],
+        avatarUrl: undefined, // Leave empty for later update
       };
 
       console.log('Photographer data to send:', photographerData);

@@ -1,7 +1,6 @@
 import { get, post, put } from "./apiService";
 import type { ResponseModel } from "../models/ResponseModel";
 import { API_CONSTANTS } from "../constants/apiConstants";
-import axiosInstance from '../config/axiosConfig';
 import { toast } from "react-toastify";
 
 interface AuthResponse {
@@ -36,24 +35,23 @@ export function parseJwt(token: string): any {
 }
 
 export const login = async (email: string, password: string): Promise<ResponseModel<AuthResponse>> => {
-  const response = await post<AuthResponse>(API_CONSTANTS.AUTH.LOGIN, { email, password });
+  const response = await post<AuthResponse>(API_CONSTANTS.AUTH.LOGIN, { email, password }, true);
   // Note: This function is deprecated, use loginUser instead
   return response;
 };
 
-export const getUserInfobyToken = async (loading?: boolean): Promise<ResponseModel<UserInfo>> => {
-  const response = await get<UserInfo>(API_CONSTANTS.AUTH.USER_INFO, "", loading);
-  // useLoadingStore.setState({ isLoadingFlag: false });
+export const getUserInfobyToken = async (): Promise<ResponseModel<UserInfo>> => {
+  const response = await get<UserInfo>(API_CONSTANTS.AUTH.USER_INFO, "");
   return response;
 };
 
 export const getAllRoles = async (keyword?: string): Promise<ResponseModel<Role[]>> => {
-  const response = await get<Role[]>(API_CONSTANTS.ROLES.GET_ALL, { keyword });
+  const response = await get<Role[]>(API_CONSTANTS.ROLES.GET_ALL, { keyword }, true);
   return response;
 };
 
 export const logoutApi = async (): Promise<void> => {
-  await post(API_CONSTANTS.AUTH.LOGOUT, {});
+  await post(API_CONSTANTS.AUTH.LOGOUT, {}, true);
 };
 
 export const forgotPassword = async (email: string): Promise<ResponseModel<null>> => {
@@ -101,7 +99,7 @@ export interface LoginResponse {
 
 export const loginUser = async (credentials: LoginRequest): Promise<LoginResponse> => {
   try {
-    const response = await axiosInstance.post<LoginResponse>(API_CONSTANTS.AUTH.LOGIN, credentials);
+    const response = await post<LoginResponse>(API_CONSTANTS.AUTH.LOGIN, credentials);
     return response.data;
   } catch (error: any) {
     // Handle different error types
@@ -130,6 +128,17 @@ export interface RegisterClientRequest {
   avatarUrl?: string;
 }
 
+export interface PhotographerPhotoType {
+  photoTypeId: number;
+  photoPrice: number;
+  time: number;
+}
+
+export interface CurrentLocation {
+  latitude: number;
+  longitude: number;
+}
+
 export interface RegisterPhotographerRequest {
   name: string;
   email: string;
@@ -138,13 +147,14 @@ export interface RegisterPhotographerRequest {
   locationAddress?: string;
   locationCity: string;
   avatarUrl?: string;
+  currentLocation?: CurrentLocation;
   yearsOfExperience: string;
   equipmentDescription: string;
   description?: string;
   isAvailable?: boolean;
-  photoPrice: string;
-  photoType: string;
-  workLocation: string;
+  workLocation?: string;
+  photographerPhotoTypes?: PhotographerPhotoType[];
+  photographerStyleIds?: number[];
 }
 
 export interface VerifyEmailRequest {
@@ -189,14 +199,14 @@ export interface PhotographerResponse {
 
 // Send verification code (resend OTP)
 export const sendVerificationCode = async (email: string): Promise<void> => {
-  await axiosInstance.post(API_CONSTANTS.AUTH.RESEND, { email });
+  await post(API_CONSTANTS.AUTH.RESEND, { email });
 };
 
 // Register as client
 export const registerClient = async (data: RegisterClientRequest): Promise<UserResponse> => {
-  const response = await axiosInstance.post<UserResponse>(
+  const response = await post<UserResponse>(
     API_CONSTANTS.AUTH.SIGNUP,
-    data
+    data, true
   );
   return response.data;
 };
@@ -205,9 +215,9 @@ export const registerClient = async (data: RegisterClientRequest): Promise<UserR
 export const registerPhotographer = async (
   data: RegisterPhotographerRequest
 ): Promise<PhotographerResponse> => {
-  const response = await axiosInstance.post<PhotographerResponse>(
+  const response = await post<PhotographerResponse>(
     API_CONSTANTS.AUTH.SIGNUP_PHOTOGRAPHER,
-    data
+    data, true
   );
   return response.data;
 };
@@ -215,7 +225,7 @@ export const registerPhotographer = async (
 // Verify email with OTP code
 export const verifyEmailCode = async (data: VerifyEmailRequest): Promise<void> => {
   try {
-    await axiosInstance.post(API_CONSTANTS.AUTH.VERIFY_OTP, data);
+    await post(API_CONSTANTS.AUTH.VERIFY_OTP, data);
   } catch (error: any) {
     if (error.response?.data?.detail) {
       throw new Error(error.response.data.detail);

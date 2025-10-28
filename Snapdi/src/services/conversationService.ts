@@ -1,5 +1,4 @@
-import axiosInstance from '../config/axiosConfig';
-
+import { get, post } from "./apiService";
 export interface Conversation {
   conversationId: number;
   type: string;
@@ -23,7 +22,7 @@ export interface SendMessageRequest {
 class ConversationService {
   // Get all conversations for current user
   async getMyConversations(): Promise<Conversation[]> {
-    const response = await axiosInstance.get<Conversation[]>('/api/conversations');
+    const response = await get<Conversation[]>('/api/conversations');
     return response.data;
   }
 
@@ -39,7 +38,7 @@ class ConversationService {
     }
     params.append('take', take.toString());
 
-    const response = await axiosInstance.get<Message[]>(
+    const response = await get<Message[]>(
       `/api/conversations/${conversationId}/messages?${params.toString()}`
     );
     return response.data;
@@ -47,7 +46,7 @@ class ConversationService {
 
   // Send a message via REST API (alternative to SignalR)
   async sendMessage(conversationId: number, content: string): Promise<Message> {
-    const response = await axiosInstance.post<Message>(
+    const response = await post<Message>(
       `/api/conversations/${conversationId}/messages`,
       { content }
     );
@@ -68,7 +67,7 @@ class ConversationService {
       }
 
       // If no admin conversation exists, create one using the backend endpoint
-      const response = await axiosInstance.post<{ conversationId: number }>('/api/conversations/admin');
+      const response = await post<{ conversationId: number }>('/api/conversations/admin', {}, true);
       return response.data.conversationId;
     } catch (error) {
       console.error('Error getting/creating admin conversation:', error);

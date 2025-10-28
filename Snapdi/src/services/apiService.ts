@@ -1,18 +1,24 @@
 import axiosInstance from "../config/axiosConfig";
 import { useLoadingStore } from "../config/zustand";
 import type { ResponseModel } from "../models/ResponseModel";
+import type { AxiosRequestConfig } from "axios";
 
-export const get = async <T>(url: string, params?: any, loading?: boolean): Promise<ResponseModel<T>> => {
+interface ApiConfig extends AxiosRequestConfig {
+  loading?: boolean;
+}
+
+export const get = async <T>(url: string, params?: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
-    useLoadingStore.getState().setIsLoadingFlag(loading ?? true); // Set loading flag
-    const response = await axiosInstance.get<any>(url, { params });
+    const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
+    const axiosConfig = typeof config === 'object' ? config : undefined;
 
-    // Check if response is already in ResponseModel format
+    useLoadingStore.getState().setIsLoadingFlag(isLoading);
+    const response = await axiosInstance.get<any>(url, { params, ...axiosConfig });
+
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       return response.data as ResponseModel<T>;
     }
 
-    // If not, wrap the response in ResponseModel format
     return {
       success: true,
       message: 'Success',
@@ -22,21 +28,22 @@ export const get = async <T>(url: string, params?: any, loading?: boolean): Prom
     console.error(`Error fetching ${url}:`, error);
     throw error;
   } finally {
-    useLoadingStore.getState().setIsLoadingFlag(false); // Clear loading flag
+    useLoadingStore.getState().setIsLoadingFlag(false);
   }
 };
 
-export const post = async <T>(url: string, data: any, loading?: boolean): Promise<ResponseModel<T>> => {
+export const post = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
-    useLoadingStore.getState().setIsLoadingFlag(loading ?? true); // Set loading flag
-    const response = await axiosInstance.post<any>(url, data);
+    const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
+    const axiosConfig = typeof config === 'object' ? config : undefined;
 
-    // Check if response is already in ResponseModel format
+    useLoadingStore.getState().setIsLoadingFlag(isLoading);
+    const response = await axiosInstance.post<any>(url, data, axiosConfig);
+
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       return response.data as ResponseModel<T>;
     }
 
-    // If not, wrap the response in ResponseModel format
     return {
       success: true,
       message: 'Success',
@@ -46,21 +53,22 @@ export const post = async <T>(url: string, data: any, loading?: boolean): Promis
     console.error(`Error posting to ${url}:`, error);
     throw error;
   } finally {
-    useLoadingStore.getState().setIsLoadingFlag(false); // Clear loading flag
+    useLoadingStore.getState().setIsLoadingFlag(false);
   }
 };
 
-export const put = async <T>(url: string, data: any, loading?: boolean): Promise<ResponseModel<T>> => {
+export const put = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
-    useLoadingStore.getState().setIsLoadingFlag(loading ?? true); // Set loading flag
-    const response = await axiosInstance.put<any>(url, data);
+    const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
+    const axiosConfig = typeof config === 'object' ? config : undefined;
 
-    // Check if response is already in ResponseModel format
+    useLoadingStore.getState().setIsLoadingFlag(isLoading);
+    const response = await axiosInstance.put<any>(url, data, axiosConfig);
+
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       return response.data as ResponseModel<T>;
     }
 
-    // If not, wrap the response in ResponseModel format
     return {
       success: true,
       message: 'Success',
@@ -70,21 +78,22 @@ export const put = async <T>(url: string, data: any, loading?: boolean): Promise
     console.error(`Error updating ${url}:`, error);
     throw error;
   } finally {
-    useLoadingStore.getState().setIsLoadingFlag(false); // Clear loading flag
+    useLoadingStore.getState().setIsLoadingFlag(false);
   }
 };
 
-export const del = async <T>(url: string, loading?: boolean): Promise<ResponseModel<T>> => {
+export const del = async <T>(url: string, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
-    useLoadingStore.getState().setIsLoadingFlag(loading ?? true); // Set loading flag
-    const response = await axiosInstance.delete<any>(url);
+    const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
+    const axiosConfig = typeof config === 'object' ? config : undefined;
 
-    // Check if response is already in ResponseModel format
+    useLoadingStore.getState().setIsLoadingFlag(isLoading);
+    const response = await axiosInstance.delete<any>(url, axiosConfig);
+
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       return response.data as ResponseModel<T>;
     }
 
-    // If not, wrap the response in ResponseModel format
     return {
       success: true,
       message: 'Success',
@@ -94,14 +103,17 @@ export const del = async <T>(url: string, loading?: boolean): Promise<ResponseMo
     console.error(`Error deleting ${url}:`, error);
     throw error;
   } finally {
-    useLoadingStore.getState().setIsLoadingFlag(false); // Clear loading flag
+    useLoadingStore.getState().setIsLoadingFlag(false);
   }
 };
 
-export const patch = async <T>(url: string, data: any, loading?: boolean): Promise<ResponseModel<T>> => {
+export const patch = async <T>(url: string, data: any, config?: boolean | ApiConfig): Promise<ResponseModel<T>> => {
   try {
-    useLoadingStore.getState().setIsLoadingFlag(loading ?? true);
-    const response = await axiosInstance.patch<any>(url, data);
+    const isLoading = typeof config === 'boolean' ? config : (config as ApiConfig)?.loading ?? true;
+    const axiosConfig = typeof config === 'object' ? config : undefined;
+
+    useLoadingStore.getState().setIsLoadingFlag(isLoading);
+    const response = await axiosInstance.patch<any>(url, data, axiosConfig);
 
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       return response.data as ResponseModel<T>;

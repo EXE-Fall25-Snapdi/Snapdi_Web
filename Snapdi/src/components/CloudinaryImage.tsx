@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Spin } from 'antd';
-import axiosInstance from '../config/axiosConfig';
+import { post } from '../services/apiService';
 
 interface CloudinaryImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   publicId: string;
@@ -55,7 +55,7 @@ const CloudinaryImage: React.FC<CloudinaryImageProps> = ({
         }
 
         // Call API with publicId as query parameter and transformation in body
-        const response = await axiosInstance.post<{ url: string }>(
+        const response = await post<{ url: string }>(
           `/api/Cloudinary/transform-url?publicId=${publicId}`,
           transformOptions
         );

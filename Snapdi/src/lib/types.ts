@@ -110,12 +110,15 @@ export interface Style {
   styleName: string;
 }
 
-export interface Type {
+export interface PhotoType {
   photoTypeId: number;
   photoTypeName: string;
-  photoPrice: number;
-  time: number;
+  photoPrice?: number;
+  time?: number;
 }
+
+// Alias for backward compatibility
+export type Type = PhotoType;
 
 
 export type PhotographerPendingLevelItem = User & {
@@ -213,20 +216,20 @@ export interface SignUpFormData {
   otp: string;
 
   // Step 3: Profile (Từ Figma 2 & API)
-  photoType: string; // Từ figma, không có trong API
-  locationCity: string; // Map từ "Tỉnh / Thành phố"
-  workLocation: string; // Map từ "Địa chỉ cụ thể"
-  workLocationDetail: string; // Map từ "Địa chỉ cụ thể"
+  locationCity: string; // Map từ workLocation -> locationCity
+  locationAddress?: string; // Optional địa chỉ cụ thể
   experienceLevel: string; // Từ figma (radio), không có trong API
   yearsOfExperience: string; // Map từ "X năm"
 
-  // Step 4: Portfolio (Từ Figma 3 & API)
-  photoPrice: string; // Map từ "Chi phí sàn"
-
-  description: string; // Map từ "Chuyên môn"
-  // category: string; // Từ figma, không có trong API
-  portfolio: UploadFile[]; // Dùng cho AntD Upload
+  // Step 4: Portfolio & Photo Types (Từ Figma 3 & API)
+  description: string; // Mô tả chuyên môn
+  photographerPhotoTypes: Array<{
+    photoTypeId: number;
+    photoPrice: number;
+    time?: number;
+  }>; // Photo types with prices
   equipment: string[]; // Mảng các thiết bị
+  portfolio: UploadFile[]; // Dùng cho AntD Upload
 
   // Step 5: Portfolio Photos & Styles
   styleIds: number[]; // Mảng ID của các style được chọn

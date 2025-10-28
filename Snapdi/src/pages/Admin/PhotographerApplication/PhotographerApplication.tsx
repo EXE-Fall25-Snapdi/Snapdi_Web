@@ -189,9 +189,9 @@ const PhotographerApplication = () => {
       prev.map((item: PhotographerApplicationItem) =>
         item.userId === userId
           ? {
-              ...item,
-              photographerLevel: level as PhotographerLevel,
-            }
+            ...item,
+            photographerLevel: level as PhotographerLevel,
+          }
           : item
       )
     );
@@ -206,9 +206,9 @@ const PhotographerApplication = () => {
         prev.map((item: PhotographerApplicationItem) =>
           item.userId === userId
             ? {
-                ...item,
-                photographerLevel: previousLevel as PhotographerLevel,
-              }
+              ...item,
+              photographerLevel: previousLevel as PhotographerLevel,
+            }
             : item
         )
       );
@@ -432,13 +432,13 @@ const PhotographerApplication = () => {
                     <p className="text-sm text-slate-500">Experience</p>
                     <p className="text-lg font-semibold text-slate-900">
                       {typeof photographer.yearsOfExperience === "string" &&
-                      photographer.yearsOfExperience.includes("|")
+                        photographer.yearsOfExperience.includes("|")
                         ? photographer.yearsOfExperience.split("|")[0].trim()
                         : photographer.yearsOfExperience}
                     </p>
                     <p className="text-xs text-slate-500">
                       {typeof photographer.yearsOfExperience === "string" &&
-                      photographer.yearsOfExperience.includes("|")
+                        photographer.yearsOfExperience.includes("|")
                         ? photographer.yearsOfExperience.split("|")[1].trim()
                         : `Joined ${new Date(photographer.createdAt).toLocaleDateString()}`}
                     </p>
@@ -464,9 +464,11 @@ const PhotographerApplication = () => {
                                 {type.time}h
                               </Tag>
                             </div>
-                            <Tag color="red" className="rounded-full px-3 text-xs font-medium">
-                              {formatPrice(type.photoPrice.toString())}
-                            </Tag>
+                            {type.photoPrice && (
+                              <Tag color="red" className="rounded-full px-3 text-xs font-medium">
+                                {formatPrice(type.photoPrice.toString())}
+                              </Tag>
+                            )}
                           </div>
                         ))}
                       </div>

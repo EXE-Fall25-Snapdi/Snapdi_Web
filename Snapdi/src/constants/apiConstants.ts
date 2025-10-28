@@ -92,6 +92,14 @@ export const API_CONSTANTS = {
     UPDATE: (id: string | number) => `/api/Styles/${id}`,
     DELETE: (id: string | number) => `/api/Styles/${id}`,
   },
+  PHOTO_TYPES: {
+    GET_ALL: "/api/PhotoTypes",
+    CREATE: "/api/PhotoTypes",
+    GET_BY_ID: (id: string | number) => `/api/PhotoTypes/${id}`,
+    UPDATE: (id: string | number) => `/api/PhotoTypes/${id}`,
+    DELETE: (id: string | number) => `/api/PhotoTypes/${id}`,
+    CHECK_NAME: "/api/PhotoTypes/check-name",
+  },
   PHOTOGRAPHER_STYLES: {
     ADD_MULTIPLE: (userId: string | number) => `/api/PhotographerStyles/photographer/${userId}/styles/multiple`,
   },
