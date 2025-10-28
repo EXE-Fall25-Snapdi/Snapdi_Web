@@ -216,8 +216,9 @@ export interface SignUpFormData {
   otp: string;
 
   // Step 3: Profile (Từ Figma 2 & API)
-  locationCity: string; // Map từ workLocation -> locationCity
-  locationAddress?: string; // Optional địa chỉ cụ thể
+  locationCity: string; // From Step 1 - nơi ở
+  locationAddress?: string; // Optional địa chỉ cụ thể - from Step 1
+  workLocation: string; // From Step 3 - khu vực làm việc
   experienceLevel: string; // Từ figma (radio), không có trong API
   yearsOfExperience: string; // Map từ "X năm"
 

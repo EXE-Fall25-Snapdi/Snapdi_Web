@@ -136,7 +136,7 @@ const App: React.FC = () => {
       >
         <div className="w-full">
           {loading && (
-            <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
+            <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-99999">
               <Spin size="default" />
             </div>
           )}

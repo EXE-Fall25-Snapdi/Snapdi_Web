@@ -104,14 +104,13 @@ export default function Step4_Portfolio() {
             const selectedPhotoTypes = (getFieldValue('photographerPhotoTypes') || []) as Array<{
               photoTypeId: number;
               photoPrice: number;
-              time?: string;
+              time: string;
             }>;
 
             const handleAddPhotoType = () => {
-              const currentDate = new Date().toISOString();
               const updated = [
                 ...selectedPhotoTypes,
-                { photoTypeId: 0, photoPrice: 0, time: currentDate }
+                { photoTypeId: 0, photoPrice: 0, time: 1 }
               ];
               setFieldsValue({ photographerPhotoTypes: updated });
             };
@@ -193,6 +192,26 @@ export default function Step4_Portfolio() {
                                 parser={(value: any) => {
                                   return value?.replace(/\./g, '');
                                 }}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="flex-1 min-w-[150px]">
+                            <Form.Item
+                              name={['photographerPhotoTypes', index, 'time']}
+                              rules={[
+                                { required: true, message: 'Nhập thời gian chụp!' },
+                                {
+                                  pattern: /^\d+$/,
+                                  message: 'Phải là số!'
+                                }
+                              ]}
+                              className="mb-0"
+                            >
+                              <InputNumber
+                                placeholder="0"
+                                min={1}
+                                className="w-full"
+                                addonAfter="Giờ"
                               />
                             </Form.Item>
                           </div>

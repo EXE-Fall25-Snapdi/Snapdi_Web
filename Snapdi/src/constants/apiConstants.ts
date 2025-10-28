@@ -2,6 +2,7 @@ export const API_CONSTANTS = {
   AUTH: {
     LOGIN: "api/auth/login",
     LOGOUT: "api/auth/logout",
+    REFRESH_TOKEN: "api/auth/refresh-token",
     USER_INFO: "api/auth",
     FORGOT_PASSWORD: "api/auth/forgot-password",
     VERIFY_TOKEN: "api/auth/verify-token",
@@ -111,5 +112,9 @@ export const API_CONSTANTS = {
     SEARCH: "/api/Booking/search",
     UPDATE_STATUS: (id: string | number) => `/api/Booking/${id}/status`,
     STATISTICS: "/api/Booking/statistics/detailed",
+  },
+  PAYMENTS: {
+    SEARCH: "/api/Payments/search",
+    SEARCH_SUMMARY: "/api/Payments/search/summary",
   }
 };

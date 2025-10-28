@@ -1,10 +1,12 @@
-import axios, { type InternalAxiosRequestConfig } from "axios";
+import axios, { type InternalAxiosRequestConfig, type AxiosError } from "axios";
 import { useLoadingStore, useUserStore } from "./zustand"; // Adjust path
 import { toast } from "react-toastify";
+import { API_CONSTANTS } from "../constants/apiConstants";
 
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   showLoading?: boolean; // Allow requests to override loading behavior
+  _retry?: boolean; // Flag to prevent infinite retry loops
 }
 
 const axiosInstance = axios.create({
@@ -63,20 +65,68 @@ axiosInstance.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error: AxiosError) => {
     const { isLoadingFlag, setLoading } = useLoadingStore.getState();
     if (isLoadingFlag) {
       setLoading(false);
+    }
+
+    const originalRequest = error.config as CustomInternalAxiosRequestConfig;
+
+    // Handle 401 Unauthorized - Try to refresh token
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = useUserStore.getState().getRefreshToken();
+
+        if (!refreshToken) {
+          throw new Error('No refresh token available');
+        }
+
+        // Call refresh token endpoint
+        const response = await axios.post(
+          `${axiosInstance.defaults.baseURL}/${API_CONSTANTS.AUTH.REFRESH_TOKEN}`,
+          { refreshToken },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        const { token, refreshToken: newRefreshToken } = response.data.data;
+
+        // Update tokens in store
+        useUserStore.getState().setToken(token);
+        if (newRefreshToken) {
+          useUserStore.getState().setRefreshToken(newRefreshToken);
+        }
+
+        // Update authorization header with new token
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+        }
+
+        // Retry original request with new token
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        // Refresh token failed - logout user
+        toast.error("Session expired - Please login again");
+        useUserStore.getState().clearUser();
+
+        if (!window.location.pathname.includes('/admin-login')) {
+          window.location.href = '/admin-login';
+        }
+
+        return Promise.reject(refreshError);
+      }
     }
 
     if (error.response) {
       // Handle different status codes
       switch (error.response.status) {
         case 400:
-          if (error.response.data?.message) {
-            toast.error(error.response.data.message);
+          if ((error.response.data as any)?.message) {
+            toast.error((error.response.data as any).message);
           } else if (error.response.data) {
-            toast.error(error.response.data);
+            toast.error(error.response.data as string);
           } else if (error.message) {
             toast.error(error.message);
           } else {
@@ -84,12 +134,9 @@ axiosInstance.interceptors.response.use(
           }
           break;
         case 401:
-          toast.error("Unauthorized - Please login again");
-          // Clear user data and redirect to login
-          if (!window.location.pathname.includes('/admin-login')) {
-            useUserStore.getState().clearUser();
-            // You might want to redirect to login page here
-            window.location.href = '/admin-login';
+          // Already handled above with token refresh
+          if (originalRequest?._retry) {
+            toast.error("Unauthorized - Please login again");
           }
           break;
         case 403:
@@ -102,8 +149,8 @@ axiosInstance.interceptors.response.use(
           toast.error("Internal server error");
           break;
         default:
-          if (error.response.data?.message) {
-            toast.error(error.response.data.message);
+          if ((error.response.data as any)?.message) {
+            toast.error((error.response.data as any).message);
           } else {
             toast.error("An error occurred");
           }

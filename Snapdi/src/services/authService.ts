@@ -214,12 +214,12 @@ export const registerClient = async (data: RegisterClientRequest): Promise<UserR
 // Register as photographer
 export const registerPhotographer = async (
   data: RegisterPhotographerRequest
-): Promise<PhotographerResponse> => {
+): Promise<ResponseModel<PhotographerResponse>> => {
   const response = await post<PhotographerResponse>(
     API_CONSTANTS.AUTH.SIGNUP_PHOTOGRAPHER,
     data, true
   );
-  return response.data;
+  return response;
 };
 
 // Verify email with OTP code

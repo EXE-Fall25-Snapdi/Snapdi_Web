@@ -39,6 +39,7 @@ export default function Snaper() {
   const [role, setRole] = useState<'client' | 'photographer'>('photographer');
   const [isResendingOTP, setIsResendingOTP] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState<string>(''); // Lưu email để dùng ở Step 2
 
   // Get setLoginData from Zustand store
   const setLoginData = useUserStore((state) => state.setLoginData);
@@ -50,6 +51,7 @@ export default function Snaper() {
     setRole(newRole);
     setCurrentStep(1);
     setIsSuccess(false);
+    setRegisteredEmail(''); // Reset email khi đổi role
     form.resetFields();
     form.setFieldsValue({ role: newRole });
   };
@@ -57,9 +59,9 @@ export default function Snaper() {
   // Định nghĩa các trường cho từng bước để validate
   const stepFields = [
     [], // Step 0
-    ['name', 'email', 'phone', 'password', 'confirmPassword', 'dob', 'gender'], // Step 1
+    ['name', 'email', 'phone', 'password', 'confirmPassword', 'dob', 'gender', 'locationCity'], // Step 1
     ['otp'], // Step 2
-    ['locationCity', 'yearsOfExperience'], // Step 3
+    ['workLocation', 'yearsOfExperience'], // Step 3
     ['description', 'photographerPhotoTypes', 'equipment'], // Step 4
     ['styleIds', 'portfolio'] // Step 5
   ];
@@ -70,6 +72,9 @@ export default function Snaper() {
       const { name, email, phone, password } = form.getFieldsValue([
         'name', 'email', 'phone', 'password'
       ]);
+
+      // Lưu email để dùng ở Step 2
+      setRegisteredEmail(email);
 
       // Register client - Backend will automatically send OTP
       await registerClient({
@@ -90,9 +95,9 @@ export default function Snaper() {
   const handleResendOTP = async () => {
     setIsResendingOTP(true);
     try {
-      const email = form.getFieldValue('email');
-      await sendVerificationCode(email);
-      message.success(`Đã gửi lại mã OTP đến ${email}`);
+      // Dùng email đã lưu thay vì lấy từ form
+      await sendVerificationCode(registeredEmail);
+      message.success(`Đã gửi lại mã OTP đến ${registeredEmail}`);
     } catch (err: any) {
       toast.error(err.message || 'Gửi lại OTP thất bại.');
     } finally {
@@ -208,21 +213,36 @@ export default function Snaper() {
       console.log('Email:', formData.email);
       console.log('Password:', formData.password);
       console.log('LocationCity:', formData.locationCity);
+      console.log('WorkLocation:', formData.workLocation);
       console.log('PhotographerPhotoTypes:', formData.photographerPhotoTypes);
+
+      // Lưu email để dùng ở Step 2
+      setRegisteredEmail(formData.email);
 
       // Build equipment description from selected equipment
       const equipmentDescription = (formData.equipment as string[])?.join(', ') || '';
 
-      // Use photographerPhotoTypes directly from form data
-      const photographerPhotoTypes = (formData.photographerPhotoTypes as Array<{
+      // Use photographerPhotoTypes directly from form data and remove duplicates
+      const photographerPhotoTypesRaw = (formData.photographerPhotoTypes as Array<{
         photoTypeId: number;
         photoPrice: number;
         time?: number;
-      }> || []).map((item) => ({
-        photoTypeId: item.photoTypeId,
-        photoPrice: item.photoPrice,
-        time: item.time || 0
-      }));
+      }> || []);
+
+      // Remove duplicates based on photoTypeId
+      const uniquePhotoTypes = photographerPhotoTypesRaw.reduce((acc, item) => {
+        const exists = acc.find(x => x.photoTypeId === item.photoTypeId);
+        if (!exists) {
+          acc.push({
+            photoTypeId: item.photoTypeId,
+            photoPrice: item.photoPrice,
+            time: item.time || 0
+          });
+        }
+        return acc;
+      }, [] as Array<{ photoTypeId: number; photoPrice: number; time: number }>);
+
+      const photographerPhotoTypes = uniquePhotoTypes;
 
       // Build photographer data matching new API format
       const photographerData: any = {
@@ -231,7 +251,8 @@ export default function Snaper() {
         phone: formData.phone || undefined,
         password: formData.password,
         locationAddress: formData.locationAddress || undefined,
-        locationCity: formData.locationCity,
+        locationCity: formData.locationCity, // From Step 1
+        workLocation: formData.workLocation, // From Step 3
         yearsOfExperience: formData.yearsOfExperience + ' năm' || '0 năm',
         equipmentDescription: equipmentDescription,
         description: formData.description || undefined,
@@ -243,8 +264,10 @@ export default function Snaper() {
 
       console.log('Photographer data to send:', photographerData);
 
-      await registerPhotographer(photographerData);
-      setCurrentStep(2);
+      const check = await registerPhotographer(photographerData);
+      if (check.success == true) {
+        setCurrentStep(2);
+      }
     } catch (err: any) {
       toast.error('Đăng ký thất bại. Vui lòng thử lại.');
     }
@@ -313,7 +336,11 @@ export default function Snaper() {
           <Step1_Account />
         </div>
         <div style={{ display: currentStep === 2 ? 'block' : 'none' }}>
-          <Step2_VerifyOTP onResend={handleResendOTP} isResending={isResendingOTP} />
+          <Step2_VerifyOTP 
+            onResend={handleResendOTP} 
+            isResending={isResendingOTP} 
+            email={registeredEmail}
+          />
         </div>
         <div style={{ display: currentStep === 3 ? 'block' : 'none' }}>
           <Step3_Profile />

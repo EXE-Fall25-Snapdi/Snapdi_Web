@@ -17,22 +17,12 @@ export default function Step3_Profile() {
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
-            name="locationCity"
-            rules={[{ required: true, message: 'Vui lòng nhập Tỉnh/Thành phố!' }]}
+            name="workLocation"
+            rules={[{ required: true, message: 'Vui lòng nhập khu vực làm việc!' }]}
           >
             <FilledInput
-              label="Tỉnh / Thành phố"
-              placeholder="---" />
-          </Form.Item>
-        </Col>
-
-        <Col span={24}>
-          <Form.Item
-            name="locationAddress"
-          >
-            <FilledInput
-              label="Địa chỉ cụ thể (nếu có)"
-              placeholder="---" />
+              label="Khu vực làm việc"
+              placeholder="TPHCM, Hà Nội, Đà Nẵng,..." />
           </Form.Item>
         </Col>
       </Row>

@@ -71,6 +71,9 @@ interface UserState {
   setLoginData: (loginResponse: LoginResponse) => void;
   clearUser: () => void;
   getToken: () => string | null;
+  getRefreshToken: () => string | null;
+  setToken: (token: string) => void;
+  setRefreshToken: (refreshToken: string) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -102,6 +105,20 @@ export const useUserStore = create<UserState>()(
       getToken: () => {
         const state = get();
         return state.user?.token || null;
+      },
+      getRefreshToken: () => {
+        const state = get();
+        return state.user?.refreshToken || null;
+      },
+      setToken: (token: string) => {
+        set((state) => ({
+          user: state.user ? { ...state.user, token } : null,
+        }));
+      },
+      setRefreshToken: (refreshToken: string) => {
+        set((state) => ({
+          user: state.user ? { ...state.user, refreshToken } : null,
+        }));
       },
     }),
     {
