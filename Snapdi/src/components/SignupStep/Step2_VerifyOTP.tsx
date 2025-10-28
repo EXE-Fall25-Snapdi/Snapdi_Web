@@ -1,16 +1,14 @@
 import { Form, Input, Button, Typography } from 'antd';
-import { useForm } from 'antd/es/form/Form';
 
 const { Title, Paragraph } = Typography;
 
 type Props = {
   onResend: () => void;
   isResending: boolean;
+  email: string; // Nhận email từ parent
 };
 
-export default function Step2_VerifyOTP({ onResend, isResending }: Props) {
-  const [form] = useForm();
-  const email = form.getFieldValue('email') || 'emailcuaban@gmail.com'; // Lấy email từ form
+export default function Step2_VerifyOTP({ onResend, isResending, email }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto h-full">

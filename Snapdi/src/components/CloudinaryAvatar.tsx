@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Avatar } from 'antd';
 import type { AvatarProps } from 'antd';
-import axiosInstance from '../config/axiosConfig';
+import { post } from '../services/apiService';
 
 interface CloudinaryAvatarProps extends Omit<AvatarProps, 'src'> {
   publicId?: string | null;
@@ -60,7 +60,7 @@ const CloudinaryAvatar: React.FC<CloudinaryAvatarProps> = ({
         }
 
         // Call API with publicId as query parameter and transformation in body
-        const response = await axiosInstance.post<{ url: string }>(
+        const response = await post<{ url: string }>(
           `/api/Cloudinary/transform-url?publicId=${encodeURIComponent(publicId)}`,
           transformOptions
         );

@@ -2,6 +2,7 @@ export const API_CONSTANTS = {
   AUTH: {
     LOGIN: "api/auth/login",
     LOGOUT: "api/auth/logout",
+    REFRESH_TOKEN: "api/auth/refresh-token",
     USER_INFO: "api/auth",
     FORGOT_PASSWORD: "api/auth/forgot-password",
     VERIFY_TOKEN: "api/auth/verify-token",
@@ -17,7 +18,7 @@ export const API_CONSTANTS = {
     DELETE: "api/Cloudinary/delete",
     DELETE_MULTIPLE: "api/Cloudinary/delete-multiple",
     DELETE_ALL: (uploadType: string) => `api/Cloudinary/delete-all/${uploadType}`,
-    TRANSFORM_URL: (publicId: string) => `/api/Cloudinary/transform-url${publicId}`
+    TRANSFORM_URL: "/api/Cloudinary/transform-url"
   },
   PHOTO_PORTFOLIO: {
     GET_BY_USER_ID: (userId: string | number) => `/api/PhotoPortfolio/user/${userId}`,
@@ -92,6 +93,14 @@ export const API_CONSTANTS = {
     UPDATE: (id: string | number) => `/api/Styles/${id}`,
     DELETE: (id: string | number) => `/api/Styles/${id}`,
   },
+  PHOTO_TYPES: {
+    GET_ALL: "/api/PhotoTypes",
+    CREATE: "/api/PhotoTypes",
+    GET_BY_ID: (id: string | number) => `/api/PhotoTypes/${id}`,
+    UPDATE: (id: string | number) => `/api/PhotoTypes/${id}`,
+    DELETE: (id: string | number) => `/api/PhotoTypes/${id}`,
+    CHECK_NAME: "/api/PhotoTypes/check-name",
+  },
   PHOTOGRAPHER_STYLES: {
     ADD_MULTIPLE: (userId: string | number) => `/api/PhotographerStyles/photographer/${userId}/styles/multiple`,
   },
@@ -103,5 +112,9 @@ export const API_CONSTANTS = {
     SEARCH: "/api/Booking/search",
     UPDATE_STATUS: (id: string | number) => `/api/Booking/${id}/status`,
     STATISTICS: "/api/Booking/statistics/detailed",
+  },
+  PAYMENTS: {
+    SEARCH: "/api/Payments/search",
+    SEARCH_SUMMARY: "/api/Payments/search/summary",
   }
 };

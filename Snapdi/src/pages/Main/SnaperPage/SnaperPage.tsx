@@ -39,6 +39,7 @@ export default function Snaper() {
   const [role, setRole] = useState<'client' | 'photographer'>('photographer');
   const [isResendingOTP, setIsResendingOTP] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState<string>(''); // Lưu email để dùng ở Step 2
 
   // Get setLoginData from Zustand store
   const setLoginData = useUserStore((state) => state.setLoginData);
@@ -50,6 +51,7 @@ export default function Snaper() {
     setRole(newRole);
     setCurrentStep(1);
     setIsSuccess(false);
+    setRegisteredEmail(''); // Reset email khi đổi role
     form.resetFields();
     form.setFieldsValue({ role: newRole });
   };
@@ -57,11 +59,11 @@ export default function Snaper() {
   // Định nghĩa các trường cho từng bước để validate
   const stepFields = [
     [], // Step 0
-    ['name', 'email', 'phone', 'password', 'confirmPassword', 'dob', 'gender'], // Step 1
+    ['name', 'email', 'phone', 'password', 'confirmPassword', 'dob', 'gender', 'locationCity'], // Step 1
     ['otp'], // Step 2
-    ['locationCity', 'locationAddress', 'yearsOfExperience'], // Step 3
-    ['description', 'equipment', 'category'], // Step 4
-    ['styleIds', 'portfolio'] // Step 5 - Added styleIds
+    ['workLocation', 'yearsOfExperience'], // Step 3
+    ['description', 'photographerPhotoTypes', 'equipment'], // Step 4
+    ['styleIds', 'portfolio'] // Step 5
   ];
 
   // --- LOGIC XỬ LÝ ---
@@ -70,6 +72,9 @@ export default function Snaper() {
       const { name, email, phone, password } = form.getFieldsValue([
         'name', 'email', 'phone', 'password'
       ]);
+
+      // Lưu email để dùng ở Step 2
+      setRegisteredEmail(email);
 
       // Register client - Backend will automatically send OTP
       await registerClient({
@@ -90,9 +95,9 @@ export default function Snaper() {
   const handleResendOTP = async () => {
     setIsResendingOTP(true);
     try {
-      const email = form.getFieldValue('email');
-      await sendVerificationCode(email);
-      message.success(`Đã gửi lại mã OTP đến ${email}`);
+      // Dùng email đã lưu thay vì lấy từ form
+      await sendVerificationCode(registeredEmail);
+      message.success(`Đã gửi lại mã OTP đến ${registeredEmail}`);
     } catch (err: any) {
       toast.error(err.message || 'Gửi lại OTP thất bại.');
     } finally {
@@ -203,43 +208,66 @@ export default function Snaper() {
   const handlePhotographerSubmit = async () => {
     try {
       const formData = form.getFieldsValue();
-      // Debug: Log all form data
       console.log('All form data:', formData);
       console.log('Name:', formData.name);
       console.log('Email:', formData.email);
       console.log('Password:', formData.password);
       console.log('LocationCity:', formData.locationCity);
+      console.log('WorkLocation:', formData.workLocation);
+      console.log('PhotographerPhotoTypes:', formData.photographerPhotoTypes);
 
+      // Lưu email để dùng ở Step 2
+      setRegisteredEmail(formData.email);
 
-      // 2. Register photographer
+      // Build equipment description from selected equipment
       const equipmentDescription = (formData.equipment as string[])?.join(', ') || '';
-      // const category = formData.category || '';
 
-      // Combine category into description field
-      // const fullDescription = category
-      //   ? `Thể loại: ${category}. ${formData.description || ''}`
-      //   : formData.description || '';
+      // Use photographerPhotoTypes directly from form data and remove duplicates
+      const photographerPhotoTypesRaw = (formData.photographerPhotoTypes as Array<{
+        photoTypeId: number;
+        photoPrice: number;
+        time?: number;
+      }> || []);
 
-      const photographerData = {
+      // Remove duplicates based on photoTypeId
+      const uniquePhotoTypes = photographerPhotoTypesRaw.reduce((acc, item) => {
+        const exists = acc.find(x => x.photoTypeId === item.photoTypeId);
+        if (!exists) {
+          acc.push({
+            photoTypeId: item.photoTypeId,
+            photoPrice: item.photoPrice,
+            time: item.time || 0
+          });
+        }
+        return acc;
+      }, [] as Array<{ photoTypeId: number; photoPrice: number; time: number }>);
+
+      const photographerPhotoTypes = uniquePhotoTypes;
+
+      // Build photographer data matching new API format
+      const photographerData: any = {
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
+        phone: formData.phone || undefined,
         password: formData.password,
-        locationCity: formData.workLocation,
-        yearsOfExperience: formData.yearsOfExperience + ' năm' + ' | ' + formData.experienceLevel || '0 năm',
+        locationAddress: formData.locationAddress || undefined,
+        locationCity: formData.locationCity, // From Step 1
+        workLocation: formData.workLocation, // From Step 3
+        yearsOfExperience: formData.yearsOfExperience + ' năm' || '0 năm',
         equipmentDescription: equipmentDescription,
-        // description: fullDescription,
+        description: formData.description || undefined,
         isAvailable: false, // Default to false, admin will approve
-        photoPrice: formData.photoPrice || '0',
-        photoType: formData.photoType || '',
-        workLocation: formData.workLocationDetail + ' ' + formData.workLocation || '',
-        avatarUrl: '', // Leave empty for later update
+        photographerPhotoTypes: photographerPhotoTypes,
+        photographerStyleIds: (formData.styleIds as number[]) || [],
+        avatarUrl: undefined, // Leave empty for later update
       };
 
       console.log('Photographer data to send:', photographerData);
 
-      await registerPhotographer(photographerData);
-      setCurrentStep(2);
+      const check = await registerPhotographer(photographerData);
+      if (check.success == true) {
+        setCurrentStep(2);
+      }
     } catch (err: any) {
       toast.error('Đăng ký thất bại. Vui lòng thử lại.');
     }
@@ -308,7 +336,11 @@ export default function Snaper() {
           <Step1_Account />
         </div>
         <div style={{ display: currentStep === 2 ? 'block' : 'none' }}>
-          <Step2_VerifyOTP onResend={handleResendOTP} isResending={isResendingOTP} />
+          <Step2_VerifyOTP
+            onResend={handleResendOTP}
+            isResending={isResendingOTP}
+            email={registeredEmail}
+          />
         </div>
         <div style={{ display: currentStep === 3 ? 'block' : 'none' }}>
           <Step3_Profile />

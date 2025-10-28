@@ -1,6 +1,6 @@
-import axiosInstance from "../config/axiosConfig";
 import { API_CONSTANTS } from "../constants/apiConstants";
 import type { BookingStatistics } from "../lib/types";
+import { del, get, patch, post, put } from "./apiService";
 
 export interface Booking {
   bookingId: number;
@@ -60,56 +60,56 @@ export interface UpdateBookingStatusRequest {
 class BookingService {
   // Get booking by ID
   async getBookingById(id: number): Promise<Booking> {
-    const response = await axiosInstance.get<Booking>(
-      API_CONSTANTS.BOOKING.GET_BY_ID(id)
+    const response = await get<Booking>(
+      API_CONSTANTS.BOOKING.GET_BY_ID(id), true
     );
     return response.data;
   }
 
   // Update booking
   async updateBooking(id: number, data: UpdateBookingRequest): Promise<Booking> {
-    const response = await axiosInstance.put<Booking>(
+    const response = await put<Booking>(
       API_CONSTANTS.BOOKING.UPDATE(id),
-      data
+      data, true
     );
     return response.data;
   }
 
   // Delete booking
   async deleteBooking(id: number): Promise<void> {
-    await axiosInstance.delete(API_CONSTANTS.BOOKING.DELETE(id));
+    await del(API_CONSTANTS.BOOKING.DELETE(id), true);
   }
 
   // Get bookings by status
   async getBookingsByStatus(statusId: number): Promise<Booking[]> {
-    const response = await axiosInstance.get<Booking[]>(
-      API_CONSTANTS.BOOKING.GET_BY_STATUS(statusId)
+    const response = await get<Booking[]>(
+      API_CONSTANTS.BOOKING.GET_BY_STATUS(statusId), true
     );
     return response.data;
   }
 
   // Search bookings
   async searchBookings(params: BookingSearchRequest): Promise<BookingSearchResponse> {
-    const response = await axiosInstance.post<BookingSearchResponse>(
+    const response = await post<BookingSearchResponse>(
       API_CONSTANTS.BOOKING.SEARCH,
-      params
+      params, true
     );
     return response.data;
   }
 
   // Update booking status
   async updateBookingStatus(id: number, statusId: number): Promise<Booking> {
-    const response = await axiosInstance.patch<Booking>(
+    const response = await patch<Booking>(
       API_CONSTANTS.BOOKING.UPDATE_STATUS(id),
-      { statusId }
+      { statusId }, true
     );
     return response.data;
   }
 
   // Get booking statistics
   async getBookingStatistics(): Promise<BookingStatistics> {
-    const response = await axiosInstance.get<BookingStatistics>(
-      API_CONSTANTS.BOOKING.STATISTICS
+    const response = await get<BookingStatistics>(
+      API_CONSTANTS.BOOKING.STATISTICS, true
     );
     return response.data;
   }

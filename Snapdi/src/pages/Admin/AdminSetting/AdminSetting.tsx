@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Input, Modal, Table, message, Popconfirm } from 'antd';
+import { Button, Card, Input, Modal, Table, message, Popconfirm, Tabs } from 'antd';
 import { Edit, Plus, Trash2 } from 'lucide-react';
-import { styleService} from '../../../services/styleService';
+import { styleService } from '../../../services/styleService';
 import type { ColumnsType } from 'antd/es/table';
 import type { Style } from '../../../lib/types';
+import AdminPhotoTypeSetting from './AdminPhotoTypeSetting';
 
 const AdminSetting = () => {
   const [styles, setStyles] = useState<Style[]>([]);
@@ -139,58 +140,72 @@ const AdminSetting = () => {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-          <p className="text-slate-500">Manage photography styles</p>
-        </div>
-        <Button
-          type="primary"
-          icon={<Plus className="h-4 w-4" />}
-          onClick={handleCreate}
-          size="large"
-        >
-          Add New Style
-        </Button>
-      </header>
+      <Tabs
+        items={[
+          {
+            key: 'styles',
+            label: 'Photography Styles',
+            children: (
+              <div className="space-y-6">
+                <header className="flex items-center justify-between">
+                  <p className="text-slate-500">Manage photography styles</p>
+                  <Button
+                    type="primary"
+                    icon={<Plus className="h-4 w-4" />}
+                    onClick={handleCreate}
+                    size="large"
+                  >
+                    Add New Style
+                  </Button>
+                </header>
 
-      <Card>
-        <Table
-          columns={columns}
-          dataSource={styles}
-          loading={loading}
-          rowKey="styleId"
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showTotal: (total) => `Total ${total} styles`,
-          }}
-        />
-      </Card>
+                <Card>
+                  <Table
+                    columns={columns}
+                    dataSource={styles}
+                    loading={loading}
+                    rowKey="styleId"
+                    pagination={{
+                      pageSize: 10,
+                      showSizeChanger: true,
+                      showTotal: (total) => `Total ${total} styles`,
+                    }}
+                  />
+                </Card>
 
-      <Modal
-        title={editingStyle ? 'Edit Style' : 'Create New Style'}
-        open={modalOpen}
-        onCancel={handleCancel}
-        onOk={handleSubmit}
-        confirmLoading={submitting}
-        okText={editingStyle ? 'Update' : 'Create'}
-      >
-        <div className="py-4">
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            Style Name
-          </label>
-          <Input
-            placeholder="Enter style name (e.g., Wedding, Portrait, Fashion)"
-            value={styleName}
-            onChange={(e) => setStyleName(e.target.value)}
-            onPressEnter={handleSubmit}
-            size="large"
-            maxLength={50}
-            showCount
-          />
-        </div>
-      </Modal>
+                <Modal
+                  title={editingStyle ? 'Edit Style' : 'Create New Style'}
+                  open={modalOpen}
+                  onCancel={handleCancel}
+                  onOk={handleSubmit}
+                  confirmLoading={submitting}
+                  okText={editingStyle ? 'Update' : 'Create'}
+                >
+                  <div className="py-4">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Style Name
+                    </label>
+                    <Input
+                      placeholder="Enter style name (e.g., Wedding, Portrait, Fashion)"
+                      value={styleName}
+                      onChange={(e) => setStyleName(e.target.value)}
+                      onPressEnter={handleSubmit}
+                      size="large"
+                      maxLength={50}
+                      showCount
+                    />
+                  </div>
+                </Modal>
+              </div>
+            ),
+          },
+          {
+            key: 'photoTypes',
+            label: 'Photo Types',
+            children: <AdminPhotoTypeSetting />,
+          },
+        ]}
+      />
     </div>
   );
 };

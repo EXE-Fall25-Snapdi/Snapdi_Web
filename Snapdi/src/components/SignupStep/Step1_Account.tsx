@@ -77,6 +77,29 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
+        <Col span={12}>
+          <Form.Item
+            name="locationCity"
+            rules={[{ required: true, message: 'Vui lòng nhập thành phố!' }]}
+          >
+            <FilledInput
+              label="Thành phố"
+              placeholder="TP. Hồ Chí Minh, Hà Nội,..."
+            />
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
+          <Form.Item
+            name="locationAddress"
+          >
+            <FilledInput
+              label="Địa chỉ (không bắt buộc)"
+              placeholder="Số nhà, tên đường, quận/huyện"
+            />
+          </Form.Item>
+        </Col>
+
         <Col span={24}>
           <Form.Item
             name="password"

@@ -1,5 +1,4 @@
 import { Form, Radio, Row, Col, Typography } from 'antd';
-import { FilledSelect } from '../UI/FilledSelect';
 import { FilledInput } from '../UI/FilledInput';
 
 const { Title } = Typography;
@@ -18,39 +17,12 @@ export default function Step3_Profile() {
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
-            name="photoType" // Map tới API
-            rules={[{ required: true, message: 'Vui lòng chọn hình thức làm việc!' }]}
-            initialValue="Tự do | Studio"
-          >
-            <FilledSelect
-              label="Hình thức làm việc"
-              options={[
-                { value: 'Tự do | Studio', label: 'Tự do | Studio' },
-                { value: 'Chỉ Tự do', label: 'Chỉ Tự do' },
-                { value: 'Chỉ Studio', label: 'Chỉ Studio' },
-              ]}
-            />
-          </Form.Item>
-        </Col>
-
-        <Col span={24}>
-          <Form.Item
-            name="workLocation" // Map tới API
-            rules={[{ required: true, message: 'Vui lòng nhập Tỉnh/Thành phố!' }]}
+            name="workLocation"
+            rules={[{ required: true, message: 'Vui lòng nhập khu vực làm việc!' }]}
           >
             <FilledInput
-              label="Tỉnh / Thành phố"
-              placeholder="---" />
-          </Form.Item>
-        </Col>
-
-        <Col span={24}>
-          <Form.Item
-            name="workLocationDetail" // Map tới API (optional)
-          >
-            <FilledInput
-              label="Địa chỉ cụ thể (nếu có)"
-              placeholder="---" />
+              label="Khu vực làm việc"
+              placeholder="TPHCM, Hà Nội, Đà Nẵng,..." />
           </Form.Item>
         </Col>
       </Row>

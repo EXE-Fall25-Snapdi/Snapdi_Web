@@ -1,6 +1,5 @@
-import axiosInstance from "../config/axiosConfig";
 import { API_CONSTANTS } from "../constants/apiConstants";
-
+import { get, post, del } from "./apiService";
 // Cloudinary Types
 export interface CloudinaryUploadResponse {
   publicId: string;
@@ -61,7 +60,7 @@ class CloudinaryService {
     formData.append("publicId", publicId ? publicId : '');
     formData.append("uploadType", uploadType);
 
-    const response = await axiosInstance.post<CloudinaryUploadResponse>(
+    const response = await post<CloudinaryUploadResponse>(
       API_CONSTANTS.CLOUDINARY.UPLOAD,
       formData,
       {
@@ -84,7 +83,7 @@ class CloudinaryService {
     });
     formData.append("uploadType", uploadType);
 
-    const response = await axiosInstance.post<CloudinaryMultipleUploadResponse>(
+    const response = await post<CloudinaryMultipleUploadResponse>(
       API_CONSTANTS.CLOUDINARY.UPLOAD_MULTIPLE,
       formData,
       {
@@ -98,16 +97,41 @@ class CloudinaryService {
 
   // Delete single image
   async deleteSingle(publicId: string): Promise<void> {
-    await axiosInstance.delete(API_CONSTANTS.CLOUDINARY.DELETE, {
+    await del (API_CONSTANTS.CLOUDINARY.DELETE, {
       params: { publicId },
     });
   }
 
   // Delete multiple images
   async deleteMultiple(publicIds: string[]): Promise<void> {
-    await axiosInstance.delete(API_CONSTANTS.CLOUDINARY.DELETE_MULTIPLE, {
+    await del (API_CONSTANTS.CLOUDINARY.DELETE_MULTIPLE, {
       data: publicIds,
     });
+  }
+
+  // Transform URL - Get Cloudinary image URL from publicId
+  async transformUrl(
+    publicId: string,
+    transformOptions?: {
+      autoOptimize?: boolean;
+      crop?: string;
+      gravity?: string;
+      quality?: number;
+      width?: number;
+      height?: number;
+      format?: string;
+    }
+  ): Promise<{ url: string }> {
+    const response = await post<{ url: string }>(
+      `${API_CONSTANTS.CLOUDINARY.TRANSFORM_URL}?publicId=${encodeURIComponent(publicId)}`,
+      transformOptions || {
+        autoOptimize: true,
+        crop: 'fill',
+        gravity: 'auto',
+        quality: 80
+      }
+    );
+    return response.data;
   }
 }
 
@@ -116,7 +140,7 @@ class PhotoPortfolioService {
   async createMultiple(
     publicIds: string[]
   ): Promise<CreateMultiplePortfoliosResponse> {
-    const response = await axiosInstance.post<CreateMultiplePortfoliosResponse>(
+    const response = await post<CreateMultiplePortfoliosResponse>(
       API_CONSTANTS.PHOTO_PORTFOLIO.CREATE_MULTIPLE,
       { photoUrls: publicIds }
     );
@@ -125,7 +149,7 @@ class PhotoPortfolioService {
 
   // Get user's portfolios
   async getMyPortfolios(): Promise<PhotoPortfolio[]> {
-    const response = await axiosInstance.get<PhotoPortfolio[]>(
+    const response = await get<PhotoPortfolio[]>(
       API_CONSTANTS.PHOTO_PORTFOLIO.GET_MY_PORTFOLIOS
     );
     return response.data;
@@ -133,7 +157,7 @@ class PhotoPortfolioService {
 
   // Delete portfolio
   async deletePortfolio(portfolioId: number): Promise<void> {
-    await axiosInstance.delete(
+    await del (
       API_CONSTANTS.PHOTO_PORTFOLIO.DELETE(portfolioId)
     );
   }
