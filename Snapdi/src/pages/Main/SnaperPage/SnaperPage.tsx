@@ -336,9 +336,9 @@ export default function Snaper() {
           <Step1_Account />
         </div>
         <div style={{ display: currentStep === 2 ? 'block' : 'none' }}>
-          <Step2_VerifyOTP 
-            onResend={handleResendOTP} 
-            isResending={isResendingOTP} 
+          <Step2_VerifyOTP
+            onResend={handleResendOTP}
+            isResending={isResendingOTP}
             email={registeredEmail}
           />
         </div>
