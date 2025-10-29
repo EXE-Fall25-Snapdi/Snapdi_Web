@@ -38,6 +38,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
   const [submitType, setSubmitType] = useState<'draft' | 'published'>('published');
   const { loading } = useLoadingStore();
   const authorId = useUserStore((state) => state.user?.id);
+  const quillRef = React.useRef<any>(null);
 
   React.useEffect(() => {
     // Fetch existing keywords from API
@@ -55,6 +56,41 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     };
     fetchKeywords();
   }, []);
+
+  // Custom image handler for React Quill
+  const imageHandler = () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      try {
+        // Show uploading message
+        message.loading({ content: 'Uploading image...', key: 'upload-image' });
+
+        // Upload to Cloudinary and get URL directly
+        const uploadResult = await cloudinaryService.uploadSingle(file, '', 'blog');
+
+        // Insert image into editor using the URL from upload response
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, 'image', uploadResult.url);
+          quill.setSelection(range.index + 1);
+        }
+
+        message.success({ content: 'Image uploaded successfully!', key: 'upload-image', duration: 2 });
+      } catch (error) {
+        console.error('Image upload failed:', error);
+        message.error({ content: 'Failed to upload image', key: 'upload-image', duration: 2 });
+      }
+    };
+  };
+
   // Quill editor modules and formats
   const modules = useMemo(() => ({
     toolbar: {
@@ -70,9 +106,12 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
         [{ 'direction': 'rtl' }],
         [{ 'align': [] }],
         ['blockquote', 'code-block'],
-        ['link', 'image', 'video'],
+        ['link', 'image'],
         ['clean']
       ],
+      handlers: {
+        image: imageHandler
+      }
     },
     clipboard: {
       matchVisual: false,
@@ -87,7 +126,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
     'list', 'indent',
     'direction', 'align',
     'blockquote', 'code-block',
-    'link', 'image', 'video'
+    'link', 'image',
   ];
 
   // Handle tag addition
@@ -399,6 +438,7 @@ const CreateBlog: React.FC<CreateBlogProps> = ({ onCreated }) => {
       >
         <div className="border border-gray-300 rounded-lg">
           <ReactQuill
+            ref={quillRef}
             theme="snow"
             value={content}
             onChange={setContent}
