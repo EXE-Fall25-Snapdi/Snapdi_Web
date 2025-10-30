@@ -67,11 +67,18 @@ const BlogAllCard: React.FC<BlogAllCardProps> = ({
         <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
           {title}
         </h3>
-
-        {/* Description */}
         <p
-          className="text-sm text-gray-600 mb-6 line-clamp-3 flex-1"
-          dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>/gi, '') }}
+          className="text-sm text-gray-600 mb-6 overflow-hidden"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 8,
+            WebkitBoxOrient: 'vertical',
+            lineHeight: '1.5em',
+            maxHeight: '12em' // 8 lines * 1.5em line-height
+          }}
+          dangerouslySetInnerHTML={{
+            __html: description.replace(/<img[^>]*>/gi, '')
+          }}
         />
 
         {/* Read More Button */}
