@@ -77,38 +77,38 @@ const BlogHeroCard: React.FC<BlogHeroCardProps> = ({
     >
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-110"
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-110 "
         style={{ backgroundImage: `url(${imageUrl || thumbnailUrl})` }}
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0" />
+      <div className="absolute inset-0 bg-gray-500 opacity-50" />
 
       {/* Content */}
       <div className={`relative h-full flex flex-col justify-between ${size === 'medium' && 'p-[40px]'} ${size === 'large' && 'p-[50px]'} p-[30px]  text-white`}>
         <div className="space-y-2 ">
-          <h2 className={`font-bold text-black text-xl ${size === 'large' && 'text-4xl!'} ${size === 'medium' && 'text-2xl!'}   line-clamp-2`}>
+          <h2 className={`font-bold text-white text-xl ${size === 'large' && 'text-4xl!'} ${size === 'medium' && 'text-2xl!'}   line-clamp-2`}>
             {title}
             {size === 'large' || size === 'medium' ? (
-              <p className="text-sm line-clamp-3 opacity-90" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '') }} />
+              <p className="text-sm line-clamp-3 opacity-90" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '').substring(0, 100) }} />
             ) : null}
           </h2>
         </div>
         {size === 'large' ? (
           <>
             <div className="flex justify-between">
-              <button className="mt-4 px-6 py-2 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] text-xl text-black font-semibold rounded-lg hover:bg-[#00C090] transition-colors">
+              <button className="mt-4 px-6 py-2 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] text-xl text-white font-semibold rounded-lg hover:bg-[#00C090] transition-colors">
                 MORE
               </button>
               <div className="flex justify-end items-end">
-                <span className="text-sm text-black font-medium">{formatDate(date)}</span>
+                <span className="text-sm text-white font-medium">{formatDate(date)}</span>
               </div>
             </div>
           </>
         ) :
           (
             <div className="flex justify-end items-end">
-              <span className="text-sm text-black font-medium">{formatDate(date)}</span>
+              <span className="text-sm text-white font-medium">{formatDate(date)}</span>
             </div>
           )}
       </div>
