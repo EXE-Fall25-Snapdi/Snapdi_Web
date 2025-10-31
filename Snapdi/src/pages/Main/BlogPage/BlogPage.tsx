@@ -357,7 +357,7 @@ const BlogPage: React.FC = () => {
             )}
           </>
         )}
-        <div className="mb-16">
+        <div className="mb-16 flex justify-center">
           <h2 className="text-4xl font-bold mb-8">ALL BLOGS</h2>
           {/* Search Filter */}
           <div className="mb-12">
