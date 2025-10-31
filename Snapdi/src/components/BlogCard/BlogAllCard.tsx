@@ -52,9 +52,9 @@ const BlogAllCard: React.FC<BlogAllCardProps> = ({
   };
 
   return (
-    <div 
+    <div
       onClick={handleClick}
-      className="flex flex-col bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer" 
+      className="flex flex-col bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
       style={{ width: '360px', height: '700px' }}
     >
       {/* Image Container - 360x360px */}
