@@ -75,8 +75,8 @@ const BlogNewestCard: React.FC<BlogNewestCardProps> = ({
 
         {/* Bottom Content Bar */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] p-6">
-          <h3 className="text-black font-bold text-lg">{title}</h3>
-          <span className="text-black text-sm line-clamp-2 opacity-80" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '') }} />
+          <h3 className="text-white font-bold text-lg">{title}</h3>
+          <span className="text-white text-sm line-clamp-2 opacity-90" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '') }} />
         </div>
       </div>
     );

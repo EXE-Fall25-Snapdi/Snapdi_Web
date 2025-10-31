@@ -436,7 +436,7 @@ const BlogPage: React.FC = () => {
                   )}
 
                   {/* Back to All Blogs Button */}
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center">
                     <button
                       onClick={handleClearSearch}
                       className="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
