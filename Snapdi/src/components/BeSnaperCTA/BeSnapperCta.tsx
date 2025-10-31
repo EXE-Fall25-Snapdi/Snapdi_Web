@@ -14,7 +14,7 @@ const BeSnapperCta: React.FC = () => {
     // - `bg-emerald-500`: Nền xanh lá cây (giống khối benefit).
     // - `rounded-3xl`: Bo góc lớn như trong thiết kế.
     // - `overflow-hidden`: Đảm bảo vòng tròn trang trí không tràn ra ngoài.
-    <div className=" w-full overflow-x-hidden ">
+    <div className=" w-full overflow-hidden ">
       <div className='relative w-10/12  mx-auto p-12 md:p-16 lg:p-20 '>
 
         {/* B. Vòng Tròn Trang Trí (Phía sau) */}
