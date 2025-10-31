@@ -22,7 +22,7 @@ const benefitItems: BenefitItem[] = [
   {
     id: 1,
     icon: BiWorld, // Thị trường
-    title: 'THỊ TRƯỜNG LỚN VÀ MẠNH MẼ', // Tên trong code cũ
+    title: 'THỊ TRƯỜNG LỚN VÀ NHANH CHÓNG', // Tên trong code cũ
     description: 'Hàng ngàn người dùng có nhu cầu chụp ảnh chỉ với vài cú click.',
   },
   {
@@ -56,7 +56,7 @@ const BenefitCard: React.FC<{ item: BenefitItem }> = ({ item }) => {
   return (
     <div
       key={item.id}
-      className="bg-white rounded-2xl p-6 flex flex-col gap-3 shadow-lg h-full"
+      className="bg-white rounded-4xl p-6 flex flex-col gap-3 shadow-soft-green-edge h-full border-r-6 border-b-6"
     >
       {/* Icon */}
       <item.icon className="text-4xl text-black" /> {/* Đổi màu icon thành đen */}
