@@ -174,7 +174,7 @@ const BlogDetail: React.FC = () => {
   const modifiedDate = blog.updatedAt ? new Date(blog.updatedAt).toISOString() : publishedDate;
 
   return (
-    <>
+    <div className='pt-[200px]'>
       {/* SEO Meta Tags */}
       <Helmet>
         <title>{blog.title} | Snapdi Blog</title>
@@ -454,7 +454,7 @@ const BlogDetail: React.FC = () => {
           </footer>
         </article>
       </div>
-    </>
+    </div>
   );
 };
 

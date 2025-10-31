@@ -2,12 +2,12 @@ import React from "react";
 import BlogHeroCard from "../../../components/BlogCard/BlogHeroCard";
 import BlogTrendingCard from "../../../components/BlogCard/BlogTrendingCard";
 import BlogNewestCard from "../../../components/BlogCard/BlogNewestCard";
-import BlogAllCard from "../../../components/BlogCard/BlogAllCard";
+// import BlogAllCard from "../../../components/BlogCard/BlogAllCard";
 import BlogSearchFilterSimple from "../../../components/BlogSearchFilter/BlogSearchFilterSimple";
 import { getActiveBlogWithPaging, searchBlogsWithBody, type BlogSearchParams } from "../../../services/blogService";
 import type { Blog } from "../../../lib/types";
 import "./BlogPage.css";
-import LearnMore from "../../../components/LearnMore/Learnmore";
+// import LearnMore from "../../../components/LearnMore/Learnmore";
 
 const BlogPage: React.FC = () => {
   // Hero, Trending, Newest sections - fetched once on mount
@@ -17,7 +17,7 @@ const BlogPage: React.FC = () => {
   const [allBlogs, setAllBlogs] = React.useState<Blog[]>([]);
   const [allBlogsPage, setAllBlogsPage] = React.useState(1);
   const [allBlogsTotalPages, setAllBlogsTotalPages] = React.useState(0);
-  const allBlogsItemsPerPage = 6;
+  const allBlogsItemsPerPage = 8;
 
   // Search/Filter - with pagination
   const [filteredBlogsForSearch, setFilteredBlogsForSearch] = React.useState<Blog[]>([]);
@@ -303,7 +303,7 @@ const BlogPage: React.FC = () => {
             {/* Trending Section */}
             {trendingBlogs.length > 0 && (
               <div className="mb-16">
-                <h2 className="text-4xl font-bold mb-8">TRENDING</h2>
+                <h2 className="text-[48px] font-bold mb-8">TRENDING</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {trendingBlogs.slice(0, 4).map((blog) => (
                     <BlogTrendingCard
@@ -320,7 +320,7 @@ const BlogPage: React.FC = () => {
             {/* Newest Section */}
             {newestBlogs.length > 0 && (
               <div className="mb-16">
-                <h2 className="text-4xl font-bold mb-8">NEWEST</h2>
+                <h2 className="text-[48px] font-bold mb-8">NEWEST</h2>
                 <div className="w-full flex justify-between">
                   {/* Large Featured Newest */}
                   {newestFeatured && (
@@ -357,10 +357,10 @@ const BlogPage: React.FC = () => {
             )}
           </>
         )}
-        <div className="mb-16 flex justify-center">
-          <h2 className="text-4xl font-bold mb-8">ALL BLOGS</h2>
+        <div className="mb-16 w-full h-auto flex flex-col justify-center items-center">
+          <h2 className="text-[48px] font-bold">ALL BLOGS</h2>
           {/* Search Filter */}
-          <div className="mb-12">
+          <div className="">
             <BlogSearchFilterSimple
               onSearch={handleSearch}
               onClear={handleClearSearch}
@@ -388,14 +388,14 @@ const BlogPage: React.FC = () => {
                 <>
                   {/* Search Results Grid */}
                   <div className="flex justify-center mb-12">
-                    <div className="gap-6" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', width: '100%', maxWidth: '1200px' }}>
+                    <div className="gap-6 max-w-7xl" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', width: '100%' }}>
                       {filteredBlogsForSearch.map((blog) => (
-                        <BlogAllCard
+                        <BlogTrendingCard
                           key={blog.blogId}
                           blogId={blog.blogId}
                           thumbnailUrl={blog.thumbnailUrl}
                           title={blog.title}
-                          description={blog.content || blog.title}
+                        // description={blog.content || blog.title}
                         />
                       ))}
                     </div>
@@ -450,16 +450,16 @@ const BlogPage: React.FC = () => {
           ) : (
             // Normal Mode - Show paginated All Blogs
             <>
-              {/* Blogs Grid - Fixed width cards (360px) */}
+              {/* Blogs Grid - Fixed width cards (286px) */}
               <div className="flex justify-center">
-                <div className="gap-6 mb-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', width: '100%', maxWidth: '1200px' }}>
+                <div className="gap-6 mb-12 max-w-7xl" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', width: '100%' }}>
                   {allBlogs.length > 0 && (allBlogs.map((blog) => (
-                    <BlogAllCard
+                    <BlogTrendingCard
                       key={blog.blogId}
                       blogId={blog.blogId}
                       thumbnailUrl={blog.thumbnailUrl}
                       title={blog.title}
-                      description={blog.content || blog.title}
+                    // description={blog.content || blog.title}
                     />
                   )))}
                 </div>
@@ -502,7 +502,7 @@ const BlogPage: React.FC = () => {
           )}
         </div>
       </div>
-      <LearnMore />
+      {/* <LearnMore /> */}
     </div>
   );
 };
