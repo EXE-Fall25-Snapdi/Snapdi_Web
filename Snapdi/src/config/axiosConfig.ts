@@ -12,7 +12,7 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_ENV === 'production'
     ? import.meta.env.VITE_API_BASE_URL
-    : "https://snapdi-api-652504949137.asia-southeast1.run.app", // Use proxy for development
+    : "https://localhost:7000", // Use proxy for development
   timeout: 1000000,
   headers: { "Content-Type": "application/json" },
 });
