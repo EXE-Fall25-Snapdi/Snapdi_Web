@@ -25,13 +25,13 @@ export type CreateUserRequest = {
 };
 
 export type UpdateUserRequest = {
-  name: string;
-  phone: string;
-  locationAddress: string;
-  locationCity: string;
-  avatarUrl: string;
-  isActive: boolean;
-  isVerify: boolean;
+  name?: string;
+  phone?: string;
+  locationAddress?: string;
+  locationCity?: string;
+  avatarUrl?: string;
+  isActive?: boolean;
+  isVerify?: boolean;
 };
 
 export type UserFilterRequest = {

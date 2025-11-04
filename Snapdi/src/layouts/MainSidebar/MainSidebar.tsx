@@ -88,9 +88,13 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Action Buttons */}
         <div className="p-4 border-t border-gray-300/50 space-y-3 bg-gradient-to-t from-gray-200/50 to-transparent">
-          <button className="w-full bg-gradient-to-r from-[#34D399] to-[#10B981] text-white py-3 rounded-2xl font-sf-pro font-bold text-lg hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none">
+          <NavLink
+            to="/download"
+            onClick={onClose}
+            className="block w-full bg-gradient-to-r from-[#34D399] to-[#10B981] text-white py-3 rounded-2xl font-sf-pro font-bold text-lg hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-500/50 focus:outline-none text-center"
+          >
             Tải xuống ngay
-          </button>
+          </NavLink>
         </div>
       </div>
     </>

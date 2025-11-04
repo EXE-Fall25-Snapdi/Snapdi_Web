@@ -48,13 +48,21 @@ function Header() {
         </Nav>
 
         {/* Desktop Buttons */}
-        <Nav.Link
-          className="bg-gradient-to-r from-[#00EA80] to-[#00C9A7] h-12 text-white! -py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform hidden lg:flex items-center justify-center"
-          href="/signup"
-        >
-          Đăng ký
-          <span className="text-lg font-semibold text-white"><Icons.ArrowUpRight className="w-8 h-8 font-extrabold!" /></span>
-        </Nav.Link>
+        <div className="flex gap-3">
+          <Nav.Link
+            className="bg-gradient-to-r from-[#00EA80] to-[#00C9A7] h-12 text-white! -py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform hidden lg:flex items-center justify-center no-underline! hover:no-underline!"
+            href="/signup"
+          >
+            Đăng ký
+            <span className="text-lg font-semibold text-white"><Icons.ArrowUpRight className="w-8 h-8 font-extrabold!" /></span>
+          </Nav.Link>
+          <Nav.Link
+            className="bg-gradient-to-r from-[#00C9A7] to-[#00e2ea] h-12 text-white! -py-2 rounded-3xl hover:scale-105 font-sf-pro font-bold text-xl transition-transform hidden lg:flex items-center justify-center no-underline! hover:no-underline!"
+            href="/download"
+          >
+            Tải ngay
+          </Nav.Link>
+        </div>
 
         {/* Mobile Menu Button */}
         <Nav className="lg:hidden">

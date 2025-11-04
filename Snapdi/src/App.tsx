@@ -27,6 +27,7 @@ import BlogPage from "./pages/Main/BlogPage/BlogPage";
 import BlogDetail from "./pages/Main/BlogDetail/BlogDetail";
 import SnaperPage from "./pages/Main/SnaperPage/SnaperPage";
 import Contact from "./pages/Main/Contact/Contact";
+import DownloadPage from "./pages/Main/DownloadPage/DownloadPage";
 import Login from "./pages/Auth/Login/Login";
 import { Spin } from "antd";
 import { HelmetProvider } from '@dr.pogodin/react-helmet';
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/download",
+        element: <DownloadPage />,
       },
       {
         path: "/snaper",
