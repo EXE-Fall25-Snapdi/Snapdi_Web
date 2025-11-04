@@ -28,7 +28,7 @@ const DownloadPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-white pt-[215px]">
+    <div className="w-full bg-white md:pt-[215px]">
       {/* Hero Section */}
       <section className="relative w-full min-h-screen">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#12C6A3] to-[#00EA80]"></div>
@@ -168,46 +168,46 @@ const DownloadPage: React.FC = () => {
           <div className="bg-white rounded-[50px] p-12 shadow-2xl">
             <div className="space-y-8">
               {/* Step 1 */}
-              <div className="flex gap-6">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
+              <div className="flex gap-3 lg:gap-6">
+                <div className="flex-shrink-0 lg:w-12 lg:h-12 w-8 h-8  bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
                   1
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2 font-sf-pro">Tải xuống file APK</h3>
-                  <p className="text-lg text-gray-700 font-sf-pro">Nhấn vào nút "Tải xuống APK" ở trên để tải file về máy</p>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-2 font-sf-pro">Tải xuống file APK</h3>
+                  <p className="lg:text-lg text-gray-700 font-sf-pro">Nhấn vào nút "Tải xuống APK" ở trên để tải file về máy</p>
                 </div>
               </div>
 
               {/* Step 2 */}
-              <div className="flex gap-6">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
+              <div className="flex gap-3 lg:gap-6">
+                <div className="flex-shrink-0 lg:w-12 lg:h-12 w-8 h-8  bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
                   2
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2 font-sf-pro">Cho phép cài đặt từ nguồn không xác định</h3>
-                  <p className="text-lg text-gray-700 font-sf-pro">Vào Cài đặt → Bảo mật → Bật "Nguồn không xác định"</p>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-2 font-sf-pro">Cho phép cài đặt từ nguồn không xác định</h3>
+                  <p className="lg:text-lg text-gray-700 font-sf-pro">Vào Cài đặt → Bảo mật → Bật "Nguồn không xác định"</p>
                 </div>
               </div>
 
               {/* Step 3 */}
-              <div className="flex gap-6">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
+              <div className="flex gap-3 lg:gap-6">
+                <div className="flex-shrink-0 lg:w-12 lg:h-12 w-8 h-8  bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
                   3
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2 font-sf-pro">Mở file APK</h3>
-                  <p className="text-lg text-gray-700 font-sf-pro">Mở file vừa tải về và nhấn "Cài đặt"</p>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-2 font-sf-pro">Mở file APK</h3>
+                  <p className="lg:text-lg text-gray-700 font-sf-pro">Mở file vừa tải về và nhấn "Cài đặt"</p>
                 </div>
               </div>
 
               {/* Step 4 */}
-              <div className="flex gap-6">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
+              <div className="flex gap-3 lg:gap-6">
+                <div className="flex-shrink-0 lg:w-12 lg:h-12 w-8 h-8  bg-gradient-to-r from-[#00EA80] to-[#12C6A3] rounded-full flex items-center justify-center text-white font-bold text-xl">
                   4
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2 font-sf-pro">Hoàn tất</h3>
-                  <p className="text-lg text-gray-700 font-sf-pro">Đợi quá trình cài đặt hoàn tất và bắt đầu sử dụng Snapdi</p>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-2 font-sf-pro">Hoàn tất</h3>
+                  <p className="lg:text-lg text-gray-700 font-sf-pro">Đợi quá trình cài đặt hoàn tất và bắt đầu sử dụng Snapdi</p>
                 </div>
               </div>
             </div>
@@ -224,20 +224,20 @@ const DownloadPage: React.FC = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="bg-gradient-to-r from-[#00EA80] to-[#12C6A3] p-8 rounded-3xl text-center shadow-lg">
-              <p className="text-sm uppercase tracking-wider mb-2 opacity-90">Version</p>
-              <p className="text-3xl font-bold font-sf-pro">1.0.0</p>
+              <p className="text-sm lg:text-lg uppercase tracking-wider mb-2 opacity-90">Version</p>
+              <p className="text-lg lg:text-3xl font-bold font-sf-pro">1.0.0</p>
             </div>
             <div className="bg-gradient-to-r from-[#12C6A3] to-[#00EA80] p-8 rounded-3xl text-center shadow-lg">
-              <p className="text-sm uppercase tracking-wider mb-2 opacity-90">Kích thước</p>
-              <p className="text-3xl font-bold font-sf-pro">~25 MB</p>
+              <p className="text-sm lg:text-lg uppercase tracking-wider mb-2 opacity-90">Kích thước</p>
+              <p className="text-lg lg:text-3xl font-bold font-sf-pro">~25 MB</p>
             </div>
             <div className="bg-gradient-to-r from-[#00EA80] to-[#5CF621] p-8 rounded-3xl text-center shadow-lg">
-              <p className="text-sm uppercase tracking-wider mb-2 opacity-90">Yêu cầu</p>
-              <p className="text-3xl font-bold font-sf-pro">Android 8.0+</p>
+              <p className="text-sm lg:text-lg uppercase tracking-wider mb-2 opacity-90">Yêu cầu</p>
+              <p className="text-lg lg:text-3xl font-bold font-sf-pro">Android 8.0+</p>
             </div>
             <div className="bg-gradient-to-r from-[#5CF621] to-[#00EA80] p-8 rounded-3xl text-center shadow-lg">
-              <p className="text-sm uppercase tracking-wider mb-2 opacity-90">Cập nhật</p>
-              <p className="text-3xl font-bold font-sf-pro">04/11/2025</p>
+              <p className="text-sm lg:text-lg uppercase tracking-wider mb-2 opacity-90">Cập nhật</p>
+              <p className="text-lg lg:text-3xl font-bold font-sf-pro">04/11/2025</p>
             </div>
           </div>
         </div>

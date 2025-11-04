@@ -20,17 +20,17 @@ const Footer: React.FC = () => {
     //   thay bằng màu gradient 5 màu của mình nếu muốn).
     // - `rounded-t-3xl`: Bo góc lớn ở phía trên.
     // - `text-black`: Màu chữ mặc định là đen.
-    <footer className="w-full bg-[#00FA9A] rounded-t-3xl p-12 md:p-16 text-black">
-      <div className="container mx-auto flex flex-col items-center gap-16">
+    <footer className="w-full bg-[#00FA9A] rounded-t-3xl p-6 sm:p-8 md:p-12 lg:p-16 text-black">
+      <div className="container mx-auto flex flex-col items-center gap-8 sm:gap-12 md:gap-16">
 
         {/* B. Hàng Trên: Logo & Tên Thương Hiệu */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-5 md:gap-6">
           <img
             src={snapdiLogo}
             alt="Snapdi Logo"
-            className="h-24 w-24" // Kích thước logo
+            className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24"
           />
-          <span className="text-8xl lg:text-9xl font-extrabold text-black tracking-tighter">
+          <span className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold text-black tracking-tighter">
             SNAPDI
           </span>
         </div>
@@ -42,12 +42,12 @@ const Footer: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-10">
 
           {/* C1. Nút Tải Ứng Dụng (Bên trái) */}
-          <div className="flex items-center gap-4 order-2 lg:order-1">
+          <div className="flex items-center gap-3 sm:gap-4 order-2 lg:order-1">
             <a href="#" aria-label="Download on the App Store">
               <img
                 src={appStoreBadge}
                 alt="Download on the App Store"
-                className="h-12 lg:h-14"
+                className="h-10 sm:h-12 md:h-12 lg:h-14"
               />
             </a>
             <a
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
               <img
                 src={googlePlayBadge}
                 alt="Get it on Google Play"
-                className="h-12 lg:h-14"
+                className="h-10 sm:h-12 md:h-12 lg:h-14"
               />
             </a>
           </div>
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
           {/* - `order-3`: Đẩy xuống cuối trên mobile.
               - `lg:order-2`: Đưa về giữa trên desktop.
           */}
-          <p className="text-base font-medium text-black text-center order-3 lg:order-2">
+          <p className="text-xs sm:text-sm md:text-base font-medium text-black text-center order-3 lg:order-2 px-4">
             &copy; 2025 Snapdi Media. All Rights Reserved.
           </p>
 
@@ -78,9 +78,9 @@ const Footer: React.FC = () => {
           {/* - `order-1`: Đẩy lên đầu trên mobile.
               - `lg:order-3`: Đưa về cuối bên phải trên desktop.
           */}
-          <div className="flex items-center gap-5 order-1 lg:order-3">
-            <BiRegistered className="text-3xl text-black" />
-            <BiEnvelope className="text-3xl text-black" />
+          <div className="flex items-center gap-4 sm:gap-5 order-1 lg:order-3">
+            <BiRegistered className="text-2xl sm:text-2xl md:text-3xl text-black" />
+            <BiEnvelope className="text-2xl sm:text-2xl md:text-3xl text-black" />
           </div>
 
         </div>

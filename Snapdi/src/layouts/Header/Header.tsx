@@ -20,11 +20,11 @@ function Header() {
 
   return (
     <>
-      <Navbar className="absolute top-[75px] z-9999 w-full justify-between items-center px-[100px] font-sf-pro flex" expand="lg" fixed="top">
+      <Navbar className="absolute top-[75px] z-9999 w-full justify-between items-center px-4 sm:px-8 md:px-16 lg:px-[100px] font-sf-pro flex" expand="lg" fixed="top">
         <Nav className="nav-logo">
-          <img src={Logo} alt="Logo" className="w-[70px] h-[60px] hidden lg:flex" />
+          <img src={Logo} alt="Logo" className="w-[50px] h-[45px] sm:w-[60px] sm:h-[55px] md:w-[70px] md:h-[60px] hidden lg:flex" />
           {/* <p className="font-sf-pro font-extrabold text-black text-2xl md:text-[32px]">SNAPDI</p> */}
-          <p className="font-sf-pro font-extrabold text-black text-2xl md:text-4xl ml-9 hidden lg:flex">SNAPDI</p>
+          <p className="font-sf-pro font-extrabold text-black text-xl sm:text-2xl md:text-3xl lg:text-4xl ml-4 sm:ml-6 md:ml-9 hidden lg:flex">SNAPDI</p>
         </Nav>
 
         {/* Desktop Navigation */}
@@ -64,11 +64,13 @@ function Header() {
           </Nav.Link>
         </div>
 
+      </Navbar >
         {/* Mobile Menu Button */}
-        <Nav className="lg:hidden">
+        <Nav className="lg:hidden z-990 absolute w-full px-2 pt-2">
+          <div className="flex w-full justify-between ">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="bg-[#34D399] text-black px-3 py-2 rounded-lg font-sf-pro font-bold text-sm hover:scale-105 transition-transform"
+            className="bg-[#34D399] text-black px-3 py-2 rounded-lg font-sf-pro font-bold text-sm hover:scale-105 transition-transform border-2 lg:border-0"
           >
             {/* Simple hamburger menu icon */}
             <div className="w-6 h-6 flex flex-col justify-center items-center gap-1">
@@ -77,8 +79,9 @@ function Header() {
               <div className="w-5 h-0.5 bg-black"></div>
             </div>
           </button>
+          <img src={Logo} alt="Logo" className="w-[50px] h-[45px] sm:w-[60px] sm:h-[55px] md:w-[70px] md:h-[60px] md:hidden" />
+            </div>
         </Nav>
-      </Navbar >
 
       {/* Mobile Sidebar */}
       < MainSidebar

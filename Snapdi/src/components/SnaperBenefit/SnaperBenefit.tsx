@@ -82,8 +82,8 @@ const SnaperBenefit: React.FC = () => {
   return (
     <div className="w-full">
       {/* 4. Tiêu đề chính (Không đổi) */}
-      <div className='w-full flex justify-end'>
-        <p className=" text-5xl font-extrabold uppercase mb-8 leading-snug ">
+      <div className='w-full flex justify-center md:justify-end px-4 sm:px-6 md:px-0'>
+        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase mb-6 sm:mb-7 md:mb-8 leading-snug text-center md:text-right">
           Đặc quyền khi
           <br />
           đăng ký snapper
@@ -94,7 +94,7 @@ const SnaperBenefit: React.FC = () => {
         - `md:grid-cols-3`: Áp dụng lưới 3 cột trên desktop.
         - Điều này đảm bảo CẢ 5 THẺ đều có chiều rộng bằng nhau (1/3 container).
       */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 px-4 sm:px-6 md:px-0">
 
         <div className="hidden md:block"></div>
         {/* HÀNG 1 - Thẻ 1 */}

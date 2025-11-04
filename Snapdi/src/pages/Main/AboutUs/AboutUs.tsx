@@ -46,7 +46,7 @@ const AboutUsPage: React.FC = () => {
         // Container chính của trang, giả sử có padding top cho Navbar
         <div className="">
             {/* --- PHẦN 1: VỀ SNAPDI --- */}
-            <section className="relative w-full h-[925px]">
+            <section className="relative w-full min-h-[600px] md:h-[925px]">
 
                 {/* 2. Lớp Nền (Background Layer):
       - `absolute` và `inset-0` (top/left/right/bottom = 0) để lấp đầy cha.
@@ -58,30 +58,30 @@ const AboutUsPage: React.FC = () => {
                 >
                     {/* Lớp này chỉ dành cho nền và hình dạng cắt */}
                 </div>
-                <div className="relative z-10 w-full h-full flex items-center justify-center p-8 md:p-16 lg:p-24 pt-[215px]!">
+                <div className="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-4 sm:p-8 md:p-16 lg:p-24 pt-[120px] md:pt-[215px]">
 
                     {/* Cột Trái: Hình ảnh Mascot */}
-                    <div className="w-1/3">
-                        <div className="w-full h-auto flex items-center justify-center pl-20">
+                    <div className="w-full md:w-1/3 mb-8 md:mb-0">
+                        <div className="w-full h-auto flex items-center justify-center pl-4 md:pl-20">
                             <img
                                 src={mascotHoldingCamera}
                                 alt="Snapdi Mascot"
-                                className="scale-180 drop-shadow-2xl "
+                                className="scale-75 sm:scale-100 md:scale-150 lg:scale-180 drop-shadow-2xl"
                             />
                         </div>
 
                     </div>
 
                     {/* Cột Phải: Khối văn bản */}
-                    <div className="w-2/3">
+                    <div className="w-full md:w-2/3">
                         {/* Bây giờ, khối văn bản này sẽ KHÔNG bị cắt
               vì nó nằm trong `div` (z-10) riêng biệt với `div` bị cắt.
             */}
-                        <div className='w-[1000px] h-[520px] bg-gradient-to-r from-[#00EA80] to-[#12C6A3] p-24 rounded-[50px]'>
-                            <h2 className="text-5xl font-extrabold mb-6">
+                        <div className='w-full max-w-[1000px] md:w-[1000px] min-h-[400px] md:h-[520px] bg-gradient-to-r from-[#00EA80] to-[#12C6A3] p-6 sm:p-12 md:p-24 rounded-[30px] md:rounded-[50px]'>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 md:mb-6">
                                 VỀ <span className='font-bold text-white'>SNAPDI</span>
                             </h2>
-                            <p className=" text-xl leading-relaxed">
+                            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed">
                                 Snapdi được sinh ra từ một ý tưởng đơn giản: gắn kết mọi người
                                 lại với nhau. Nhiệm vụ của chúng tôi là cách mạng hóa cách bạn
                                 chụp ảnh, biến nó thành một trải nghiệm dễ dàng và thú vị.
@@ -99,7 +99,7 @@ const AboutUsPage: React.FC = () => {
             </section>
 
             {/* --- PHẦN 2: LOGO & TÍNH NĂNG (Block ở giữa) --- */}
-            < section className="relative w-full h-[1440px]" >
+            < section className="relative w-full min-h-[800px] md:h-[1440px]" >
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#12C6A3] to-[#00EA80] shape-cut-top-left">
                 </div>
                 <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-8 md:p-16 lg:p-24 ">
@@ -119,12 +119,12 @@ const AboutUsPage: React.FC = () => {
                     <div className="pt-4">
                         <div
                             className="
-              relative w-full p-12
-              flex items-center justify-center "                        >
+              relative w-full p-4 sm:p-8 md:p-12
+              flex items-center justify-center">
                             <img
                                 src={aboutUsBanner}
                                 alt="Snapdi Logo Full"
-                                className="scale-120 z-10"
+                                className="w-full max-w-full scale-75 sm:scale-100 md:scale-120 z-10"
                             />
                         </div>
                     </div>
@@ -132,26 +132,26 @@ const AboutUsPage: React.FC = () => {
             </section >
 
             {/* --- PHẦN 3: GIÁ TRỊ CỐT LÕI --- */}
-            < section className="relative w-full h-[1080px]" >
+            < section className="relative w-full min-h-[800px] md:h-[1080px]" >
                 <div
                     className="absolute inset-0 bg-gradient-to-tr from-[#12C6A3] to-[#00EA80] shape-cut-top-right2"
                 >
                     {/* Lớp này chỉ dành cho nền và hình dạng cắt */}
                 </div>
-                <div className="relative z-10 w-full h-full flex items-center justify-center ">
+                <div className="relative z-10 w-full h-full flex items-center justify-center p-4 sm:p-8 md:p-12">
                     {/* Cột Trái: Hình ảnh Mascot */}
-                    <div className='w-10/12 flex items-center'>
+                    <div className='w-full md:w-10/12 flex flex-col md:flex-row items-center gap-6 md:gap-0'>
 
-                        <div className="flex justify-end">
+                        <div className="flex justify-center md:justify-end w-full md:w-auto">
                             <img
                                 src={mascotWaving}
                                 alt="Snapdi Mascot Waving"
-                                className=""
+                                className="scale-75 md:scale-100"
                             />
                         </div>
 
                         {/* Cột Phải: 4 Thẻ Giá Trị */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-auto">
                             {valuesItems.map((item) => (
                                 <div
                                     key={item.title}
@@ -160,20 +160,20 @@ const AboutUsPage: React.FC = () => {
                                      - Bỏ: bg-white, rounded-3xl, shadow-lg
                                      - Thêm: Gradient, padding lớn hơn (p-8), và class `shape-value-card`
                                     */
-                                    className={`w-[400px] h-[400px] ${item.style} border-r-6 border-b-6 drop-shadow-2xl bg-gradient-to-r from-[#00EA80] to-[#5CF621] p-11 flex flex-col gap-4`}
+                                    className={`w-full max-w-[400px] md:w-[400px] min-h-[300px] md:h-[400px] ${item.style} border-r-4 md:border-r-6 border-b-4 md:border-b-6 drop-shadow-2xl bg-gradient-to-r from-[#00EA80] to-[#5CF621] p-6 sm:p-8 md:p-11 flex flex-col gap-3 md:gap-4`}
                                 >
-                                    <img src={item.icon} alt={item.title} className="w-[90px] h-[90px]" />
+                                    <img src={item.icon} alt={item.title} className="w-[60px] h-[60px] md:w-[90px] md:h-[90px]" />
 
                                     <h3
 
-                                        className="text-2xl font-bold mt-10"
+                                        className="text-lg sm:text-xl md:text-2xl font-bold mt-4 md:mt-10"
                                     >
                                         {item.title}
                                     </h3>
 
                                     <p
 
-                                        className="text-lg "
+                                        className="text-sm sm:text-base md:text-lg"
                                     >
                                         {item.description}
                                     </p>
@@ -198,7 +198,7 @@ const AboutUsPage: React.FC = () => {
                 <div className="container mx-auto flex flex-col items-center justify-center text-center gap-6">
 
                     {/* Tiêu đề chính */}
-                    <h2 className="text-8xl! md:text-6xl font-extrabold tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-extrabold tracking-tight">
                         {/* Phần chữ màu đen */}
                         <span className="text-black">CÙNG </span>
 
@@ -207,27 +207,27 @@ const AboutUsPage: React.FC = () => {
                     </h2>
 
                     {/* Tiêu đề phụ */}
-                    <p className="text-3xl md:text-4xl  font-bold">
+                    <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold">
                         Tạo Nên Những Khoảnh Khắc Đáng Nhớ
                     </p>
 
-                    <div className="mt-8">
+                    <div className="mt-6 md:mt-8">
                         <a
                             href="/signup" // Bạn có thể thay đổi liên kết (link) ở đây
                             className="
                     inline-block
-                    bg-[#FFFF00]     {/* Màu nền vàng chanh sáng */}
-                    text-black!        {/* Màu chữ đen */}
-                    text-6xl          {/* Kích thước chữ */}
-                    font-extrabold!    {/* Chữ siêu đậm */}
-                    uppercase         {/* Viết hoa */}
-                    px-12 py-5        {/* Padding ngang và dọc */}
-                    rounded-3xl       {/* Bo góc (không quá tròn) */}
-                    border-6          {/* Viền dày 4px */}
-                    border-[#0A4D3B]  {/* Màu viền xanh đậm (hợp với logo) */}
-                    shadow-lg         {/* Đổ bóng nhẹ */}
+                    bg-[#FFFF00]
+                    text-black
+                    text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-6xl
+                    font-extrabold
+                    uppercase
+                    px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 md:py-5
+                    rounded-2xl md:rounded-3xl
+                    border-4 md:border-6
+                    border-[#0A4D3B]
+                    shadow-lg
                     transition-transform duration-200 
-                    hover:scale-105   {/* Hiệu ứng phóng to nhẹ khi hover */}
+                    hover:scale-105
                 "
                         >
                             Đăng Ký Ngay

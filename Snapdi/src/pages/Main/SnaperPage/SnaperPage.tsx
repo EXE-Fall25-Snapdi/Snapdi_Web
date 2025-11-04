@@ -379,7 +379,7 @@ export default function Snaper() {
 
   // Giao diện Form
   return (
-    <div className="bg-linear-60 bg-gradient-to-tr from-[#032C24] to-[#0A9276] min-h-screen flex items-center justify-center p-4">
+    <div className="bg-linear-60 bg-gradient-to-tr from-[#032C24] to-[#0A9276] min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6">
       <ConfigProvider theme={themeConfig} >
         <SignUpLayout currentRole={role} onRoleChange={handleRoleChange}>
           {/* Chỉ hiển thị Steps sau khi đã chọn vai trò */}
@@ -390,19 +390,19 @@ export default function Snaper() {
           >
 
             {/* Vùng nội dung của step, 'flex-grow' để đẩy nút bấm xuống dưới */}
-            <div className="flex-grow">
+            <div className="flex-grow overflow-y-auto">
               {renderStepContent()}
             </div>
 
             {/* Nút điều hướng */}
-            <div className="flex justify-end items-center mt-6">
+            <div className="flex justify-end items-center mt-4 sm:mt-6">
               <Button
                 disabled={loading}
                 htmlType="button"
                 onClick={onNext}
-                className='rounded-full! w-16! h-16! bg-[#34D399]! text-white! hover:scale-105! transition-transform!'
+                className='rounded-full! w-12! h-12! sm:w-14! sm:h-14! md:w-16! md:h-16! bg-[#34D399]! text-white! hover:scale-105! transition-transform!'
               >
-                <Icons.ArrowRight className='w-14 h-14' />
+                <Icons.ArrowRight className='w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14' />
               </Button>
             </div>
           </Form>

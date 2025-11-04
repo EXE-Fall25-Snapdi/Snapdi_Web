@@ -31,7 +31,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#D9D9D9] via-gray-200 to-[#D9D9D9] transform transition-all duration-300 ease-out z-50 lg:hidden flex flex-col shadow-2xl shadow-black/20 border-r border-gray-300/30 ${isOpen ? "translate-x-0 scale-100" : "-translate-x-full scale-95"
+        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#D9D9D9] via-gray-200 to-[#D9D9D9] transform transition-all duration-300 ease-out z-999 lg:hidden flex flex-col shadow-2xl shadow-black/20 border-r border-gray-300/30 ${isOpen ? "translate-x-0 scale-100" : "-translate-x-full scale-95"
           }`}
       >
         {/* Header */}
