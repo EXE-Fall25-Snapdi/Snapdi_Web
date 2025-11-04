@@ -303,7 +303,7 @@ const BlogPage: React.FC = () => {
             {/* Trending Section */}
             {trendingBlogs.length > 0 && (
               <div className="mb-16">
-                <h2 className="text-[48px] font-bold mb-8">TRENDING</h2>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold mb-6 md:mb-8">TRENDING</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {trendingBlogs.slice(0, 4).map((blog) => (
                     <BlogTrendingCard
@@ -320,11 +320,11 @@ const BlogPage: React.FC = () => {
             {/* Newest Section */}
             {newestBlogs.length > 0 && (
               <div className="mb-16">
-                <h2 className="text-[48px] font-bold mb-8">NEWEST</h2>
-                <div className="w-full flex justify-between">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold mb-6 md:mb-8">NEWEST</h2>
+                <div className="w-full flex flex-col lg:flex-row gap-6 lg:justify-between">
                   {/* Large Featured Newest */}
                   {newestFeatured && (
-                    <div className="lg:col-span-1">
+                    <div className="w-full lg:col-span-1 lg:w-auto">
                       <BlogNewestCard
                         blogId={newestFeatured.blogId}
                         thumbnailUrl={newestFeatured.thumbnailUrl}
@@ -338,7 +338,7 @@ const BlogPage: React.FC = () => {
 
                   {/* List of Newest */}
                   {newestList.length > 0 && (
-                    <div className="lg:col-span-2 space-y-8">
+                    <div className="w-full lg:col-span-2 lg:w-auto space-y-6 md:space-y-8">
                       {newestList.map((blog) => (
                         <BlogNewestCard
                           key={blog.blogId}
@@ -358,7 +358,7 @@ const BlogPage: React.FC = () => {
           </>
         )}
         <div className="mb-16 w-full h-auto flex flex-col justify-center items-center">
-          <h2 className="text-[48px] font-bold">ALL BLOGS</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold mb-6 md:mb-8">ALL BLOGS</h2>
           {/* Search Filter */}
           <div className="">
             <BlogSearchFilterSimple

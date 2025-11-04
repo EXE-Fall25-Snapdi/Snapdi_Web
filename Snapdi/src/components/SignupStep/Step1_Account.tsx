@@ -8,9 +8,9 @@ import { FilledDatePicker } from '../UI/FilledDatePicker';
 export default function Step1_Account() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">TẠO TÀI KHOẢN MỚI</h1>
-      <Row gutter={16}>
-        <Col span={24}>
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-5 md:mb-6">TẠO TÀI KHOẢN MỚI</h1>
+      <Row gutter={[12, 16]} className="sm:gutter-[16px]">
+        <Col xs={24} sm={24} md={24}>
           <Form.Item
             name="name"
             rules={[{ required: true, message: 'Vui lòng nhập họ và tên!' }]}
@@ -21,7 +21,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <Form.Item
             name="dob"
             rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}
@@ -34,7 +34,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <Form.Item
             name="gender"
             initialValue="Nam"
@@ -51,7 +51,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={24}>
+        <Col xs={24} sm={24} md={24}>
           <Form.Item
             name="phone"
             rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
@@ -62,7 +62,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={24}>
+        <Col xs={24} sm={24} md={24}>
           <Form.Item
             name="email"
             rules={[
@@ -77,7 +77,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <Form.Item
             name="locationCity"
             rules={[{ required: true, message: 'Vui lòng nhập thành phố!' }]}
@@ -89,7 +89,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12}>
           <Form.Item
             name="locationAddress"
           >
@@ -100,7 +100,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={24}>
+        <Col xs={24} sm={24} md={24}>
           <Form.Item
             name="password"
             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
@@ -113,7 +113,7 @@ export default function Step1_Account() {
           </Form.Item>
         </Col>
 
-        <Col span={24}>
+        <Col xs={24} sm={24} md={24}>
           <Form.Item
             name="confirmPassword"
             dependencies={['password']}
