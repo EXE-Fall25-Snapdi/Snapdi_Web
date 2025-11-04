@@ -4,9 +4,11 @@ import './DownloadPage.css';
 import mascotPhone from '../../../assets/images/pose2.svg';
 import appStoreBadge from '../../../assets/icons/Appstore.svg';
 import googlePlayBadge from '../../../assets/icons/googlePlay.svg';
+import { getDownloadUrl } from '../../../config/downloadConfig';
 
 const DownloadPage: React.FC = () => {
   const [downloading, setDownloading] = useState(false);
+  const downloadUrl = getDownloadUrl();
 
   const handleDownload = () => {
     setDownloading(true);
@@ -16,8 +18,9 @@ const DownloadPage: React.FC = () => {
       setDownloading(false);
       // Trigger actual download
       const link = document.createElement('a');
-      link.href = '/downloads/snapdi-app.apk';
+      link.href = downloadUrl;
       link.download = 'snapdi-app.apk';
+      link.target = '_blank'; // Mở tab mới nếu là external URL
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -55,18 +58,14 @@ const DownloadPage: React.FC = () => {
 
                 {/* Download Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <a
-                    href="/downloads/snapdi-app.apk"
-                    download
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDownload();
-                    }}
-                    className="inline-flex items-center justify-center gap-3 bg-white text-black font-sf-pro font-bold text-lg px-8 py-4 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-200 border-4 border-[#0A4D3B]"
+                  <button
+                    onClick={handleDownload}
+                    disabled={downloading}
+                    className="inline-flex items-center justify-center gap-3 bg-white text-black font-sf-pro font-bold text-lg px-8 py-4 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-200 border-4 border-[#0A4D3B] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Download size={24} />
                     {downloading ? 'Đang tải...' : 'Tải APK (Android)'}
-                  </a>
+                  </button>
                 </div>
 
                 {/* Store Badges */}
@@ -75,14 +74,17 @@ const DownloadPage: React.FC = () => {
                     <a href="#" className="hover:scale-105 transition-transform block opacity-50 cursor-not-allowed">
                       <img src={appStoreBadge} alt="App Store" className="h-12" />
                     </a>
+                    <div className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg border-2 border-black">
+                      Coming Soon
+                    </div>
                   </div>
-                  <a
-                    href="/downloads/snapdi-app.apk"
-                    download
-                    className="hover:scale-105 transition-transform"
+                  <button
+                    onClick={handleDownload}
+                    disabled={downloading}
+                    className="hover:scale-105 transition-transform disabled:opacity-50"
                   >
                     <img src={googlePlayBadge} alt="Google Play" className="h-12" />
-                  </a>
+                  </button>
                 </div>
                 <div className='flex gap-10'>
                   <p className="flex items-center gap-2 text-sm mt-4 opacity-90">
