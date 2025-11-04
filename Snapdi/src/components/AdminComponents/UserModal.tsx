@@ -37,20 +37,51 @@ export const UserModal: React.FC<UserModalProps> = ({
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
-    if (isEditing && user) {
-      setFormData({
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        password: '',
-        roleId: user.roleId,
-        locationAddress: user.locationAddress,
-        locationCity: user.locationCity,
-        avatarUrl: user.avatarUrl,
-        isActive: user.isActive,
-        isVerify: user.isVerify
-      });
-    } else {
+    console.log('UserModal useEffect triggered:', {
+      isOpen,
+      isEditing,
+      hasUser: !!user,
+      userEmail: user?.email || 'no user'
+    });
+
+    if (isOpen) {
+      // ONLY load user data if explicitly editing AND user exists
+      if (isEditing === true && user) {
+        console.log('Setting form data for editing:', user.email);
+        setFormData({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          password: '',
+          roleId: user.roleId,
+          locationAddress: user.locationAddress,
+          locationCity: user.locationCity,
+          avatarUrl: user.avatarUrl,
+          isActive: user.isActive,
+          isVerify: user.isVerify
+        });
+      } else {
+        // ALWAYS reset for new user
+        console.log('Resetting form for new user - isEditing:', isEditing, 'user:', user?.email);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          password: '',
+          roleId: 1,
+          locationAddress: '',
+          locationCity: '',
+          avatarUrl: '',
+          isActive: true,
+          isVerify: false
+        });
+      }
+    }
+  }, [isOpen, isEditing, user]);
+
+  // Additional cleanup when modal closes
+  useEffect(() => {
+    if (!isOpen) {
       setFormData({
         name: '',
         email: '',
@@ -64,7 +95,7 @@ export const UserModal: React.FC<UserModalProps> = ({
         isVerify: false
       });
     }
-  }, [isEditing, user]);
+  }, [isOpen]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -182,8 +213,11 @@ export const UserModal: React.FC<UserModalProps> = ({
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
               required={!isEditing}
+              disabled={isEditing}
+              autoComplete="off"
+              key={`email-${isOpen}-${isEditing}`}
             />
           </div>
 
@@ -212,6 +246,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                autoComplete="new-password"
               />
             </div>
           )}

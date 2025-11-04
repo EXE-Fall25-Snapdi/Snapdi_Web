@@ -327,7 +327,11 @@ const UserManagement = () => {
       {/* User Modal */}
       <UserModal
         isOpen={isUserModalOpen}
-        onClose={() => setIsUserModalOpen(false)}
+        onClose={() => {
+          setIsUserModalOpen(false);
+          setSelectedUser(null);
+          setIsEditing(false);
+        }}
         onSubmit={async (data) => {
           if (isEditing) {
             await handleUpdateUser(data as UpdateUserRequest);
