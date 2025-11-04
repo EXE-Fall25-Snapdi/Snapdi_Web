@@ -3,6 +3,7 @@ import React from 'react';
 import snapdiLogo from '../../assets/images/logo-withBG.svg';
 import appStoreBadge from '../../assets/icons/Appstore.svg';
 import googlePlayBadge from '../../assets/icons/googlePlay.svg';
+import { getDownloadUrl } from '../../config/downloadConfig';
 
 // 2. Import icons
 import { BiRegistered, BiEnvelope } from 'react-icons/bi';
@@ -11,6 +12,8 @@ import { BiRegistered, BiEnvelope } from 'react-icons/bi';
  * Component Footer chính cho trang web Snapdi
  */
 const Footer: React.FC = () => {
+  const downloadUrl = getDownloadUrl();
+
   return (
     // A. Container Chính
     // - `bg-[#00FA9A]`: Mã màu xanh lá mạ siêu sáng (bạn có thể
@@ -48,8 +51,10 @@ const Footer: React.FC = () => {
               />
             </a>
             <a
-              href="/downloads/snapdi-app.apk"
-              download
+              href={downloadUrl}
+              download="snapdi-app.apk"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Get it on Google Play"
               className="hover:opacity-80 transition-opacity"
             >
