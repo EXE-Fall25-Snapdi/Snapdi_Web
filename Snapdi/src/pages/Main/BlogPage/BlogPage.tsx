@@ -216,9 +216,9 @@ const BlogPage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-white pt-8">
+    <div className="min-h-screen bg-white pt-8 overflow-x-hidden">
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-32 pb-16 overflow-x-hidden">
         {isSearchMode && filteredBlogsForSearch.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🔍</div>
@@ -319,12 +319,12 @@ const BlogPage: React.FC = () => {
 
             {/* Newest Section */}
             {newestBlogs.length > 0 && (
-              <div className="mb-16">
+              <div className="mb-16 overflow-x-hidden">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold mb-6 md:mb-8">NEWEST</h2>
-                <div className="w-full flex flex-col lg:flex-row gap-6 lg:justify-between">
+                <div className="w-full flex flex-col lg:flex-row gap-6 lg:justify-between overflow-x-hidden">
                   {/* Large Featured Newest */}
                   {newestFeatured && (
-                    <div className="w-full lg:col-span-1 lg:w-auto">
+                    <div className="w-full lg:col-span-1 lg:w-auto flex justify-center lg:justify-start">
                       <BlogNewestCard
                         blogId={newestFeatured.blogId}
                         thumbnailUrl={newestFeatured.thumbnailUrl}
@@ -338,17 +338,18 @@ const BlogPage: React.FC = () => {
 
                   {/* List of Newest */}
                   {newestList.length > 0 && (
-                    <div className="w-full lg:col-span-2 lg:w-auto space-y-6 md:space-y-8">
+                    <div className="w-full lg:col-span-2 lg:w-auto space-y-4 sm:space-y-6 md:space-y-8 overflow-x-hidden">
                       {newestList.map((blog) => (
-                        <BlogNewestCard
-                          key={blog.blogId}
-                          blogId={blog.blogId}
-                          thumbnailUrl={blog.thumbnailUrl}
-                          title={blog.title}
-                          description={blog.content || blog.title}
-                          date={getDateString(blog.createAt)}
-                          size="small"
-                        />
+                        <div key={blog.blogId} className="w-full overflow-x-hidden">
+                          <BlogNewestCard
+                            blogId={blog.blogId}
+                            thumbnailUrl={blog.thumbnailUrl}
+                            title={blog.title}
+                            description={blog.content || blog.title}
+                            date={getDateString(blog.createAt)}
+                            size="small"
+                          />
+                        </div>
                       ))}
                     </div>
                   )}
@@ -387,8 +388,8 @@ const BlogPage: React.FC = () => {
               ) : (
                 <>
                   {/* Search Results Grid */}
-                  <div className="flex justify-center mb-12">
-                    <div className="gap-6 max-w-7xl" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', width: '100%' }}>
+                  <div className="flex justify-center mb-12 overflow-x-hidden px-2 sm:px-4">
+                    <div className="gap-4 sm:gap-6 max-w-7xl w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
                       {filteredBlogsForSearch.map((blog) => (
                         <BlogTrendingCard
                           key={blog.blogId}
@@ -451,8 +452,8 @@ const BlogPage: React.FC = () => {
             // Normal Mode - Show paginated All Blogs
             <>
               {/* Blogs Grid - Fixed width cards (286px) */}
-              <div className="flex justify-center">
-                <div className="gap-6 mb-12 max-w-7xl" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', width: '100%' }}>
+              <div className="flex justify-center overflow-x-hidden px-2 sm:px-4">
+                <div className="gap-4 sm:gap-6 mb-12 max-w-7xl w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
                   {allBlogs.length > 0 && (allBlogs.map((blog) => (
                     <BlogTrendingCard
                       key={blog.blogId}

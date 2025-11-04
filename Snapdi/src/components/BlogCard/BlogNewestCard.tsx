@@ -60,7 +60,7 @@ const BlogNewestCard: React.FC<BlogNewestCardProps> = ({
     return (
       <div
         onClick={handleClick}
-        className="relative h-[630px] w-[500px] rounded-3xl overflow-hidden cursor-pointer group border-1 border-gray-300"
+        className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[630px] w-full max-w-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer group border-1 border-gray-300"
       >
         {/* Background Image */}
         <div
@@ -85,23 +85,23 @@ const BlogNewestCard: React.FC<BlogNewestCardProps> = ({
   return (
     <div
       onClick={handleClick}
-      className="flex gap-4 cursor-pointer group h-[190px] w-[600px]"
+      className="flex gap-3 sm:gap-4 cursor-pointer group h-auto sm:h-[190px] w-full max-w-[600px]"
     >
       {/* Thumbnail */}
       <div
-        className="w-[190px] h-[190px] flex-shrink-0 bg-gray-300 rounded-2xl bg-cover border-1 border-gray-300 bg-center overflow-hidden"
+        className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] md:w-[190px] md:h-[190px] flex-shrink-0 bg-gray-300 rounded-xl sm:rounded-2xl bg-cover border-1 border-gray-300 bg-center overflow-hidden"
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-center py-1">
+      <div className="flex-1 flex flex-col justify-center py-1 min-w-0">
         <div>
-          <h3 className="text-black font-bold text-base mb-2 line-clamp-2 group-hover:text-[#00D9A3] transition-colors">
+          <h3 className="text-black font-bold text-sm sm:text-base mb-1 sm:mb-2 line-clamp-2 group-hover:text-[#00D9A3] transition-colors">
             {title}
           </h3>
-          <p className="text-gray-600 text-sm line-clamp-2" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '') }} />
+          <p className="text-gray-600 text-xs sm:text-sm line-clamp-2" dangerouslySetInnerHTML={{ __html: description.replace(/<img[^>]*>|<\/?br>/gi, '') }} />
         </div>
-        <div className="text-gray-500 text-lg mt-2 text-right flex justify-end items-end">{formatDate(date)}</div>
+        <div className="text-gray-500 text-sm sm:text-base md:text-lg mt-1 sm:mt-2 text-right flex justify-end items-end">{formatDate(date)}</div>
       </div>
     </div>
   );
