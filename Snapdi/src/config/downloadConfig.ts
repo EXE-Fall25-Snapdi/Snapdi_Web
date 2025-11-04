@@ -12,17 +12,14 @@
 // Cấu hình
 export const DOWNLOAD_CONFIG = {
   // Đặt USE_EXTERNAL_URL = true nếu muốn dùng link external
-  USE_EXTERNAL_URL: false,
+  USE_EXTERNAL_URL: true,
 
   // URL local (file trong public/downloads/)
   LOCAL_APK_URL: '/downloads/snapdi-app.apk',
 
   // URL external (Google Drive, Cloudinary, AWS S3, Firebase Storage, etc.)
-  // VÍ DỤ:
-  // - Google Drive: https://drive.google.com/uc?export=download&id=YOUR_FILE_ID
-  // - Cloudinary: https://res.cloudinary.com/your-cloud/raw/upload/v1/snapdi-app.apk
-  // - Firebase: https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/snapdi-app.apk
-  EXTERNAL_APK_URL: 'https://drive.google.com/file/d/1_A0eIoy5_-lFvUbC-bYBfqMcd86q4LCZ/view?usp=sharing',
+  // Google Drive direct download link (từ File ID: 1_A0eIoy5_-lFvUbC-bYBfqMcd86q4LCZ)
+  EXTERNAL_APK_URL: 'https://drive.google.com/uc?export=download&id=1_A0eIoy5_-lFvUbC-bYBfqMcd86q4LCZ',
 
   // App info
   APP_VERSION: '1.0.0',
