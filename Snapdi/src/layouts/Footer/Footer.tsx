@@ -47,7 +47,12 @@ const Footer: React.FC = () => {
                 className="h-12 lg:h-14"
               />
             </a>
-            <a href="#" aria-label="Get it on Google Play">
+            <a
+              href="/downloads/snapdi-app.apk"
+              download
+              aria-label="Get it on Google Play"
+              className="hover:opacity-80 transition-opacity"
+            >
               <img
                 src={googlePlayBadge}
                 alt="Get it on Google Play"

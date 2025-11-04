@@ -1,0 +1,232 @@
+.download-page-container {
+  min-height: 100vh;
+  padding: 120px 20px 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.download-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.download-header {
+  text-align: center;
+  margin-bottom: 60px;
+  color: white;
+}
+
+.smartphone-icon {
+  margin: 0 auto 20px;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+.download-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.download-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Features Grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.feature-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.feature-icon {
+  color: #00d9a3;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.feature-card p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Download Action */
+.download-action {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.download-button {
+  height: 60px !important;
+  padding: 0 50px !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #00d9a3 0%, #00b887 100%) !important;
+  border: none !important;
+  border-radius: 30px !important;
+  box-shadow: 0 10px 30px rgba(0, 217, 163, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.download-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 217, 163, 0.5) !important;
+}
+
+.download-note {
+  margin-top: 15px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Installation Guide */
+.installation-guide {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.installation-guide h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+}
+
+.guide-steps {
+  list-style: none;
+  padding: 0;
+  counter-reset: step-counter;
+}
+
+.guide-steps li {
+  counter-increment: step-counter;
+  margin-bottom: 30px;
+  padding-left: 60px;
+  position: relative;
+}
+
+.guide-steps li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #00d9a3 0%, #00b887 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.guide-steps li strong {
+  display: block;
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.guide-steps li p {
+  color: #666;
+  margin: 0;
+}
+
+/* App Info */
+.app-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .download-page-container {
+    padding: 100px 15px 40px;
+  }
+
+  .download-title {
+    font-size: 2.5rem;
+  }
+
+  .download-subtitle {
+    font-size: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .installation-guide {
+    padding: 30px 20px;
+  }
+
+  .guide-steps li {
+    padding-left: 50px;
+  }
+
+  .guide-steps li::before {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+}

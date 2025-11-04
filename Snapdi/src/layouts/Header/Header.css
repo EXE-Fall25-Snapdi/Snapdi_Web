@@ -35,8 +35,8 @@
 }
 
 .nav-link {
-  font-size: 20px!important;
-  font-family: 'SF Pro Display';
+  font-size: 20px !important;
+  font-family: "SF Pro Display";
   font-weight: bold;
   color: black;
   padding: 1rem 1.25rem;
@@ -46,18 +46,28 @@
 .nav-link:hover {
   text-decoration: underline;
   text-underline-offset: 5px;
-  color: #34D399;
+  color: #34d399;
   transform: scale(1.05);
 }
 
 .nav-link.active {
   color: white;
-  background-color: #34D399;
+  background-color: #34d399;
   padding: 8px;
   border-radius: 8px;
   text-underline-offset: 5px;
 }
 
+/* Remove underline from buttons (download, signup) */
+.nav a[href="/download"],
+.nav a[href="/signup"] {
+  text-decoration: none !important;
+}
+
+.nav a[href="/download"]:hover,
+.nav a[href="/signup"]:hover {
+  text-decoration: none !important;
+}
 
 @media (max-width: 1620px) {
   .nav-container {
