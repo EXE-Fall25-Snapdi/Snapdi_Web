@@ -332,23 +332,23 @@ export default function Snaper() {
   const renderStepContent = () => {
     return (
       <>
-        <div className='w-full overflow-hidden' style={{ display: currentStep === 1 ? 'block' : 'none' }}>
+        <div className='w-full overflow-hidden' style={{ display: currentStep === 1 ? 'flex' : 'none' }}>
           <Step1_Account />
         </div>
-        <div className='w-full overflow-hidden' style={{ display: currentStep === 2 ? 'block' : 'none' }}>
+        <div className='w-full overflow-hidden' style={{ display: currentStep === 2 ? 'flex' : 'none' }}>
           <Step2_VerifyOTP
             onResend={handleResendOTP}
             isResending={isResendingOTP}
             email={registeredEmail}
           />
         </div>
-        <div className='w-full overflow-hidden' style={{ display: currentStep === 3 ? 'block' : 'none' }}>
+        <div className='w-full overflow-hidden' style={{ display: currentStep === 3 ? 'flex' : 'none' }}>
           <Step3_Profile />
         </div>
-        <div className='w-full overflow-hidden' style={{ display: currentStep === 4 ? 'block' : 'none' }}>
+        <div className='w-full overflow-hidden' style={{ display: currentStep === 4 ? 'flex' : 'none' }}>
           <Step4_Portfolio />
         </div>
-        <div className='w-full overflow-hidden' style={{ display: currentStep === 5 ? 'block' : 'none' }}>
+        <div className='w-full overflow-hidden' style={{ display: currentStep === 5 ? 'flex' : 'none' }}>
           <Step5_PortfolioPhoto />
         </div>
       </>
