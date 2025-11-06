@@ -6,14 +6,12 @@ interface BlogAllCardProps {
   blogId: string;
   thumbnailUrl: string;
   title: string;
-  description: string;
 }
 
 const BlogAllCard: React.FC<BlogAllCardProps> = ({
   blogId,
   thumbnailUrl,
   title,
-  description,
 }) => {
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
@@ -29,6 +27,8 @@ const BlogAllCard: React.FC<BlogAllCardProps> = ({
       try {
         // Call service to get transformed image URL from Cloudinary
         const response = await cloudinaryService.transformUrl(thumbnailUrl, {
+          width: 400,
+          height: 500,
           autoOptimize: true,
           crop: 'fill',
           gravity: 'auto',
@@ -54,44 +54,19 @@ const BlogAllCard: React.FC<BlogAllCardProps> = ({
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-      style={{ width: '360px', height: '700px' }}
+      className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-shadow"
     >
-      {/* Image Container - 360x360px */}
-      <div className="relative bg-gray-300 overflow-hidden" style={{ width: '360px', height: '360px' }}>
-        <div
-          className="w-full h-full bg-cover bg-center transition-transform duration-300 hover:scale-110"
-          style={{ backgroundImage: `url(${imageUrl || thumbnailUrl})` }}
-        />
-      </div>
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-gray-300 bg-cover bg-center transition-transform duration-300 group-hover:scale-110"
+        style={{ backgroundImage: `url(${imageUrl})` }}
+      />
 
-      {/* Content Container */}
-      <div className="flex flex-col flex-1 p-6">
-        {/* Title */}
-        <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+      {/* Bottom Title Bar */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00EA80] to-[#12C6A3] p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-bold text-white line-clamp-2">
           {title}
         </h3>
-        <p
-          className="text-sm text-gray-600 mb-6 overflow-hidden"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 8,
-            WebkitBoxOrient: 'vertical',
-            lineHeight: '1.5em',
-            maxHeight: '12em' // 8 lines * 1.5em line-height
-          }}
-          dangerouslySetInnerHTML={{
-            __html: description.replace(/<img[^>]*>/gi, '')
-          }}
-        />
-
-        {/* Read More Button */}
-        <button
-          onClick={handleClick}
-          className="px-4 py-2 bg-[#FF5757] text-white font-semibold rounded-lg hover:bg-[#E53D3D] transition-colors self-start"
-        >
-          Read more
-        </button>
       </div>
     </div>
   );

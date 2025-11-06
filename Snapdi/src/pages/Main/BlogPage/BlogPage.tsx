@@ -2,7 +2,7 @@ import React from "react";
 import BlogHeroCard from "../../../components/BlogCard/BlogHeroCard";
 import BlogTrendingCard from "../../../components/BlogCard/BlogTrendingCard";
 import BlogNewestCard from "../../../components/BlogCard/BlogNewestCard";
-// import BlogAllCard from "../../../components/BlogCard/BlogAllCard";
+import BlogAllCard from "../../../components/BlogCard/BlogAllCard";
 import BlogSearchFilterSimple from "../../../components/BlogSearchFilter/BlogSearchFilterSimple";
 import { getActiveBlogWithPaging, searchBlogsWithBody, type BlogSearchParams } from "../../../services/blogService";
 import type { Blog } from "../../../lib/types";
@@ -321,10 +321,10 @@ const BlogPage: React.FC = () => {
             {newestBlogs.length > 0 && (
               <div className="mb-16 overflow-x-hidden">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-bold mb-6 md:mb-8">NEWEST</h2>
-                <div className="w-full flex flex-col lg:flex-row gap-6 lg:justify-between overflow-x-hidden">
-                  {/* Large Featured Newest */}
+                <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-8 overflow-x-hidden">
+                  {/* Large Featured Newest - Left Column (45% width on desktop) */}
                   {newestFeatured && (
-                    <div className="w-full lg:col-span-1 lg:w-auto flex justify-center lg:justify-start">
+                    <div className="w-full lg:w-[45%] flex justify-center lg:justify-start flex-shrink-0">
                       <BlogNewestCard
                         blogId={newestFeatured.blogId}
                         thumbnailUrl={newestFeatured.thumbnailUrl}
@@ -336,9 +336,9 @@ const BlogPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* List of Newest */}
+                  {/* List of Newest - Right Column (55% width on desktop) */}
                   {newestList.length > 0 && (
-                    <div className="w-full lg:col-span-2 lg:w-auto space-y-4 sm:space-y-6 md:space-y-8 overflow-x-hidden">
+                    <div className="w-full lg:w-[55%] space-y-4 sm:space-y-6 md:space-y-8 overflow-x-hidden">
                       {newestList.map((blog) => (
                         <div key={blog.blogId} className="w-full overflow-x-hidden">
                           <BlogNewestCard
@@ -389,14 +389,26 @@ const BlogPage: React.FC = () => {
                 <>
                   {/* Search Results Grid */}
                   <div className="flex justify-center mb-12 overflow-x-hidden px-2 sm:px-4">
-                    <div className="gap-4 sm:gap-6 max-w-7xl w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
+                    {/* Mobile & Tablet: BlogAllCard */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-7xl w-full xl:hidden">
+                      {filteredBlogsForSearch.map((blog) => (
+                        <BlogAllCard
+                          key={blog.blogId}
+                          blogId={blog.blogId}
+                          thumbnailUrl={blog.thumbnailUrl}
+                          title={blog.title}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Desktop: BlogTrendingCard */}
+                    <div className="hidden xl:grid xl:grid-cols-4 gap-6 max-w-7xl w-full">
                       {filteredBlogsForSearch.map((blog) => (
                         <BlogTrendingCard
                           key={blog.blogId}
                           blogId={blog.blogId}
                           thumbnailUrl={blog.thumbnailUrl}
                           title={blog.title}
-                        // description={blog.content || blog.title}
                         />
                       ))}
                     </div>
@@ -451,19 +463,41 @@ const BlogPage: React.FC = () => {
           ) : (
             // Normal Mode - Show paginated All Blogs
             <>
-              {/* Blogs Grid - Fixed width cards (286px) */}
-              <div className="flex justify-center overflow-x-hidden px-2 sm:px-4">
-                <div className="gap-4 sm:gap-6 mb-12 max-w-7xl w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
-                  {allBlogs.length > 0 && (allBlogs.map((blog) => (
-                    <BlogTrendingCard
-                      key={blog.blogId}
-                      blogId={blog.blogId}
-                      thumbnailUrl={blog.thumbnailUrl}
-                      title={blog.title}
-                    // description={blog.content || blog.title}
-                    />
-                  )))}
-                </div>
+              {/* Blogs Grid - Responsive */}
+              <div className="flex justify-center overflow-x-hidden px-2 sm:px-4 mb-12 w-full">
+                {allBlogs.length === 0 ? (
+                  <div className="text-center py-20 w-full">
+                    <div className="text-6xl mb-4">📚</div>
+                    <div className="text-2xl text-gray-600 mb-2">No blogs found</div>
+                    <div className="text-gray-500">Please check back later</div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Mobile & Tablet: BlogAllCard */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-7xl w-full xl:hidden">
+                      {allBlogs.map((blog) => (
+                        <BlogAllCard
+                          key={blog.blogId}
+                          blogId={blog.blogId}
+                          thumbnailUrl={blog.thumbnailUrl}
+                          title={blog.title}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Desktop: BlogTrendingCard */}
+                    <div className="hidden xl:grid xl:grid-cols-4 gap-6 max-w-7xl w-full">
+                      {allBlogs.map((blog) => (
+                        <BlogTrendingCard
+                          key={blog.blogId}
+                          blogId={blog.blogId}
+                          thumbnailUrl={blog.thumbnailUrl}
+                          title={blog.title}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Pagination */}
