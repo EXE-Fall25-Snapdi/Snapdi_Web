@@ -8,8 +8,8 @@ export interface DailyRevenue {
 
 export interface DashboardRevenueResponse {
   dailyRevenue: DailyRevenue[];
-  totalRevenue: number;
-  averageDailyRevenue: number;
+  totalRevenue: string;
+  averageDailyRevenue: string;
   totalTransactions: number;
   startDate: string;
   endDate: string;
@@ -23,8 +23,8 @@ export interface UserStatistics {
 }
 
 export interface RevenueStatistics {
-  todayRevenue: number;
-  totalRevenue: number;
+  todayRevenue: string;
+  totalRevenue: string;
 }
 
 export interface TransactionStatistics {

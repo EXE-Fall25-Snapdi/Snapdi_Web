@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { dashboardService, type DashboardRevenueResponse, type DashboardStatistics } from '../../../services/dashboardService';
 import dayjs, { type Dayjs } from 'dayjs';
+import { formatPrice } from '../../../utils/formatPrice';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -109,8 +110,8 @@ const AdminDashboard = () => {
     },
     {
       label: 'Revenue',
-      value: `$${Math.round(statistics.revenueStatistics.todayRevenue).toLocaleString()}/day`,
-      change: `$${Math.round(statistics.revenueStatistics.totalRevenue).toLocaleString()} total`,
+      value: `${formatPrice(statistics.revenueStatistics.todayRevenue)}/day`,
+      change: `${formatPrice(statistics.revenueStatistics.totalRevenue)} total`,
       icon: DollarSign,
       accent: 'bg-emerald-100 text-emerald-600',
     },
@@ -165,7 +166,7 @@ const AdminDashboard = () => {
               <h3 className="text-lg font-semibold text-slate-900">Revenue by Day</h3>
               <p className="text-sm text-slate-500">
                 {revenueData
-                  ? `Total: $${revenueData.totalRevenue.toLocaleString()} | Avg: $${revenueData.averageDailyRevenue.toLocaleString()}/day | ${revenueData.totalTransactions} transactions`
+                  ? `Total: ${formatPrice(revenueData.totalRevenue)} | Avg: ${formatPrice(revenueData.averageDailyRevenue)}/day | ${revenueData.totalTransactions} transactions`
                   : 'Daily revenue performance'
                 }
               </p>
