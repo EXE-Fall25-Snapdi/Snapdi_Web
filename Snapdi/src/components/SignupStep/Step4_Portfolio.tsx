@@ -30,7 +30,7 @@ const EquipmentCard = ({
 }) => (
   <div className="relative" onClick={onClick}>
     <div
-      className={`w-40 h-40 bg-white rounded-xl border-2 
+      className={`w-36 h-36  bg-white rounded-xl border-2 
                 flex flex-col items-center justify-center text-center p-4
                 cursor-pointer transition-all hover:shadow-md
                 ${checked ? 'border-green-500 shadow-lg' : 'border-gray-200'}
@@ -131,9 +131,9 @@ export default function Step4_Portfolio() {
                   ) : (
                     selectedPhotoTypes.map((_, index) => {
                       return (
-                        <div key={index} className="flex gap-3 items-end">
+                        <div key={index} className="flex gap-2 items-end">
                           {/* Photo Type Select */}
-                          <div className="flex-1 min-w-[200px]">
+                          <div className="w-32 flex-shrink-0">
                             <Form.Item
                               name={['photographerPhotoTypes', index, 'photoTypeId']}
                               rules={[
@@ -168,7 +168,7 @@ export default function Step4_Portfolio() {
                           </div>
 
                           {/* Price Input */}
-                          <div className="flex-1 min-w-[150px]">
+                          <div className="w-28 flex-shrink-0">
                             <Form.Item
                               name={['photographerPhotoTypes', index, 'photoPrice']}
                               rules={[
@@ -195,7 +195,7 @@ export default function Step4_Portfolio() {
                               />
                             </Form.Item>
                           </div>
-                          <div className="flex-1 min-w-[150px]">
+                          <div className="w-24 flex-shrink-0">
                             <Form.Item
                               name={['photographerPhotoTypes', index, 'time']}
                               rules={[
@@ -208,7 +208,7 @@ export default function Step4_Portfolio() {
                               className="mb-0"
                             >
                               <InputNumber
-                                placeholder="0"
+                                placeholder="1"
                                 min={1}
                                 className="w-full"
                                 addonAfter="Giờ"
@@ -223,6 +223,7 @@ export default function Step4_Portfolio() {
                             size="small"
                             icon={<Trash2 className="h-4 w-4" />}
                             onClick={() => handleDeletePhotoType(index)}
+                            className="flex-shrink-0"
                           />
                         </div>
                       );

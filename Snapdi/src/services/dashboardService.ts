@@ -31,12 +31,17 @@ export interface TransactionStatistics {
   todayTransactions: number;
   totalTransactions: number;
 }
-
+export interface ReviewStatistics {
+  averageRating: Float32Array;
+  totalReviews: number;
+}
 export interface DashboardStatistics {
   userStatistics: UserStatistics;
   revenueStatistics: RevenueStatistics;
   transactionStatistics: TransactionStatistics;
+  reviewStatistics: ReviewStatistics;
 }
+
 
 class DashboardService {
   /**
