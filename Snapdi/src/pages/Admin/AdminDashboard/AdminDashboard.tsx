@@ -117,8 +117,8 @@ const AdminDashboard = () => {
     },
     {
       label: 'Total Reviews',
-      value: '1,238',
-      change: 'Avg ★ 4.7 from 10+ reviews',
+      value: `${statistics.reviewStatistics.totalReviews}`,
+      change: `Avg ${statistics.reviewStatistics.averageRating}★ from ${statistics.reviewStatistics.totalReviews} reviews`,
       icon: MessageSquare,
       accent: 'bg-purple-100 text-purple-600',
     },
