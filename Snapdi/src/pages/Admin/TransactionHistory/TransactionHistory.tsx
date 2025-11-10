@@ -132,7 +132,7 @@ const TransactionHistory = () => {
     return [
       {
         label: 'Total Revenue (VND)',
-        value: `${formatPriceDisplay(summary.totalAmount)}`,
+        value: `${formatPriceDisplay(Number(summary.totalAmount.toFixed(1)))}`,
         helper: 'Total payment amount',
         icon: <DollarSign className="h-6 w-6" />,
         accent: 'bg-emerald-50 text-emerald-600',
@@ -153,7 +153,7 @@ const TransactionHistory = () => {
       },
       {
         label: 'Average Amount (VND)',
-        value: `${formatPriceDisplay(summary.averageAmount)}`,
+        value: `${formatPriceDisplay(Number(summary.averageAmount.toFixed()))}`,
         helper: 'Average transaction amount',
         icon: <Search className="h-6 w-6" />,
         accent: 'bg-rose-50 text-rose-600',
@@ -297,7 +297,7 @@ const TransactionHistory = () => {
 
       {/* Float Button for Filter */}
       <FloatButton
-        icon={<Filter  />}
+        icon={<Filter />}
         type="primary"
         onClick={() => setFilterDrawerOpen(true)}
         tooltip="Advanced Filters"
