@@ -124,7 +124,7 @@ const AdminDashboard = () => {
     },
     {
       label: 'Transactions',
-      value: statistics.transactionStatistics.todayTransactions.toLocaleString(),
+      value: statistics.transactionStatistics.todayTransactions.toLocaleString() + ' today',
       change: `${statistics.transactionStatistics.totalTransactions.toLocaleString()} total transactions`,
       icon: CreditCard,
       accent: 'bg-orange-100 text-orange-600',
@@ -247,7 +247,7 @@ const AdminDashboard = () => {
                       boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)'
                     }}
                     formatter={(value: number, name: string) => {
-                      if (name === 'revenue') return [`$${value.toLocaleString()}`, 'Revenue'];
+                      if (name === 'revenue') return [`${formatPrice(value.toString())}`, 'Revenue'];
                       return [`${value.toLocaleString()} transactions`, 'Transactions'];
                     }}
                   />
