@@ -228,7 +228,7 @@ const AdminDashboard = () => {
                     yAxisId="left"
                     stroke="#94A3B8"
                     fontSize={12}
-                    tickFormatter={(value) => `$${value >= 1000 ? Math.round(value / 1000) + 'k' : value}`}
+                    tickFormatter={(value) => `${value >= 1000000 ? formatPrice(Math.round(value / 1000).toString()) + '' : formatPrice(value.toString())}`}
                     tickLine={false}
                     axisLine={false}
                   />
