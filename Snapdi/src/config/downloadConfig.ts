@@ -19,7 +19,7 @@ export const DOWNLOAD_CONFIG = {
 
   // URL external (Google Drive, Cloudinary, AWS S3, Firebase Storage, etc.)
   // Google Drive direct download link (từ File ID: 1_A0eIoy5_-lFvUbC-bYBfqMcd86q4LCZ)
-  EXTERNAL_APK_URL: 'https://drive.google.com/file/d/1GGb57TLDZEQDdN6kuMqctqoSMUtM78P4/view?usp=sharing',
+  EXTERNAL_APK_URL: 'https://drive.google.com/file/d/128veXaK15Ww-RS-bx0N0mrLK6afDXojL/view?usp=sharing',
 
   // App info
   APP_VERSION: '1.0.0',
