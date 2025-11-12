@@ -310,7 +310,7 @@ const BookingManagement: React.FC = () => {
       dataIndex: "scheduleAt",
       key: "scheduleAt",
       width: 150,
-      render: (text: string) => dayjs(text).format("DD/MM/YYYY HH:mm"),
+      render: (text: string) => dayjs(text).format("DD/MM/YYYY"),
     },
     {
       title: "Địa Điểm",
