@@ -5,7 +5,7 @@ import mascotPhone from '../../../assets/images/pose2.svg';
 import appStoreBadge from '../../../assets/icons/Appstore.svg';
 import googlePlayBadge from '../../../assets/icons/googlePlay.svg';
 import { getDownloadUrl } from '../../../config/downloadConfig';
-
+import apkPure from '../../../assets/icons/apk-pure.png';
 const DownloadPage: React.FC = () => {
   const [downloading, setDownloading] = useState(false);
   const downloadUrl = getDownloadUrl();
@@ -63,9 +63,13 @@ const DownloadPage: React.FC = () => {
                     disabled={downloading}
                     className="inline-flex items-center justify-center gap-3 bg-white text-black font-sf-pro font-bold text-lg px-8 py-4 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-200 border-4 border-[#0A4D3B] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Download size={24} />
+                    <Download size={20} />
                     {downloading ? 'Đang tải...' : 'Tải APK (Android)'}
                   </button>
+                  <a href='https://apkpure.com/p/com.snapdi.app' className="inline-flex items-center justify-center gap-3 bg-white text-black font-sf-pro font-bold text-lg px-8 py-4 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-200 border-4 border-[#0A4D3B] disabled:opacity-50 disabled:cursor-not-allowed hover:border-emerald-200">
+                    <Download size={20} className='text-black' />
+                    <img src={apkPure} alt="APK Pure" className="h-6 ml-2" />
+                  </a>
                 </div>
 
                 {/* Store Badges */}
