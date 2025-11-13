@@ -116,5 +116,6 @@ export const API_CONSTANTS = {
   PAYMENTS: {
     SEARCH: "/api/Payments/search",
     SEARCH_SUMMARY: "/api/Payments/search/summary",
-  }
+  },
+  REVIEWS: "/api/Reviews"
 };

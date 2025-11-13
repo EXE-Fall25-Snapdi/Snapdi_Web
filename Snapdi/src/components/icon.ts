@@ -35,7 +35,8 @@ import {
   Wallet2,
   UserCheck,
   TrendingUp,
-  FilterIcon
+  FilterIcon,
+  Star
 } from "lucide-react";
 import {
   FaUsers,
@@ -61,6 +62,7 @@ type IconType = {
 };
 
 const Icons: IconType = {
+  Star: Star,
   Booking: FaCalendar,
   Facebook: FaFacebook,
   Tiktok: FaTiktok,

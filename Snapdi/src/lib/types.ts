@@ -59,6 +59,18 @@ export type Blog = {
   thumbnailUrl: string;
   keywords: Keyword[];
 };
+
+export type Review = {
+  reviewId: number;
+  bookingId: number;
+  fromUserId: number;
+  fromUserName: string;
+  fromUserAvatar: string;
+  rating: number;
+  comment: string;
+  createAt: string;
+};
+
 export type Keyword = {
   keywordId: string;
   keyword: string;
