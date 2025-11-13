@@ -34,6 +34,7 @@ import { HelmetProvider } from '@dr.pogodin/react-helmet';
 // import ChatBubble from "./components/ChatBubble";
 import AdminSetting from "./pages/Admin/AdminSetting/AdminSetting";
 import BookingManagement from "./pages/Admin/BookingManagement/BookingManagement";
+import ReviewsManagement from "./pages/Admin/ReviewsManagement/ReviewsManagement";
 
 const router = createBrowserRouter([
   {
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
       {
         path: "bookings-management",
         element: <BookingManagement />,
+      },
+      {
+        path: "reviews-management",
+        element: <ReviewsManagement />,
       },
       {
         path: "transaction-history",

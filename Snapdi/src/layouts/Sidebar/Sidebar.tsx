@@ -47,6 +47,11 @@ const Sidebar: React.FC = () => {
         label: "Bookings Management",
       },
       {
+        path: "reviews-management",
+        icon: <Icons.Star className="w-8 h-8" />,
+        label: "Reviews Management",
+      },
+      {
         path: "transaction-history",
         icon: <Icons.History className="w-8 h-8" />,
         label: "Transaction History",
